@@ -6,6 +6,12 @@ bibliography: WadeBaker_Review.bib
 
 ## Baker, Wade: Review: Vis Neurosci
 
+Neurons in the visual areas of the brain are primarily responsive to differences between light and dark in an image. This property, referred to as contrast, sets the fundamental limits of our visual abilities, which remain steady over a remarkably wide range of environmental light levels. The human response to contrast can be studied using many different techniques. Early work used psychophysical methods to measure contrast sensitivity (Campbell & Green, 1965), defined as the inverse of the lowest contrast that can be reliably detected. But neural responses can also be measured more directly using techniques such as fMRI, MEG, and EEG. Here we will describe how an EEG method known as the steady state visually evoked potential (SSVEP) technique has contributed to our understanding of human contrast processing in health, disease and throughout development.
+
+The SSVEP is a continuous electrical response evoked in the brain by visual stimuli flickering at a constant frequency (Regan, 1966). For contrast-defined stimuli, such as sine-wave gratings, it is strongest at the occipital pole, adjacent to the early visual areas that generate the signal. The flickering stimulus entrains neural responses at multiples of the stimulus frequency, so continuous EEG data are typically analysed by taking the Fourier transform, and estimating the amplitude at these frequencies. Two common variants involve sinusoidal on-off flicker, where the stimulus alternates between a blank background and the peak contrast, and sinusoidal counterphase flicker, where the stimulus alternates in phase (i.e the black regions become white and the white regions become black). On-off flicker produces a response at the fundamental flicker frequency, known as 1F, and its integer harmonics: 2F, 3F, 4F and so on. Counterphase flicker does not produce a response at 1F, only at its even harmonics: 2F, 4F, 6F and so on. Variants involving square wave flicker can additionally produce more complex spectral components. The higher harmonics of the steady-state signal are generally thought to reflect nonlinear processing in the visual system (Regan & Regan, 1988). SSVEP signals can also be elicited by periodic changes of stimulus properties other than contrast, such as chromaticity, motion, stereo depth, and facial identity or expression (see Norcia et al., 2015, for an overview); however our focus here is on the contrast response.
+
+
+
 Figures:
 
 *1: a) A typical SSVEP setup: a screen, a grating, a flicker rate: b)
@@ -13,6 +19,7 @@ The responses from a single electrode (time domain) c) Frequency
 domain.*
 
 ```{python}
+
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy as scp
