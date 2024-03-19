@@ -1,6 +1,7 @@
 ---
 title: "Measuring contrast processing in the visual system using SSVEP (and VEP?)"
 format: html
+bibliography: WadeBaker_Review.bib
 ---
 
 ## Baker, Wade: Review: Vis Neurosci
