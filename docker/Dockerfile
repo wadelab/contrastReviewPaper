@@ -8,3 +8,7 @@ RUN apt-get -y install ghostscript
 RUN apt-get -y install libxt-dev
 RUN apt-get -y install git
 
+RUN install2.r –error \
+--deps TRUE \
+rmarkdown \
+reticulate
