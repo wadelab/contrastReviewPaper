@@ -7,8 +7,14 @@ RUN apt-get -y install libxml2-dev
 RUN apt-get -y install ghostscript
 RUN apt-get -y install libxt-dev
 RUN apt-get -y install git
+RUN apt-get install -y libpython3-dev
+RUN pip install numpy
+RUN pip install scipy
+RUN pip install matplotlib
 
 RUN install2.r –error \
 --deps TRUE \
 rmarkdown \
 reticulate
+
+RUN R 'reticulate::use_python("/usr/bin/python3")'
