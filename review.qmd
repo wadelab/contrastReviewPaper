@@ -76,9 +76,6 @@ plt.show()
 ```
 
 
-
-
-
 *2: Sweeps and CRFs. Measurements of contrast sensitivity, extrapolating
 the sweep to zero response to get t'hold. Infants and adults?*
 
@@ -87,7 +84,7 @@ Attention to space, attention to features, adaptation (?).
 masking/surround suppression\\*
 
 *4: Clinical (Porciatti / Tsai/ Marmite/ Amblyopia / PD?)*
-
+[@porciatti_lack_2000][@tsai_contrast_2011]
 *5: Future directions (decoding in frequency domain?, animals? BCI?)*
 
 []{#anchor-1}ABSTRACT:
