@@ -8,9 +8,9 @@ RUN apt-get -y install ghostscript
 RUN apt-get -y install libxt-dev
 RUN apt-get -y install git
 RUN apt-get install -y libpython3-dev
-RUN pip install numpy
-RUN pip install scipy
-RUN pip install matplotlib
+RUN pip3 install numpy
+RUN pip3 install scipy
+RUN pip3 install matplotlib
 
 RUN install2.r –error \
 --deps TRUE \
