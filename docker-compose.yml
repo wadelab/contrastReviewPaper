@@ -4,8 +4,8 @@ services:
     build:
       dockerfile: docker/Dockerfile
       context: .
-    container_name: wadelab/contrastReviewPaper:knit
-    image: wadelab/contrastReviewPaper:knit
+    container_name: wadelab/contrastreviewpaper:knit
+    image: wadelab/contrastreviewpaper:knit
     volumes:
       - .:/home/rstudio
     environment:
