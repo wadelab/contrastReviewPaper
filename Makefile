@@ -7,3 +7,4 @@ document:
 document-docker: 
 	R -e "xfun::pkg_attach2('rmarkdown')"
 	R -e "rmarkdown::render('review.qmd',output_format='html_document')"
+	R -e "rmarkdown::render('review.qmd',output_format='pdf_document')"
