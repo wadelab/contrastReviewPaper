@@ -7,11 +7,24 @@ bibliography: WadeBaker_Review.bib
 ## Baker, Wade: Review: Vis Neurosci
 
 
-
-
 ## ABSTRACT:
 
 Cone photoreceptor contrast modulations are the currency of the early visual system. Measuring the way that sensitivity to contrast depends on factors such as spatial and temporal frequency, age, eccentricity, chromaticity and the presence of other stimuli has been a focus of vision science for at least 100 years. One of the most productive experimental approaches in this field has been the use of the 'steady-state visually-evoked potential' (SSVEP): a technique where contrast modulating inputs are 'frequency tagged (presented at well-defined frequencies and phases) and the electrical signals that they generate in the brain are analyzed in the temporal frequency domain. SSVEPs have several advantages over conventional measures of visually-evoked responses: they have relatively unambiguous ouput measures, a high SNR and they allow us to analyze interactions between stimulus components using a convenient mathematical framework. Here we describe how SSVEPs have been used to study visual contrast over the past 70 years[@dawson_summation_1954]. Because our thinking about SSVEPs is best described in simple mathematical models, we embed code that illustrates key steps in the modelling and analysis. This document can therefore be used both as a review of the use of SSVEP in measuring human contrast processing, and as an interactive learning aid.
+
+## INTRODUCTION:
+Neurons in the visual areas of the brain are primarily responsive to differences between light and dark in an image. This property, referred to as contrast, sets the fundamental limits of our visual abilities, which remain steady over a remarkably wide range of environmental light levels. The human response to contrast can be studied using many different techniques. Early work used psychophysical methods to measure contrast sensitivity [@Campbell1965], defined as the inverse of the lowest contrast that can be reliably detected. But neural responses can also be measured more directly using techniques such as fMRI, MEG, and EEG. Here we will describe how an EEG method known as the steady state visually evoked potential (SSVEP) technique has contributed to our understanding of human contrast processing in health, disease and throughout development.
+
+The SSVEP is a continuous electrical response evoked in the brain by visual stimuli flickering at a constant frequency [@Regan1966]. For contrast-defined stimuli, such as sine-wave gratings, it is strongest at the occipital pole, adjacent to the early visual areas that generate the signal. The flickering stimulus entrains neural responses at multiples of the stimulus frequency, so continuous EEG data are typically analysed by taking the Fourier transform, and estimating the amplitude at these frequencies. Two common variants involve sinusoidal on-off flicker, where the stimulus alternates between a blank background and the peak contrast, and sinusoidal counterphase flicker, where the stimulus alternates in phase (i.e the black regions become white and the white regions become black). On-off flicker produces a response at the fundamental flicker frequency, known as 1F, and its integer harmonics: 2F, 3F, 4F and so on. Counterphase flicker does not produce a response at 1F, only at its even harmonics: 2F, 4F, 6F and so on. Variants involving square wave flicker can additionally produce more complex spectral components. The higher harmonics of the steady-state signal are generally thought to reflect nonlinear processing in the visual system [@Regan1988]. SSVEP signals can also be elicited by periodic changes of stimulus properties other than contrast, such as chromaticity, motion, stereo depth, and facial identity or expression [see @Norcia2015, for an overview]; however our focus here is on the contrast response.
+
+In early work on infants, the ‘sweep VEP’ paradigm was developed to measure SSVEP activity in response to a stimulus that changes its properties throughout a trial, for example gradually increasing in contrast or spatial frequency. Other studies keep the stimulus properties constant for the entire trial, which avoids serial effects and makes the analysis more straightforward.
+
+
+Because it provides a direct read-out of neural population activity, the SSVEP signal can reveal key features of neural signal transduction. By parametrically varying the peak stimulus contrast, a monotonically increasing contrast response function can be measured. This corresponds closely to similar functions measured in single unit studies, or those measuring local field potentials invasively in the cortex. However SSVEP has the advantage that it is non-invasive, and so can be measured in awake, behaving human participants. An early use of the contrast response function was to provide an automated estimate of contrast sensitivity, without requiring behavioural responses from the participant. This was achieved by measuring the contrast response function, and extrapolating back along the function to estimate its intercept with the x-axis, which was shown to correspond with psychophysically measured detection thresholds (REFS). This general approach revealed much about the development of visual abilities in infants (Braddick), as well as deficits in neurological disease. However, psychophysical measurements remain the gold standard, and do not always correspond closely with SSVEP estimates in individuals with normal adult visual systems.
+
+
+
+
+
 
 
 Figures:
@@ -21,6 +34,7 @@ The responses from a single electrode (time domain) c) Frequency
 domain.*
 
 ```{python}
+
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy as scp
@@ -148,13 +162,13 @@ response evoked in the brain by visual stimuli flickering at a constant
 frequency (Regan, 1966).
 
 Contrast Sensitivity: The ability to detect differences in luminance
-between an object and its background (Campbell & Green, 1965).
+between an object and its background (Campbell \& Green, 1965).
 
 Regan, D. (1966). Some characteristics of average steady-state and
 transient responses evoked by modulated light. Electroencephalography
 and clinical neurophysiology, 20(3), 238-248.
 
-Campbell, F. W., & Green, D. G. (1965). Optical and retinal factors
+Campbell, F. W., \& Green, D. G. (1965). Optical and retinal factors
 affecting visual resolution. J Physiology, 181, 576-593.
 
 Check Regan paper for earlier (e.g. EEG refs). Norcia review will be
@@ -214,7 +228,6 @@ infancy than previously expected. Also measures of colour sensitivity.
 Tinyeyes is based off those measurements. Other people: Tyler, Norcia,
 Gunilla H-P, many of the people at SKERI in the 1980s and 90s. Norcia
 86,88,90 - mentioned in Regan's nice autobiography :
-https://www.google.co.uk/books/edition/Seeing_Spatial_Form/HqaKlR_GpP0C?hl=en&gbpv=1&dq=Analysis+of+EEG+responses+in+man,+evoked+by+sine+watre+modulated+light.+Thesis&pg=PA215&printsec=frontcover
 
 In parallel of course, people were using frequency tagging to do single
 unit work - the 1F vs 2F simple/complex cell classification scheme was
@@ -227,7 +240,7 @@ precise spatial localization (Di Russo et al., 2007). See however the
 Ales cruciform paper.
 
 Di Russo, F., Pitzalis, S., Spitoni, G., Aprile, T., Patria, F., Stella,
-A., \... & Hillyard, S. A. (2007). Identification of the neural sources
+A., \... \& Hillyard, S. A. (2007). Identification of the neural sources
 of the pattern-reversal VEP. Neuroimage, 34(1), 177-189.
 
 Ales and Norcia:\... (showed that people's intuition about V1 upper /
@@ -245,7 +258,7 @@ masking, and attention
 measuring contrast sensitivity - the shape of the response function was
 assumed to be basically log-linear - and they fit it with straight lines
 to extrapolate back to zero response. But then (once Heeger's 1992 paper
-had sunk in - see also stuff like Shapley and Victor 1981 [(Shapley &
+had sunk in - see also stuff like Shapley and Victor 1981 [(Shapley \&
 Victor, 1981)](https://www.zotero.org/google-docs/?zAmtgj)), people
 started thinking about gain control - Candy and Norcia in about 1999,
 Porciatti, probably a load of Tyler papers that I don't even know
@@ -280,16 +293,16 @@ dynamic model of normalization with some MEG data. Busse et al cat/human
 comparison. Candy and Norcia 2001 JNS [(Candy et al.,
 2001)](https://www.zotero.org/google-docs/?7hhs5Z)
 
-Ross, J., Speed, H. D., & Morgan, M. J. (1989). The effects of
+Ross, J., Speed, H. D., \& Morgan, M. J. (1989). The effects of
 adaptation and masking on incremental thresholds for contrast. Vision
 research, 29(2), 205-215.
 
-Haynes, J. D., Roth, G., Stadler, M., & Heinze, H. J. (2003).
+Haynes, J. D., Roth, G., Stadler, M., \& Heinze, H. J. (2003).
 Neuromagnetic correlates of perceived contrast in primary visual cortex.
 Journal of Neurophysiology, 89(6), 2655-2666.
 
 Müller, M. M., Picton, T. W., Valdes-Sosa, P., Riera, J.,
-Teder-Sälejärvi, W. A., & Hillyard, S. A. (2006). Effects of spatial
+Teder-Sälejärvi, W. A., \& Hillyard, S. A. (2006). Effects of spatial
 selective attention on the steady-state visual evoked potential in the
 20--28 Hz range. Cognitive Brain Research, 24(1), 1-13.
 
@@ -311,7 +324,7 @@ Citation:
 
 Migraine (Regan et al). Autism?
 
-Norcia, A. M., Appelbaum, L. G., Ales, J. M., Cottereau, B. R., &
+Norcia, A. M., Appelbaum, L. G., Ales, J. M., Cottereau, B. R., \&
 Rossion, B. (2015). The steady-state visual evoked potential in vision
 research: A review. Journal of vision, 15(6), 4-4.
 
@@ -339,7 +352,7 @@ neurological diseases, and developing novel therapeutic interventions.
 
 Citation:
 
-Zhu, D., Bieger, J., Molina, G. G., & Aarts, R. M. (2010). A survey of
+Zhu, D., Bieger, J., Molina, G. G., \& Aarts, R. M. (2010). A survey of
 stimulation methods used in SSVEP-based BCIs. Computational intelligence
 and neuroscience, 2010.
 
