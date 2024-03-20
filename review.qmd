@@ -6,6 +6,14 @@ bibliography: WadeBaker_Review.bib
 
 ## Baker, Wade: Review: Vis Neurosci
 
+
+
+
+## ABSTRACT:
+
+Cone photoreceptor contrast modulations are the currency of the early visual system. Measuring the way that sensitivity to contrast depends on factors such as spatial and temporal frequency, age, eccentricity, chromaticity and the presence of other stimuli has been a focus of vision science for at least 100 years. One of the most productive experimental approaches in this field has been the use of the 'steady-state visually-evoked potential' (SSVEP): a technique where contrast modulating inputs are 'frequency tagged (presented at well-defined frequencies and phases) and the electrical signals that they generate in the brain are analyzed in the temporal frequency domain. SSVEPs have several advantages over conventional measures of visually-evoked responses: they have relatively unambiguous ouput measures, a high SNR and they allow us to analyze interactions between stimulus components using a convenient mathematical framework. Here we describe how SSVEPs have been used to study visual contrast over the past 70 years[@dawson_summation_1954]. Because our thinking about SSVEPs is best described in simple mathematical models, we embed code that illustrates key steps in the modelling and analysis. This document can therefore be used both as a review of the use of SSVEP in measuring human contrast processing, and as an interactive learning aid.
+
+
 Figures:
 
 *1: a) A typical SSVEP setup: a screen, a grating, a flicker rate: b)
@@ -17,9 +25,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy as scp
 
-inputFrequencies_Hz=np.array([5,7])
+inputFrequencies_Hz=np.array([5,7]) # We simulate a system with two input frequencies (perhaps contrast-reversing gratings?)
 
-duration_S=1
+duration_S=1 # All variables in this code have an _[units] where possible
 
 digitisationRate_Hz=1000
 
@@ -42,7 +50,49 @@ for i, freq in enumerate(inputFrequencies_Hz):
 
 # Adjust the spacing between subplots
 plt.tight_layout()
+plt.show()
+```
 
+
+It is relatively easy to write the same thing in R. This is a 'machine translation' using Anthropic's Claude3 LLM. You need to modify your R environment to include the reticulate package (and probably some others... rmarkdown for one?)
+
+Note that once you have this working, you can pass data back and fore between R and python!
+
+
+
+```{r}
+library(ggplot2)
+
+inputFrequencies_Hz <- c(5, 7)
+duration_S <- 1
+digitisationRate_Hz <- 1000
+
+support_S <- seq(0, duration_S, length.out = duration_S * digitisationRate_Hz)
+
+inputModulations <- matrix(0, nrow = length(support_S), ncol = length(inputFrequencies_Hz))
+for (i in seq_along(inputFrequencies_Hz)) {
+  freq <- inputFrequencies_Hz[i]
+  inputModulations[, i] <- sin(2 * pi * freq * support_S)
+}
+
+# Create a data frame for plotting
+data <- data.frame(
+  Time = rep(support_S, length(inputFrequencies_Hz)),
+  Amplitude = c(inputModulations),
+  Frequency = factor(rep(inputFrequencies_Hz, each = length(support_S)))
+)
+
+# Create the plot using ggplot2
+plot <- ggplot(data, aes(x = Time, y = Amplitude)) +
+  geom_line() +
+  facet_wrap(~ Frequency, ncol = 1) +
+  scale_x_continuous(name = "Time (s)", limits = c(0, duration_S)) +
+  scale_y_continuous(name = "Amplitude") +
+  ggtitle("Input Modulations") +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+print(plot)
 ```
 
 The two inputs are represented here as amplitude modulations across time. 
@@ -87,7 +137,6 @@ masking/surround suppression\\*
 [@porciatti_lack_2000][@tsai_contrast_2011]
 *5: Future directions (decoding in frequency domain?, animals? BCI?)*
 
-[]{#anchor-1}ABSTRACT:
 
 []{#anchor-2}History
 
