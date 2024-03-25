@@ -376,138 +376,6 @@ system using SSVEP (and VEP?)</h1>
 </div>
 
 
-<<<<<<< HEAD
-
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-</header>
-
-<section id="baker-wade-review-vis-neurosci" class="level2">
-<h2 class="anchored" data-anchor-id="baker-wade-review-vis-neurosci">Baker, Wade: Review: Vis Neurosci</h2>
-</section>
-<section id="abstract" class="level2">
-<h2 class="anchored" data-anchor-id="abstract">ABSTRACT:</h2>
-<p>Cone photoreceptor contrast modulations are the currency of the early visual system. Measuring the way that sensitivity to contrast depends on factors such as spatial and temporal frequency, age, eccentricity, chromaticity and the presence of other stimuli has been a focus of vision science for at least 100 years. One of the most productive experimental approaches in this field has been the use of the ‘steady-state visually-evoked potential’ (SSVEP): a technique where contrast modulating inputs are ’frequency tagged (presented at well-defined frequencies and phases) and the electrical signals that they generate in the brain are analyzed in the temporal frequency domain. SSVEPs have several advantages over conventional measures of visually-evoked responses: they have relatively unambiguous ouput measures, a high SNR and they allow us to analyze interactions between stimulus components using a convenient mathematical framework. Here we describe how SSVEPs have been used to study visual contrast over the past 70 years<span class="citation" data-cites="Dawson1954">(<a href="#ref-Dawson1954" role="doc-biblioref">Dawson 1954</a>)</span>. Because our thinking about SSVEPs is best described in simple mathematical models, we embed code that illustrates key steps in the modelling and analysis. This document can therefore be used both as a review of the use of SSVEP in measuring human contrast processing, and as an interactive learning aid.</p>
-</section>
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">INTRODUCTION:</h2>
-<p>Neurons in the visual areas of the brain are primarily responsive to differences between light and dark in an image. This property, referred to as contrast, sets the fundamental limits of our visual abilities, which remain steady over a remarkably wide range of environmental light levels. The human response to contrast can be studied using many different techniques. Early work used psychophysical methods to measure contrast sensitivity <span class="citation" data-cites="Campbell1965">(<a href="#ref-Campbell1965" role="doc-biblioref">Campbell and Green 1965</a>)</span>, defined as the inverse of the lowest contrast that can be reliably detected. But neural responses can also be measured more directly using techniques such as fMRI, MEG, and EEG. Here we will describe how an EEG method known as the steady state visually evoked potential (SSVEP) technique has contributed to our understanding of human contrast processing in health, disease and throughout development.</p>
-<p>The SSVEP is a continuous electrical response evoked in the brain by visual stimuli flickering at a constant frequency <span class="citation" data-cites="Regan1966">(<a href="#ref-Regan1966" role="doc-biblioref">D. Regan 1966</a>)</span>. For contrast-defined stimuli, such as sine-wave gratings, it is strongest at the occipital pole, adjacent to the early visual areas that generate the signal. The flickering stimulus entrains neural responses at multiples of the stimulus frequency, so continuous EEG data are typically analysed by taking the Fourier transform, and estimating the amplitude at these frequencies. Two common variants involve sinusoidal on-off flicker, where the stimulus alternates between a blank background and the peak contrast, and sinusoidal counterphase flicker, where the stimulus alternates in phase (i.e the black regions become white and the white regions become black). On-off flicker produces a response at the fundamental flicker frequency, known as 1F, and its integer harmonics: 2F, 3F, 4F and so on. Counterphase flicker does not produce a response at 1F, only at its even harmonics: 2F, 4F, 6F and so on. Variants involving square wave flicker can additionally produce more complex spectral components. The higher harmonics of the steady-state signal are generally thought to reflect nonlinear processing in the visual system <span class="citation" data-cites="Regan1988">(<a href="#ref-Regan1988" role="doc-biblioref">M. P. Regan and Regan 1988</a>)</span>. SSVEP signals can also be elicited by periodic changes of stimulus properties other than contrast, such as chromaticity, motion, stereo depth, and facial identity or expression <span class="citation" data-cites="Norcia2015">(see <a href="#ref-Norcia2015" role="doc-biblioref">Norcia et al. 2015</a>, for an overview)</span>; however our focus here is on the contrast response.</p>
-<p>In early work on infants, the ‘sweep VEP’ paradigm was developed to measure SSVEP activity in response to a stimulus that changes its properties throughout a trial, for example gradually increasing in contrast or spatial frequency. Other studies keep the stimulus properties constant for the entire trial, which avoids serial effects and makes the analysis more straightforward.</p>
-<p>Because it provides a direct read-out of neural population activity, the SSVEP signal can reveal key features of neural signal transduction. By parametrically varying the peak stimulus contrast, a monotonically increasing contrast response function can be measured. This corresponds closely to similar functions measured in single unit studies, or those measuring local field potentials invasively in the cortex. However SSVEP has the advantage that it is non-invasive, and so can be measured in awake, behaving human participants. An early use of the contrast response function was to provide an automated estimate of contrast sensitivity, without requiring behavioural responses from the participant. This was achieved by measuring the contrast response function, and extrapolating back along the function to estimate its intercept with the x-axis, which was shown to correspond with psychophysically measured detection thresholds (REFS). This general approach revealed much about the development of visual abilities in infants (Braddick), as well as deficits in neurological disease. However, psychophysical measurements remain the gold standard, and do not always correspond closely with SSVEP estimates in individuals with normal adult visual systems.</p>
-<p>Figures:</p>
-<p><em>1: a) A typical SSVEP setup: a screen, a grating, a flicker rate: b) The responses from a single electrode (time domain) c) Frequency domain.</em></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy <span class="im">as</span> scp</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>inputFrequencies_Hz<span class="op">=</span>np.array([<span class="dv">5</span>,<span class="dv">7</span>]) <span class="co"># We simulate a system with two input frequencies (perhaps contrast-reversing gratings?)</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>duration_S<span class="op">=</span><span class="dv">1</span> <span class="co"># All variables in this code have an _[units] where possible</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>digitisationRate_Hz<span class="op">=</span><span class="dv">1000</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>support_S<span class="op">=</span>np.linspace(<span class="dv">0</span>,duration_S,duration_S<span class="op">*</span>digitisationRate_Hz)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>inputModulations <span class="op">=</span> np.zeros((<span class="bu">len</span>(support_S), <span class="bu">len</span>(inputFrequencies_Hz)))</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, freq <span class="kw">in</span> <span class="bu">enumerate</span>(inputFrequencies_Hz):</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    inputModulations[:, i] <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> freq <span class="op">*</span> support_S)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a figure with two subplots</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="bu">len</span>(inputFrequencies_Hz), <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot each input modulation in a separate subplot</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, freq <span class="kw">in</span> <span class="bu">enumerate</span>(inputFrequencies_Hz):</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    axs[i].plot(support_S, inputModulations[:, i])</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    axs[i].set_xlabel(<span class="st">'Time (s)'</span>)</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    axs[i].set_ylabel(<span class="st">'Amplitude'</span>)</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    axs[i].set_title(<span class="st">'Frequency: </span><span class="sc">{}</span><span class="st"> Hz'</span>.<span class="bu">format</span>(freq))</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust the spacing between subplots</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="review_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="768"></p>
-</div>
-</div>
-<p>It is relatively easy to write the same thing in R. This is a ‘machine translation’ using Anthropic’s Claude3 LLM. You need to modify your R environment to include the reticulate package (and probably some others… rmarkdown for one?)</p>
-<p>Note that once you have this working, you can pass data back and fore between R and python!</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>inputFrequencies_Hz <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">7</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>duration_S <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>digitisationRate_Hz <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>support_S <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, duration_S, <span class="at">length.out =</span> duration_S <span class="sc">*</span> digitisationRate_Hz)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>inputModulations <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> <span class="fu">length</span>(support_S), <span class="at">ncol =</span> <span class="fu">length</span>(inputFrequencies_Hz))</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(inputFrequencies_Hz)) {</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  freq <span class="ot">&lt;-</span> inputFrequencies_Hz[i]</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  inputModulations[, i] <span class="ot">&lt;-</span> <span class="fu">sin</span>(<span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">*</span> freq <span class="sc">*</span> support_S)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a data frame for plotting</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">Time =</span> <span class="fu">rep</span>(support_S, <span class="fu">length</span>(inputFrequencies_Hz)),</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">Amplitude =</span> <span class="fu">c</span>(inputModulations),</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">Frequency =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(inputFrequencies_Hz, <span class="at">each =</span> <span class="fu">length</span>(support_S)))</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot using ggplot2</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> Time, <span class="at">y =</span> Amplitude)) <span class="sc">+</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Frequency, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> <span class="st">"Time (s)"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, duration_S)) <span class="sc">+</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> <span class="st">"Amplitude"</span>) <span class="sc">+</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Input Modulations"</span>) <span class="sc">+</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="review_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>The two inputs are represented here as amplitude modulations across time.</p>
-<p>If the two inputs are simply added together, the representation of the resulting signal in the Fourier domain is just the linear sum of the two independent signals:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>freqCutoff_Hz<span class="op">=</span><span class="dv">30</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>combinedSignal<span class="op">=</span>np.<span class="bu">sum</span>(inputModulations,axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>FT_combinedSignal<span class="op">=</span>np.fft.fft(combinedSignal)<span class="op">/</span><span class="bu">len</span>(combinedSignal)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>fig,axs<span class="op">=</span>plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>,figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">6</span>))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].plot(support_S,combinedSignal)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_xlabel(<span class="st">'Time (s)'</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_ylabel(<span class="st">'Amplitude (a.u.)'</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_title(<span class="st">'Input signals with linear combination'</span>)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the frequency support for the FFT plot</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>frequencySupport <span class="op">=</span> np.arange(<span class="dv">1</span>,freqCutoff_Hz<span class="op">*</span>duration_S<span class="op">+</span><span class="dv">1</span>) <span class="co"># We only want to plot the frequencies in the FFT up to this point</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the absolute values of the FFT in the second axis as a bar plot</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].bar(frequencySupport, np.<span class="bu">abs</span>(FT_combinedSignal[frequencySupport]))</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_xlabel(<span class="st">'Frequency (Hz)'</span>)</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_ylabel(<span class="st">'Magnitude (a.u.)'</span>)</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_title(<span class="st">'FFT of Combined Signal'</span>)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="review_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="768"></p>
-</div>
-</div>
-<p><em>2: Sweeps and CRFs. Measurements of contrast sensitivity, extrapolating the sweep to zero response to get t’hold. Infants and adults?</em></p>
-<p><em>3: Measurements of modulation. Figures adapted from other papers: Attention to space, attention to features, adaptation (?). masking/surround suppression\</em></p>
-<p><em>4: Clinical (Porciatti / Tsai/ Marmite/ Amblyopia / PD?)</em> [<span class="citation" data-cites="Porciatti2000">Porciatti et al. (<a href="#ref-Porciatti2000" role="doc-biblioref">2000</a>)</span>]<span class="citation" data-cites="tsai_contrast_2011">(<a href="#ref-tsai_contrast_2011" role="doc-biblioref"><strong>tsai_contrast_2011?</strong></a>)</span> <em>5: Future directions (decoding in frequency domain?, animals? BCI?)</em></p>
-=======
 <div id="baker-wade-review-vis-neurosci" class="section level2">
 <h2>Baker, Wade: Review: Vis Neurosci</h2>
 </div>
@@ -528,12 +396,12 @@ visually-evoked responses: they have relatively unambiguous ouput
 measures, a high SNR and they allow us to analyze interactions between
 stimulus components using a convenient mathematical framework. Here we
 describe how SSVEPs have been used to study visual contrast over the
-past 70 years<span class="citation">(<strong>dawson_summation_1954?</strong>)</span>.
-Because our thinking about SSVEPs is best described in simple
-mathematical models, we embed code that illustrates key steps in the
-modelling and analysis. This document can therefore be used both as a
-review of the use of SSVEP in measuring human contrast processing, and
-as an interactive learning aid.</p>
+past 70 years<span class="citation">(Dawson 1954)</span>. Because our
+thinking about SSVEPs is best described in simple mathematical models,
+we embed code that illustrates key steps in the modelling and analysis.
+This document can therefore be used both as a review of the use of SSVEP
+in measuring human contrast processing, and as an interactive learning
+aid.</p>
 </div>
 <div id="introduction" class="section level2">
 <h2>INTRODUCTION:</h2>
@@ -719,7 +587,6 @@ masking/surround suppression\</em></p>
 <span class="citation">(Porciatti et al. 2000; Tsai et al. 2011)</span>
 <em>5: Future directions (decoding in frequency domain?, animals?
 BCI?)</em></p>
->>>>>>> 58a7d511f6e0a0a6ec1de0091f15d05362e9c952
 <p><span id="anchor-2"></span>History</p>
 <p><span id="anchor-3"></span>1. The basics of SSVEP and contrast
 sensitivity including a history of both fields</p>
@@ -885,6 +752,11 @@ Campbell, F W, and D G Green. 1965. <span>“Optical and Retinal Factors
 Affecting Visual Resolution.”</span> <em>J Physiol</em> 181 (3): 576–93.
 <a href="https://doi.org/10.1113/jphysiol.1965.sp007784">https://doi.org/10.1113/jphysiol.1965.sp007784</a>.
 </div>
+<div id="ref-Dawson1954" class="csl-entry">
+Dawson, G. D. 1954. <span>“A Summation Technique for the Detection of
+Small Evoked Potentials.”</span> <em>Electroencephalography and Clinical
+Neurophysiology</em> 6 (January): 65–84. <a href="https://doi.org/10.1016/0013-4694(54)90007-3">https://doi.org/10.1016/0013-4694(54)90007-3</a>.
+</div>
 <div id="ref-Norcia2015" class="csl-entry">
 Norcia, Anthony M., L. Gregory Appelbaum, Justin M. Ales, Benoit R.
 Cottereau, and Bruno Rossion. 2015. <span>“The Steady-State Visual
@@ -920,70 +792,6 @@ Generalized Epilepsy.”</span> <em>Annals of Neurology</em> 70 (4):
 
 
 </div>
-<<<<<<< HEAD
-<div id="ref-Dawson1954" class="csl-entry" role="listitem">
-Dawson, G. D. 1954. <span>“A Summation Technique for the Detection of Small Evoked Potentials.”</span> <em>Electroencephalography and Clinical Neurophysiology</em> 6 (January): 65–84. <a href="https://doi.org/10.1016/0013-4694(54)90007-3">https://doi.org/10.1016/0013-4694(54)90007-3</a>.
-</div>
-<div id="ref-Norcia2015" class="csl-entry" role="listitem">
-Norcia, Anthony M., L. Gregory Appelbaum, Justin M. Ales, Benoit R. Cottereau, and Bruno Rossion. 2015. <span>“The Steady-State Visual Evoked Potential in Vision Research: <span>A</span> Review.”</span> <em>Journal of Vision</em> 15 (6): 4–4.
-</div>
-<div id="ref-Porciatti2000" class="csl-entry" role="listitem">
-Porciatti, V., P. Bonanni, A. Fiorentini, and R. Guerrini. 2000. <span>“Lack of Cortical Contrast Gain Control in Human Photosensitive Epilepsy.”</span> <em>Nature Neuroscience</em> 3 (3): 259–63. <a href="https://doi.org/10.1038/72972">https://doi.org/10.1038/72972</a>.
-</div>
-<div id="ref-Regan1966" class="csl-entry" role="listitem">
-Regan, D. 1966. <span>“Some Characteristics of Average Steady-State and Transient Responses Evoked by Modulated Light.”</span> <em>Electroencephalogr Clin Neurophysiol</em> 20 (3): 238–48. <a href="https://doi.org/10.1016/0013-4694(66)90088-5">https://doi.org/10.1016/0013-4694(66)90088-5</a>.
-</div>
-<div id="ref-Regan1988" class="csl-entry" role="listitem">
-Regan, M. P., and D. Regan. 1988. <span>“A Frequency Domain Technique for Characterizing Nonlinearities in Biological Systems.”</span> <em>Journal of Theoretical Biology</em> 133 (3): 293–317. https://doi.org/<a href="https://doi.org/10.1016/S0022-5193(88)80323-0">https://doi.org/10.1016/S0022-5193(88)80323-0</a>.
-</div>
-</div></section></div></main>
-<!-- /main column -->
-<script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-=======
 
 <script>
 
@@ -1008,7 +816,6 @@ $(document).ready(function () {
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
     $(this).parent().toggleClass('nav-tabs-open');
->>>>>>> 58a7d511f6e0a0a6ec1de0091f15d05362e9c952
   });
 });
 </script>
