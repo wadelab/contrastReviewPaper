@@ -29,12 +29,13 @@ Because it provides a direct read-out of neural population activity, the SSVEP s
 
 Figures:
 
-*1: a) A typical SSVEP setup: a screen, a grating, a flicker rate: b)
-The responses from a single electrode (time domain) c) Frequency
-domain.*
 
 ```{python}
 
+#| label: plotsinewaves
+#| fig-cap: "a) A typical SSVEP setup: a screen, a grating, a flicker rate: b) The responses from a single electrode (time domain) c) Frequency domain"
+#| fig-cap-location: bottom
+#| 
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy as scp
@@ -75,6 +76,7 @@ Note that once you have this working, you can pass data back and fore between R 
 
 
 ```{r}
+
 library(ggplot2)
 
 inputFrequencies_Hz <- c(5, 7)
@@ -107,6 +109,7 @@ plot <- ggplot(data, aes(x = Time, y = Amplitude)) +
   theme(plot.title = element_text(hjust = 0.5))
 
 print(plot)
+
 ```
 
 The two inputs are represented here as amplitude modulations across time. 
@@ -114,6 +117,10 @@ The two inputs are represented here as amplitude modulations across time.
 If the two inputs are simply added together, the representation of the resulting signal in the Fourier domain is just the linear sum of the two independent signals:
 
 ```{python}
+
+#| label: plotspectra
+#| fig-cap: "a"
+#| fig-cap-location: bottom
 
 freqCutoff_Hz=30
 combinedSignal=np.sum(inputModulations,axis=1)
@@ -148,7 +155,7 @@ Attention to space, attention to features, adaptation (?).
 masking/surround suppression\\*
 
 *4: Clinical (Porciatti / Tsai/ Marmite/ Amblyopia / PD?)*
-[@Porciatti2000][@tsai_contrast_2011]
+[@Porciatti2000; @Tsai2011]
 *5: Future directions (decoding in frequency domain?, animals? BCI?)*
 
 
