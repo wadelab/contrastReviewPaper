@@ -11,30 +11,163 @@ execute:
 
 ## ABSTRACT:
 
-Contrast is the currency of the early visual system. Measuring the way that sensitivity to contrast depends on factors such as spatial and temporal frequency, age, eccentricity, chromaticity and the presence of other stimuli has been a focus of vision science for at least 100 years. One of the most productive experimental approaches in this field has been the use of the 'steady-state visually-evoked potential' (SSVEP): a technique where contrast modulating inputs are 'frequency tagged (presented at well-defined frequencies and phases) and the electrical signals that they generate in the brain are analyzed in the temporal frequency domain. SSVEPs have several advantages over conventional measures of visually-evoked responses: they have relatively unambiguous ouput measures, a high SNR and they allow us to analyze interactions between stimulus components using a convenient mathematical framework. Here we describe how SSVEPs have been used to study visual contrast over the past 70 years[@Dawson1954]. Because our thinking about SSVEPs is best described in simple mathematical models, we embed code that illustrates key steps in the modelling and analysis. This document can therefore be used both as a review of the use of SSVEP in measuring human contrast processing, and as an interactive learning aid.
+Contrast is the currency of the early visual system. Measuring the way that the computations underlying contrast processing depend on factors such as spatial and temporal frequency, age, eccentricity, chromaticity and the presence of other stimuli has been a focus of vision science for at least 100 years. One of the most productive experimental approaches in this field has been the use of the 'steady-state visually-evoked potential' (SSVEP): a technique where contrast modulating inputs are 'frequency tagged (presented at well-defined frequencies and phases) and the electrical signals that they generate in the brain are analyzed in the temporal frequency domain. SSVEPs have several advantages over conventional measures of visually-evoked responses: they have relatively unambiguous ouput measures, a high SNR and they allow us to analyze interactions between stimulus components using a convenient mathematical framework. Here we describe how SSVEPs have been used to study visual contrast over the past 70 years[@Dawson1954]. Because our thinking about SSVEPs is best described in simple mathematical models, we embed code that illustrates key steps in the modelling and analysis. This document can therefore be used both as a review of the use of SSVEP in measuring human contrast processing, and as an interactive learning aid.
 
 ## INTRODUCTION:
-Neurons in the visual areas of the brain are primarily responsive to differences between light and dark in an image. This property, referred to as contrast, sets the fundamental limits of our visual abilities, which remain steady over a remarkably wide range of environmental light levels. The human response to contrast can be studied using many different techniques. Early work used psychophysical methods to measure contrast sensitivity [@Campbell1965], defined as the inverse of the lowest contrast that can be reliably detected. But neural responses can also be measured more directly using techniques such as fMRI, MEG, and EEG. Here we will describe how an EEG method known as the steady state visually evoked potential (SSVEP) technique has contributed to our understanding of human contrast processing in health, disease and throughout development.
+Neurons in the visual areas of the brain are primarily responsive to changes in cone photoreceptor activations across time and space. This property, referred to as contrast, sets the fundamental limits of our visual abilities, which remain steady over a remarkably wide range of environmental light levels. The human response to contrast can be studied using many different techniques. Early work used psychophysical methods to measure contrast sensitivity [@Campbell1965], defined as the inverse of the lowest contrast that can be reliably detected. But neural responses can also be measured more directly using techniques such as fMRI, MEG, and EEG. Here we will describe how an EEG method known as the steady state visually evoked potential (SSVEP) technique has contributed to our understanding of human contrast processing in health, disease and throughout development.
 
 The SSVEP is a continuous electrical response evoked in the brain by visual stimuli flickering at a constant frequency [@Regan1966]. For contrast-defined stimuli, such as sine-wave gratings, it is strongest at the occipital pole, adjacent to the early visual areas that generate the signal. The flickering stimulus entrains neural responses at multiples of the stimulus frequency, so continuous EEG data are typically analysed by taking the Fourier transform, and estimating the amplitude at these frequencies. Two common variants involve sinusoidal on-off flicker, where the stimulus alternates between a blank background and the peak contrast, and sinusoidal counterphase flicker, where the stimulus alternates in phase (i.e the black regions become white and the white regions become black). On-off flicker produces a response at the fundamental flicker frequency, known as 1F, and its integer harmonics: 2F, 3F, 4F and so on. Counterphase flicker does not produce a response at 1F, only at its even harmonics: 2F, 4F, 6F and so on. Variants involving square wave flicker can additionally produce more complex spectral components. The higher harmonics of the steady-state signal are generally thought to reflect nonlinear processing in the visual system [@Regan1988]. SSVEP signals can also be elicited by periodic changes of stimulus properties other than contrast, such as chromaticity, motion, stereo depth, and facial identity or expression [see @Norcia2015, for an overview]; however our focus here is on the contrast response.
 
 ### Why measure responses to contrast?
-Contrast is one of the most fundamental pieces of information that the eye transmits to the brain. It can be defined as the change in cone photoreceptor activity over time ('spatial contrast') or space ('spatial contrast'). Cone photoreceptors contribute to both chromatic and achromatic contrast and although most of the research we describe here focuses on achromatic contrast, SSVEPs have proven to be an excellent measure of early chromatic processing as well. [McKeefry, Baseler, DiRusso...]. 
+Contrast is one of the most fundamental pieces of information that the eye transmits to the brain. It can be defined as the change in cone photoreceptor activity over time ('spatial contrast') or space ('spatial contrast'). Cone photoreceptors contribute to both chromatic and achromatic contrast and although most of the research we describe here focuses on achromatic contrast, SSVEPs have proven to be an excellent measure of early chromatic processing as well. [McKeefry, Sutter, Baseler, DiRusso...]. 
 
-Contrast is relatively simple to define: typically, contrast is specificed as the percentage deviation of uniform stimulus from the background. So, for example, a disk of 100 units, $I_{\mathrm{stim}}$ of cone activation surrounded by a 'background' of 50 units of activation $I_{\mathrm{background}}$ has a contrast of $\frac{I_{\mathrm{stim}} - I_{\mathrm{background}}}{I_{\mathrm{background}}}$ = 100%. Where patterns are more complex (for example, the sine-wave gratings or Gabors common in vision science), the Michaelson definition of contrast is specified by the maximum and minimum excursions from the mean: $${\displaystyle {\frac {I_{\mathrm {stimmax} }-I_{\mathrm {stimmin} }}{I_{\mathrm {stimmax} }+I_{\mathrm {stimmin} }}},} $$. These contrast definitions are appropriate both to photometric measures of stimulus contrast (for example, luminance [LenniePokornySmith]) and also to definitions based on cone excitations [DKL, MacBoynton] which are more common in work on chromatic processing.
+Contrast is relatively simple to define: typically, contrast is specificed as the percentage deviation of uniform stimulus from the background. So, for example, a disk of 100 units, $I_{\mathrm{stim}}$ of cone activation surrounded by a 'background' of 50 units of activation $I_{\mathrm{background}}$ has a contrast of $\frac{I_{\mathrm{stim}} - I_{\mathrm{background}}}{I_{\mathrm{background}}}$ = 100%. Where patterns are more complex (for example, the sine-wave gratings or Gabor patches common in vision science), the Michaelson definition of contrast is specified by the maximum and minimum excursions from the mean: $${{\frac {I_{\mathrm {stimmax} }-I_{\mathrm {stimmin} }}{I_{\mathrm {stimmax} }+I_{\mathrm {stimmin} }}},} $$. These contrast definitions are appropriate both to photometric measures of stimulus contrast (for example, luminance [LenniePokornySmith]) and also to definitions based on cone excitations [DKL, MacBoynton] which are more common in work on chromatic processing.
 
-Although its definition is simple, the computations that underlie contrast processing have been the subject of intense research for many decades. The neural code for contrast, even in the earliest parts of visual cortex, is not simply a linear transform of the contrast at the retina - instead, contrast signals undergo a cascade of nonlinear processing stages that, broadly, attempt to normalise the output relative to the spatiotemporal environment. This normalization, achieved through a computation called 'contrast gain control' [Heeger 92, Heeger and Carandini 2011] maximises the sensitivity of the visual system by making optimal use of neuronal bandwidth. As an example, a grating seen on a low-contrast background tpyically appears more intense than the same grating when superimposed on a high contrast background. A signifcant part of research into contrast processing is concerned with how these normalization mechanisms depend on colour, orientation, eye of origin, spatial and temporal frequency, age, and the presence of neurological disorders. The SSVEP has proven to be invaliable in this research because it provides an objective readout of contrast representation at different parts of the visual system and allows us to 'tag' the probe and background separately.
+Although its definition as a stimulus is simple, the computations that underlie contrast processing in the brain have been the subject of intense research for many decades. The neural code for contrast, even in the earliest parts of visual cortex, is not simply a linear transform of the contrast at the retina - instead, contrast signals undergo a cascade of nonlinear processing stages that, broadly, attempt to normalise the output relative to the spatiotemporal environment. This normalization, achieved through a computation called 'contrast gain control' [Heeger 92, Heeger and Carandini 2011] maximises the sensitivity of the visual system by making optimal use of neuronal bandwidth. As an example, a grating placed at the centre of a low-contrast background tpyically appears more intense than the same grating when superimposed on a high contrast background.
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def create_grating(size, frequency, phase, contrast):
+    x, y = np.meshgrid(np.linspace(-1, 1, size), np.linspace(-1, 1, size))
+    grating = np.sin(2 * np.pi * frequency * np.sqrt(x**2 + y**2) + phase)
+    grating = (grating + 1) / 2  # Normalize to [0, 1]
+    grating = grating * contrast + (1 - contrast) / 2  # Adjust contrast
+    return grating
+
+def create_circular_mask(size):
+    x, y = np.meshgrid(np.linspace(-1, 1, size), np.linspace(-1, 1, size))
+    mask = np.sqrt(x**2 + y**2) <= 0.3
+    return mask
+
+# Set parameters
+size = 256
+frequency = 10
+phase = 0
+contrast_center = 0.5
+contrast_surround_low = 0.1
+contrast_surround_high = 0.9
+
+# Create gratings and circular masks
+grating_center = create_grating(size, frequency, phase, contrast_center)
+grating_surround_low = create_grating(size, frequency, phase, contrast_surround_low)
+grating_surround_high = create_grating(size, frequency, phase, contrast_surround_high)
+mask = create_circular_mask(size)
+
+# Combine gratings and masks
+image_low_contrast = grating_surround_low.copy()
+image_low_contrast[mask] = grating_center[mask]
+image_high_contrast = grating_surround_high.copy()
+image_high_contrast[mask] = grating_center[mask]
+
+# Create subplots
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7, 3))
+
+# Plot low-contrast background
+ax1.imshow(image_low_contrast, cmap='gray', vmin=0, vmax=1)
+ax1.axis('off')
+ax1.set_title('Low-Contrast Background', )
+
+# Plot high-contrast background
+ax2.imshow(image_high_contrast, cmap='gray', vmin=0, vmax=1)
+ax2.axis('off')
+ax2.set_title('High-Contrast Background')
+
+plt.tight_layout()
+plt.show()
+
+
+```
+
+
+ A signifcant part of research into contrast processing is concerned with how these normalization mechanisms depend on colour, orientation, eye of origin, spatial and temporal frequency, age, and the presence of neurological disorders. The SSVEP has proven to be invaliable in this research because it provides an objective readout of contrast representation at different parts of the visual system and allows us to 'tag' the probe and background separately.
 
 ### The development of contrast processing
-Because it provides a direct read-out of neural population activity, the SSVEP signal can reveal key features of neural signal transduction. By varying the peak stimulus contrast parametrically, a 'contrast vs response' function can be measured - where the 'response' is typically defined as the amplitude of the SSVEP frequency component at the stimulus frequency or a low multiple thereof. This corresponds closely to similar functions measured in single unit studies, or those measuring local field potentials invasively in the cortex. However SSVEP has the advantage that it is non-invasive, and so can be measured in awake, behaving human participants. An early use of the contrast response function was to provide an automated estimate of contrast sensitivity, without requiring behavioural responses from the participant. This was achieved by measuring the contrast response function, and extrapolating back along the function to estimate its intercept with the x-axis, which was shown to correspond with psychophysically measured detection thresholds (REFS). This general approach revealed much about the development of visual abilities in infants (Braddick), as well as deficits in neurological disease. In well-motivated adults, psychophysical measurements remain the gold standard. However, it is hard to obtain reliable psychophysical data from infants, children and adults with neuological disorders. In these cases, SSVEP measurements represent a fast and efficient method for measuring low-level visual responses.
+Because it provides a direct read-out of neural population activity, the SSVEP signal can reveal key features of neural signal transduction. By varying the peak stimulus contrast parametrically, a 'contrast vs response' function can be measured - where the 'response' is typically defined as the amplitude of the SSVEP frequency component at the stimulus frequency or a low multiple thereof. This corresponds closely to similar functions measured in single unit studies, or those measuring local field potentials invasively in the cortex. However SSVEP has the advantage that it is non-invasive, and so can be measured in awake, behaving human participants. 
+
+An early use of the contrast response function was to provide an automated estimate of contrast sensitivity, without requiring behavioural responses from the participant. Because SSVEP response at detection threshold are very small, this was achieved by measuring the contrast response function at relatively high levels, and extrapolating back along the function to estimate its intercept with the x-axis, which was shown to correspond with psychophysically measured detection thresholds (REFS). This general approach revealed much about the development of visual abilities in infants (Braddick), as well as deficits in neurological disease. 
+
+In well-motivated adults, psychophysical measurements remain the gold standard. However, it is hard to obtain reliable psychophysical data from infants, children and adults with neuological disorders. In these cases, SSVEP measurements represent a fast and efficient method for measuring low-level visual responses [Norcia, Tyler, Braddick].
+
+Measuring the SSVEP at multiple levels was made faster by the development of the ‘sweep VEP’ paradigm in which the stimulus changes its contrast (or some other property) throughout a trial - for example gradually increasing in contrast or spatial frequency. To avoid hysteresis effects, the sweep was sometimes conducted both up and down in the same experiment [Tyler, Norcia etc]. 
 
 ```{python}
+
+#| label: SweepVEP Deteection threshold estimate
+#| fig-cap: "a"
+#| fig-cap-location: bottom
+
+
+import matplotlib.pyplot as plt
+from matplotlib import colormaps
+import numpy as np
+import scipy as scp
+from sklearn.linear_model import LinearRegression
+
+
+
+def simpleTransducerFunction(inputContrast, c50, RMax):
+ # Here we model a simple hyperbolic ratio function. Also called a "Naka-Rushton" function.
+ # RMax defines the reponse gain of the transducer (how big the biggest output is). 
+ # c50 defines the conrast sensitivity. Smaller values are more sensitive.
+ # The exponent can also vary - here we fix it to 2
+  expnt=2
+  output=RMax*(inputContrast**expnt)/(inputContrast**expnt + c50**expnt)
+  return output
+
+# Define some constants
+nLevels=8
+internalNoise=1
+inputFrequency_Hz=np.array([5]) # We simulate a system with on input at many different contrasts
+contrastRange=np.logspace(1,1.9,nLevels)/100 # Equally spaced log contrast between 1 and 10^1.5
+duration_S=1 # All variables in this code have an _[units] where possible
+digitisationRate_Hz=1000
+freqCutoff_Hz=30
+
+support_S=np.linspace(0,duration_S,duration_S*digitisationRate_Hz)
+
+initialSignal=[] # Create lists to hold the initial contrast representation and the result of passign it through a simple Naka-Rushton function
+transducedSignal=[]
+
+fig, axs = plt.subplots(1,1, figsize=(4, 3))
+
+initialSignal = np.zeros(len(contrastRange))
+transducedSignal = np.zeros(len(contrastRange))
+for contrastIndex,thisContrast in enumerate(contrastRange):
+  inputModulation = np.sin(2 * np.pi * inputFrequency_Hz * support_S) * thisContrast + np.random.rand(len(support_S))*internalNoise
+
+  FT_Signal = np.fft.fft(inputModulation) / len(inputModulation)
+
+  responseAmplitude = np.abs(FT_Signal[inputFrequency_Hz])
+  initialSignal[contrastIndex]=responseAmplitude[0]
+  transducedSignal[contrastIndex]=simpleTransducerFunction(responseAmplitude[0], 0.05, 10)
+
+# Now fit a linear regression to the first 4 contrast levels (before it saturates) and find out where this crosses the Y-axis
+X = np.log10(contrastRange[:4]).reshape(-1, 1)
+y = transducedSignal[:4]
+reg = LinearRegression().fit(X, y)
+x_intercept = 10 ** (-reg.intercept_ / reg.coef_[0])
+
+axs.set_title(f'Simulated sweep VEP at {nLevels} different contrasts', fontsize=10)
+axs.semilogx(contrastRange, transducedSignal, 'o')
+axs.semilogx(contrastRange[:4], reg.predict(X), 'r--', label='Linear Fit')
+axs.semilogx([x_intercept], [0], 'ro', label='Threshold')
+axs.set_xlabel('Contrast')
+axs.set_ylabel('Amplitude (a.u.)')
+axs.set_xlim(0.01, 1)
+axs.set_ylim(0, 10)
+axs.legend()
+axs.grid()
+plt.tight_layout()
+plt.show()
 
 
 
 ```
 
-In early work on infants, the ‘sweep VEP’ paradigm was developed to measure SSVEP activity in response to a stimulus that changes its properties throughout a trial, for example gradually increasing in contrast or spatial frequency. Other studies keep the stimulus properties constant for the entire trial, which avoids serial effects and makes the analysis more straightforward.
+
+
+
 
 
 Figures:
@@ -184,19 +317,20 @@ for contrastIndex,thisContrast in enumerate(contrastRange):
   responseAmplitude = np.abs(FT_Signal[inputFrequency_Hz])
   initialSignal[contrastIndex]=responseAmplitude[0]
   transducedSignal[contrastIndex]=simpleTransducerFunction(responseAmplitude[0], 0.05, 10)
+axs[0].set_title('Sine-wave responses at\n different contrast levels', fontsize=10)
 
 
 
 axs[1].plot(contrastRange,initialSignal)
 axs[1].set_xlabel('Contrast')
 axs[1].set_ylabel('Amplitude (a.u.)')
-axs[1].set_title('Linear computation stage')
+axs[1].set_title('Linear computation stage', fontsize=10)
 axs[1].grid()
 
 axs[2].plot(contrastRange,transducedSignal)
 axs[2].set_xlabel('Contrast')
 axs[2].set_ylabel('Amplitude (a.u.)')
-axs[2].set_title('After nonlinear transducer')
+axs[2].set_title('After nonlinear transducer', fontsize=10)
 
 axs[2].grid()
 plt.tight_layout()
