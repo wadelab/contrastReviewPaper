@@ -24,12 +24,15 @@ Contrast is relatively simple to define: typically, contrast is specificed as th
 Although its definition is simple, the computations that underlie contrast processing have been the subject of intense research for many decades. The neural code for contrast, even in the earliest parts of visual cortex, is not simply a linear transform of the contrast at the retina - instead, contrast signals undergo a cascade of nonlinear processing stages that, broadly, attempt to normalise the output relative to the spatiotemporal environment. This normalization, achieved through a computation called 'contrast gain control' [Heeger 92, Heeger and Carandini 2011] maximises the sensitivity of the visual system by making optimal use of neuronal bandwidth. As an example, a grating seen on a low-contrast background tpyically appears more intense than the same grating when superimposed on a high contrast background. A signifcant part of research into contrast processing is concerned with how these normalization mechanisms depend on colour, orientation, eye of origin, spatial and temporal frequency, age, and the presence of neurological disorders. The SSVEP has proven to be invaliable in this research because it provides an objective readout of contrast representation at different parts of the visual system and allows us to 'tag' the probe and background separately.
 
 ### The development of contrast processing
-In early work on infants, the ‘sweep VEP’ paradigm was developed to measure SSVEP activity in response to a stimulus that changes its properties throughout a trial, for example gradually increasing in contrast or spatial frequency. Other studies keep the stimulus properties constant for the entire trial, which avoids serial effects and makes the analysis more straightforward.
-
 Because it provides a direct read-out of neural population activity, the SSVEP signal can reveal key features of neural signal transduction. By varying the peak stimulus contrast parametrically, a 'contrast vs response' function can be measured - where the 'response' is typically defined as the amplitude of the SSVEP frequency component at the stimulus frequency or a low multiple thereof. This corresponds closely to similar functions measured in single unit studies, or those measuring local field potentials invasively in the cortex. However SSVEP has the advantage that it is non-invasive, and so can be measured in awake, behaving human participants. An early use of the contrast response function was to provide an automated estimate of contrast sensitivity, without requiring behavioural responses from the participant. This was achieved by measuring the contrast response function, and extrapolating back along the function to estimate its intercept with the x-axis, which was shown to correspond with psychophysically measured detection thresholds (REFS). This general approach revealed much about the development of visual abilities in infants (Braddick), as well as deficits in neurological disease. In well-motivated adults, psychophysical measurements remain the gold standard. However, it is hard to obtain reliable psychophysical data from infants, children and adults with neuological disorders. In these cases, SSVEP measurements represent a fast and efficient method for measuring low-level visual responses.
 
+```{python}
 
 
+
+```
+
+In early work on infants, the ‘sweep VEP’ paradigm was developed to measure SSVEP activity in response to a stimulus that changes its properties throughout a trial, for example gradually increasing in contrast or spatial frequency. Other studies keep the stimulus properties constant for the entire trial, which avoids serial effects and makes the analysis more straightforward.
 
 
 Figures:
@@ -74,49 +77,6 @@ plt.show()
 ```
 
 
-It is relatively easy to write the same thing in R. This is a 'machine translation' using Anthropic's Claude3 LLM. You need to modify your R environment to include the reticulate package (and probably some others... rmarkdown for one?)
-
-Note that once you have this working, you can pass data back and fore between R and python!
-
-
-
-```{r}
-
-library(ggplot2)
-
-inputFrequencies_Hz <- c(5, 7)
-duration_S <- 1
-digitisationRate_Hz <- 1000
-
-support_S <- seq(0, duration_S, length.out = duration_S * digitisationRate_Hz)
-
-inputModulations <- matrix(0, nrow = length(support_S), ncol = length(inputFrequencies_Hz))
-for (i in seq_along(inputFrequencies_Hz)) {
-  freq <- inputFrequencies_Hz[i]
-  inputModulations[, i] <- sin(2 * pi * freq * support_S)
-}
-
-# Create a data frame for plotting
-data <- data.frame(
-  Time = rep(support_S, length(inputFrequencies_Hz)),
-  Amplitude = c(inputModulations),
-  Frequency = factor(rep(inputFrequencies_Hz, each = length(support_S)))
-)
-
-# Create the plot using ggplot2
-plot <- ggplot(data, aes(x = Time, y = Amplitude)) +
-  geom_line() +
-  facet_wrap(~ Frequency, ncol = 1) +
-  scale_x_continuous(name = "Time (s)", limits = c(0, duration_S)) +
-  scale_y_continuous(name = "Amplitude") +
-  ggtitle("Input Modulations") +
-  theme_bw() +
-  theme(plot.title = element_text(hjust = 0.5))
-
-print(plot)
-
-```
-
 The two inputs are represented here as amplitude modulations across time. 
 
 If the two inputs are simply added together, the representation of the resulting signal in the Fourier domain is just the linear sum of the two independent signals:
@@ -126,6 +86,26 @@ If the two inputs are simply added together, the representation of the resulting
 #| label: plotspectra
 #| fig-cap: "a"
 #| fig-cap-location: bottom
+
+#| label: plotsinewaves
+#| fig-cap: "a) A typical SSVEP setup: a screen, a grating, a flicker rate: b) The responses from a single electrode (time domain) c) Frequency domain"
+#| fig-cap-location: bottom
+#| 
+import matplotlib.pyplot as plt
+import numpy as np
+import scipy as scp
+
+inputFrequencies_Hz=np.array([5,7]) # We simulate a system with two input frequencies (perhaps contrast-reversing gratings?)
+
+duration_S=1 # All variables in this code have an _[units] where possible
+
+digitisationRate_Hz=1000
+
+support_S=np.linspace(0,duration_S,duration_S*digitisationRate_Hz)
+
+inputModulations = np.zeros((len(support_S), len(inputFrequencies_Hz)))
+for i, freq in enumerate(inputFrequencies_Hz):
+    inputModulations[:, i] = np.sin(2 * np.pi * freq * support_S)
 
 freqCutoff_Hz=30
 combinedSignal=np.sum(inputModulations,axis=1)
@@ -151,6 +131,77 @@ plt.show()
 
 ```
 
+```{python}
+
+#| label: ContrastResponseFunction
+#| fig-cap: "a"
+#| fig-cap-location: bottom
+
+#| label: plotsinewaves
+#| fig-cap: "a) A typical SSVEP setup: a screen, a grating, a flicker rate: b) The responses from a single electrode (time domain) c) Frequency domain"
+#| fig-cap-location: bottom
+#| 
+import matplotlib.pyplot as plt
+from matplotlib import colormaps
+import numpy as np
+import scipy as scp
+
+
+def simpleTransducerFunction(inputContrast, c50, RMax):
+ # Here we model a simple hyperbolic ratio function. Also called a "Naka-Rushton" function.
+ # RMax defines the reponse gain of the transducer (how big the biggest output is). 
+ # c50 defines the conrast sensitivity. Smaller values are more sensitive.
+ # The exponent can also vary - here we fix it to 2
+  expnt=2.5
+  output=RMax*(inputContrast**expnt)/(inputContrast**expnt + c50**expnt)
+  return output
+
+# Define some constants
+inputFrequency_Hz=np.array([5]) # We simulate a system with on input at many different contrasts
+contrastRange=np.logspace(0,1.5,20)/100 # Equally spaced log contrast between 1 and 10^1.5
+duration_S=1 # All variables in this code have an _[units] where possible
+digitisationRate_Hz=1000
+freqCutoff_Hz=30
+
+support_S=np.linspace(0,duration_S,duration_S*digitisationRate_Hz)
+
+initialSignal=[] # Create lists to hold the initial contrast representation and the result of passign it through a simple Naka-Rushton function
+transducedSignal=[]
+
+fig, axs = plt.subplots(1,3, figsize=(8, 3))
+
+initialSignal = np.zeros(len(contrastRange))
+transducedSignal = np.zeros(len(contrastRange))
+for contrastIndex,thisContrast in enumerate(contrastRange):
+  inputModulation = np.sin(2 * np.pi * inputFrequency_Hz * support_S) * thisContrast
+
+  axs[0].plot(support_S, inputModulation)
+
+  FT_Signal = np.fft.fft(inputModulation) / len(inputModulation)
+
+  responseAmplitude = np.abs(FT_Signal[inputFrequency_Hz])
+  initialSignal[contrastIndex]=responseAmplitude[0]
+  transducedSignal[contrastIndex]=simpleTransducerFunction(responseAmplitude[0], 0.05, 10)
+
+
+
+axs[1].plot(contrastRange,initialSignal)
+axs[1].set_xlabel('Contrast')
+axs[1].set_ylabel('Amplitude (a.u.)')
+axs[1].set_title('Linear computation stage')
+axs[1].grid()
+
+axs[2].plot(contrastRange,transducedSignal)
+axs[2].set_xlabel('Contrast')
+axs[2].set_ylabel('Amplitude (a.u.)')
+axs[2].set_title('After nonlinear transducer')
+
+axs[2].grid()
+plt.tight_layout()
+plt.show()
+
+
+```
 
 *2: Sweeps and CRFs. Measurements of contrast sensitivity, extrapolating
 the sweep to zero response to get t'hold. Infants and adults?*
