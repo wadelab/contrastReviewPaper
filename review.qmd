@@ -85,16 +85,19 @@ plt.show()
 
  A signifcant part of research into contrast processing is concerned with how these normalization mechanisms depend on colour, orientation, eye of origin, spatial and temporal frequency, age, and the presence of neurological disorders [refs: Chen and Foley, Petrov etc Carandini, Binocular normalization / suppression (Baker/Meese but also e.g. Heeger), Tadin, Winawer, Wade, Porciatti, Tsai...]. The SSVEP has proven to be invaliable in this research because it provides an objective readout of contrast representation at different parts of the visual system and allows us to 'tag' the probe and background separately.
 
-### The development of contrast processing
 Because it provides a direct read-out of neural population activity, the SSVEP signal can reveal key features of neural signal transduction. For example, by varying the peak stimulus contrast parametrically, a 'contrast vs response' function can be measured - where the 'response' is typically defined as the amplitude of the SSVEP frequency component at the stimulus frequency or a low multiple thereof. This corresponds closely to similar functions measured in single unit studies, or those measuring local field potentials invasively in the cortex[@ShapleyVictor etc]. However the SSVEP has the advantage that it is non-invasive, and so can be measured in awake, behaving human participants. 
 
-An early use of the contrast response function was to provide an automated estimate of contrast sensitivity, without requiring behavioural responses from the participant. Because SSVEP response at detection threshold are very small, this was achieved by measuring the contrast response function at relatively high levels, and extrapolating back along the function to estimate its intercept with the x-axis, which was shown to correspond with psychophysically measured detection thresholds [(REFS)]. This general approach revealed much about the development of visual abilities in infants [@braddick], as well as deficits in neurological disease. 
+### The development of contrast processing
 
-In well-motivated adults, psychophysical measurements of contrast sensitivity remain the gold standard. However, it is hard to obtain reliable psychophysical data from infants, children and adults with neuological disorders. In these cases, SSVEP measurements represent a fast and efficient method for measuring low-level visual responses [Norcia, Tyler, Braddick, Porciatti, Tsai...].
+An early use of the contrast response function was to provide an automated estimate of spatial contrast sensitivity in infants, without requiring behavioural responses. 
 
-Measuring the SSVEP at multiple levels was made faster by the development of the ‘sweep VEP’ paradigm in which the stimulus changed its contrast, or some other property, throughout a trial - for example gradually increasing in spatial frequency [Tyler, Nakayama etc 1979]. To avoid hysteresis effects, the sweep is sometimes conducted both up and down in the same experiment [Tyler, Norcia etc: 1985, 1990 etc]. 
+In well-motivated adults, psychophysical measurements of contrast sensitivity remain the gold standard. However, it is difficult and time consuming to obtain reliable psychophysical data from infants. In these cases, SSVEP measurements represent a fast and efficient method for measuring low-level visual responses [Norcia, Tyler, Braddick].
 
-In general, SSVEP measurements of infant vision have revealed that the development of spatial acuity for both achromatic and chromatic contrast as well as stereoscopic depth perception was faster than had been supposed previously based on behavioural measures [@DobsonTeller78, @NorciaTyler85, @NorciaGerhard 15]
+Because SSVEP response at detection threshold are very small, this was achieved by measuring the contrast response function at relatively high levels, and extrapolating back along the function (either contrast vs response measured at a constant spatial frequency or spatial frequency vs response at a constant contrast level) to estimate its intercept with the x-axis. This contrast level was shown to correspond approximately with psychophysically measured detection thresholds [@DaleNorciaTyler86]. 
+
+Measuring the SSVEP at multiple levels was made faster by the development of the ‘sweep VEP’ paradigm in which the stimulus changed its contrast, spatial frequency or some other property, throughout a trial [Tyler, Nakayama etc 1979]. To avoid hysteresis effects, the sweep is sometimes conducted both up and down in the same experiment [Tyler, Norcia etc: 1985, 1990 etc]. This general approach revealed much about the development of visual abilities in infants [@braddick], as well as deficits in neurological disease. 
+
+In general, SSVEP measurements of infant vision have revealed that the development of spatial acuity for both achromatic and chromatic contrast as well as stereoscopic depth perception is faster than had been supposed previously based on behavioural readouts [@DobsonTeller78, @NorciaTyler85, @NorciaGerhard 15]. At least some of this difference is likely due to the high SNR of the SSVEP technique.
 
 ```{python}
 
@@ -168,9 +171,10 @@ plt.show()
 
 ```
 
-As well as measuing contrast thresholds for a stimulus with a fixed spatiotemporal frequency, this technique can also be used to assess spatial frequency thresholds [ REFS - Almoqbel etc.]. Because of its relative speed and simplicity, this technique has now become a standard for conducting tests of visual acuity in young subjects [Ridder2004 Diva vs Enfant, Hoffman, Bach and Farmer].
+The sweep VEP (really, a sweep 'SSVEP') technique is now commonly-used to obtain a rapid and objective measurement of visual acuity. In particular, because of its relative speed and simplicity, this technique has now become a standard for conducting tests of visual acuity in very young subjects or where behavioural tests are not appropriate [Ridder2004 Diva vs Enfant, Hoffman, Bach and Farmer].
 
-
+# Contrast processing - gain control
+Previous figures showed how a single-input SSVEP might generate a single peak in the FT response which, in turn, can be used as a read-out of neuronal activity.  Here, we show that adding a second contrast component can generate intermodulation and that the two components interact. The nature of the interaction is determined by the precise computations happening as the contrast signal moves from retina to cortex.
 
 Figures:
 
