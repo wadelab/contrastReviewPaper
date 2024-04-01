@@ -172,7 +172,9 @@ plt.show()
 The sweep VEP (really, a sweep 'SSVEP') technique is now commonly-used to obtain a rapid and objective measurement of visual acuity. In particular, because of its relative speed and simplicity, this technique has now become a standard for conducting tests of visual acuity in very young subjects or where behavioural tests are not appropriate [Ridder2004 Diva vs Enfant, Hoffman, Bach and Farmer].
 
 # Contrast processing - gain control
-Previous figures showed how a single-input SSVEP might generate a single peak in the FT response which, in turn, can be used as a read-out of neuronal activity.  Here, we show that adding a second contrast component can generate intermodulation and that the two components interact. The nature of the interaction is determined by the precise computations happening as the contrast signal moves from retina to cortex.
+Previous figures showed how a single-input SSVEP might generate a single set of peaks in the frequency domain response which, in turn, can be used as a read-out of neuronal activity.  
+
+Here, we show that adding a second contrast component can generate intermodulation and that the two components interact. The nature of the interaction is determined by the precise computations happening as the contrast signal moves from retina to cortex.
 
 Figures:
 
