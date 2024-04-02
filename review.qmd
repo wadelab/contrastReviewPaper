@@ -172,14 +172,26 @@ plt.show()
 ```
 
 The sweep VEP (really, a sweep 'SSVEP') technique is now commonly-used to obtain a rapid and objective measurement of visual acuity. In particular, because of its relative speed and simplicity, this technique has now become a standard for conducting tests of visual acuity in very young subjects or where behavioural tests are not appropriate [@Ridder2004 Diva vs Enfant, @Hoffman, @Bach and @Farmer].
+The sweep VEP (really, a sweep 'SSVEP') technique is now commonly-used to obtain a rapid and objective measurement of visual acuity. In particular, because of its relative speed and simplicity, this technique has now become a standard for conducting tests of visual acuity in very young subjects or where behavioural tests are not appropriate [@Ridder2004; @Hoffman; @Bach; @Farmer].
 
 # Contrast processing - linear and nonlinear 
 
-Neurons have a limited dynamic range yet they can transmit information about  visual stimuli that span many order of magnitude. In the domain of contrast, to some extent this is accomplished at a population level - individual neurons typically implement a non-linear,sigmoidal contrast vs response (CRF) transducer and different neurons exhibit peak sensitivity (the maximum slope of the function) at different contrast levels [@Early matteo stuff, Busse refs]. Individual neurons at multiple stages of the visual hierarchy also change their sensitivity depending on the average spatiotemporal contrast energy of their environment. This normalisation process is dynamic and nonlinear and is well-modeled by a hyperbolic ratio function in which the response of each neuron is modulated by a local 'gain pool' composed of the summed respnses of the local neuronal population.[@Heeger 92, @Carandini and Heeger 2011 @Busse 2008, @Baker and Wade] 
+Neurons have a limited dynamic range yet they can transmit information about  visual stimuli that span many order of magnitude. In the domain of contrast, to some extent this is accomplished at a population level - individual neurons typically implement a non-linear,sigmoidal contrast vs response (CRF) transducer and different neurons exhibit peak sensitivity (defined as the maximum slope of the function) at different contrast levels [@Early matteo stuff, Busse refs]. A neuronal population will therefor span a sensitivity range greater than any individual member,
+Neurons have a limited dynamic range yet they can transmit information about visual stimuli that span many orders of magnitude. In the domain of contrast, to some extent this is accomplished at a population level - individual neurons typically implement a non-linear, sigmoidal contrast vs response (CRF) transducer and different neurons exhibit peak sensitivity (defined as the maximum slope of the function) at different contrast levels [@EarlyMatteoStuff; @BusseRefs]. A neuronal population will therefore span a sensitivity range greater than any individual member.
+
+ Individual neurons at multiple stages of the visual hierarchy also change their sensitivity depending on the average spatiotemporal contrast energy of their environment. This "normalisation" process is dynamic and nonlinear and is well-modeled by a hyperbolic ratio function in which the response of each neuron is modulated by a local 'gain pool' composed of the summed respnses of the local neuronal population.[@Heeger 92, @Carandini and Heeger 2011 @Busse 2008, @Baker and Wade] 
+Individual neurons at multiple stages of the visual hierarchy also change their sensitivity depending on the average spatiotemporal contrast energy of their environment. This "normalisation" process is dynamic and nonlinear and is well-modeled by a hyperbolic ratio function in which the response of each neuron is modulated by a local 'gain pool' composed of the summed responses of the local neuronal population [@Heeger1992; @CarandiniHeeger2011; @Busse2008; @BakerWade].
 
 Previous figures showed how a single-input SSVEP might generate a single set of peaks in the frequency domain response which, in turn, can be used as a read-out of neuronal activity.  
 
-Here, we show that adding a second contrast component can generate intermodulation and that the two components interact. The nature of the interaction is determined by the precise computations happening as the contrast signal moves from retina to cortex.
+Here, we show the effect of adding a second contrast component: in general, the two components interact generating nonlinear intermodulation terms at sums and differences of the input frequencies (F1, F2). The nature of the interaction --- and therefore the pattern of intermodulation terms ---  is determined by the computations happening as the contrast signal moves from retina to cortex [@Regan]
+
+Here, we show the effect of adding a second contrast component: in general, the two components interact generating nonlinear intermodulation terms at sums and differences of the input frequencies (F1, F2). The nature of the interaction --- and therefore the pattern of intermodulation terms --- is determined by the computations happening as the contrast signal moves from retina to cortex [@Regan].
+First, we implement a simple non-linear transducer with a single input to illustrate the typical signoidal shape of a contrast response function.
+(Figure xx)
+
+Next, we show that adding a second component which contributes to the gain pool of the first, results in a complex pattern of intermodulation terms.
+
 
 Figures:
 
@@ -224,7 +236,7 @@ plt.show()
 
 The two inputs are represented here as amplitude modulations across time. 
 
-If the two inputs are simply added together, the representation of the resulting signal in the Fourier domain is just the linear sum of the two independent signals:
+If the two inputs are simply added together, the representation of the resulting signal in the Fourier domain is just the linear sum of the two independent signals. However, it is important to take physiology into account. Contrast is represented as a combination of rectified signals from 'on and 'off'-sensitive cells (broadly, cells sensitive to positive or negative changes in spatiotemporal luminace). To model the population response to a contrast-reversing luminance sine wave, we therefore introduce an initial full-wave rectification stage that simulates the outputs of two equal populations of on- and off-polarity detectors. Once this is done, we see that the FT of the resulting signal contains power only at the second harmonics and above. It is possible to generate first-hamonic responses in contrast-response SSVEPs but only when the inputs are modulated in an 'on/off' manner rather than contrast reversed. 
 
 ```{python}
 
@@ -254,12 +266,14 @@ for i, freq in enumerate(inputFrequencies_Hz):
 
 freqCutoff_Hz=30
 combinedSignal=np.sum(inputModulations,axis=1)
+combinedRectifiedSignal=np.sum(np.abs(inputModulations), axis=1)
 FT_combinedSignal=np.fft.fft(combinedSignal)/len(combinedSignal)
-fig,axs=plt.subplots(1,2,figsize=(8,6))
+FT_combinedRectifiedSignal=np.fft.fft(combinedRectifiedSignal)/len(combinedSignal)
+fig,axs=plt.subplots(1,4,figsize=(8,3))
 axs[0].plot(support_S,combinedSignal)
 axs[0].set_xlabel('Time (s)')
 axs[0].set_ylabel('Amplitude (a.u.)')
-axs[0].set_title('Input signals with linear combination')
+axs[0].set_title('Input signals:\nlinear combination')
 
 # Create the frequency support for the FFT plot
 frequencySupport = np.arange(1,freqCutoff_Hz*duration_S+1) # We only want to plot the frequencies in the FFT up to this point
@@ -268,7 +282,18 @@ frequencySupport = np.arange(1,freqCutoff_Hz*duration_S+1) # We only want to plo
 axs[1].bar(frequencySupport, np.abs(FT_combinedSignal[frequencySupport]))
 axs[1].set_xlabel('Frequency (Hz)')
 axs[1].set_ylabel('Magnitude (a.u.)')
-axs[1].set_title('FFT of Combined Signal')
+axs[1].set_title('FFT\n linear combination')
+# Plot the absolute values of the FFT in the second axis as a bar plot
+
+axs[2].plot(support_S,combinedRectifiedSignal)
+axs[2].set_xlabel('Time (s)')
+axs[2].set_ylabel('Amplitude (a.u.)')
+axs[2].set_title('Sum rectified inputs')
+
+axs[3].bar(frequencySupport, np.abs(FT_combinedRectifiedSignal[frequencySupport]))
+axs[3].set_xlabel('Frequency (Hz)')
+axs[3].set_ylabel('Magnitude (a.u.)')
+axs[3].set_title('FFT of\n sum rectified inputs')
 
 plt.tight_layout()
 plt.show()
@@ -276,16 +301,14 @@ plt.show()
 
 ```
 
+Althoug
 ```{python}
 
 #| label: ContrastResponseFunction
 #| fig-cap: "a"
 #| fig-cap-location: bottom
 
-#| label: plotsinewaves
-#| fig-cap: "a) A typical SSVEP setup: a screen, a grating, a flicker rate: b) The responses from a single electrode (time domain) c) Frequency domain"
-#| fig-cap-location: bottom
-#| 
+
 import matplotlib.pyplot as plt
 from matplotlib import colormaps
 import numpy as np
@@ -297,7 +320,11 @@ def simpleTransducerFunction(inputContrast, c50, RMax):
  # RMax defines the reponse gain of the transducer (how big the biggest output is). 
  # c50 defines the conrast sensitivity. Smaller values are more sensitive.
  # The exponent can also vary - here we fix it to 2
-  expnt=2.5
+  expnt=2
+
+  # Contrast cannot be negative. To model the responses of a set of on and off 
+  # contrast detectors we perform full-wave rectification of the signal
+  inputContrast=np.abs(inputContrast)
   output=RMax*(inputContrast**expnt)/(inputContrast**expnt + c50**expnt)
   return output
 
@@ -307,6 +334,8 @@ contrastRange=np.logspace(0,1.5,20)/100 # Equally spaced log contrast between 1 
 duration_S=1 # All variables in this code have an _[units] where possible
 digitisationRate_Hz=1000
 freqCutoff_Hz=30
+c50=.10
+RMax=10
 
 support_S=np.linspace(0,duration_S,duration_S*digitisationRate_Hz)
 
@@ -323,13 +352,18 @@ for contrastIndex,thisContrast in enumerate(contrastRange):
   axs[0].plot(support_S, inputModulation)
 
   FT_Signal = np.fft.fft(inputModulation) / len(inputModulation)
+ 
+  inputAmplitude = np.abs(FT_Signal[inputFrequency_Hz])
+  initialSignal[contrastIndex]=inputAmplitude[0] 
 
-  responseAmplitude = np.abs(FT_Signal[inputFrequency_Hz])
-  initialSignal[contrastIndex]=responseAmplitude[0]
-  transducedSignal[contrastIndex]=simpleTransducerFunction(responseAmplitude[0], 0.05, 10)
+   # Now compute the FT on the signal after it has passed through a single non-linearity. Do this 
+   # using the transducer functiona above.
+  transducedModulation=simpleTransducerFunction(inputModulation, c50,RMax)
+  FT_transducedModulation=np.fft.fft(transducedModulation)/ len(transducedModulation)
+  transducedAmplitude = np.abs(FT_transducedModulation[inputFrequencies_Hz*2])
+  transducedSignal[contrastIndex]=transducedAmplitude[0]
+
 axs[0].set_title('Sine-wave responses at\n different contrast levels', fontsize=10)
-
-
 
 axs[1].plot(contrastRange,initialSignal)
 axs[1].set_xlabel('Contrast')
@@ -348,6 +382,76 @@ plt.show()
 
 
 ```
+
+
+Notice the slight roll-off in the amplitude of the second harmonic at high input contrasts. This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity. Power at other harmonics increases and the total power generated by the input is monotonic. This roll-off is often seen in experimental data and has been referred to as 'supersaturation' [@Tyler] 
+
+
+Here, we include a second component that contributes to the gain pool of the first. At a single pair of (matched) contrast levels, we see a complex pattern of intermodulation terms in the FT.
+
+```{python}
+#| label: MaskedContrastResponseFunction
+#| fig-cap: "a"
+#| fig-cap-location: bottom
+
+import matplotlib.pyplot as plt
+from matplotlib import colormaps
+import numpy as np
+import scipy as scp
+
+
+def simpleTransducerFunction(inputContrast, maskContrast, c50, RMax):
+ # Here we model a simple hyperbolic ratio function. Also called a "Naka-Rushton" function.
+ # RMax defines the reponse gain of the transducer (how big the biggest output is). 
+ # c50 defines the conrast sensitivity. Smaller values are more sensitive.
+ # The exponent can also vary - here we fix it to 2
+  expnt=2
+  inputContrast=np.abs(inputContrast)
+  maskContrast=np.abs(maskContrast)
+
+  output=RMax*(inputContrast**expnt)/(inputContrast**expnt + maskContrast**expnt + c50**expnt)
+  return output
+
+# Define some constants
+inputFrequency_Hz=np.array([5,7]) # We simulate a system with two inputs at a single contrast
+inputContrasts=np.array([.2 ,.2])
+duration_S=1 # All variables in this code have an _[units] where possible
+digitisationRate_Hz=1000
+freqCutoff_Hz=30
+c50=.10
+RMax=10
+
+support_S=np.linspace(0,duration_S,duration_S*digitisationRate_Hz)
+
+initialSignal=[] # Create lists to hold the initial contrast representation and the result of passign it through a simple Naka-Rushton function
+transducedSignal=[]
+
+fig, axs = plt.subplots(1,3, figsize=(8, 3))
+
+inputModulation = np.sin(2 * np.pi * inputFrequency_Hz[0] * support_S) * inputContrasts[0]
+maskModulation =  np.sin(2 * np.pi * inputFrequency_Hz[1] * support_S) * inputContrasts[1]
+
+axs[0].plot(support_S, inputModulation,'k')
+axs[0].plot(support_S, maskModulation,'r')
+axs[0].set_title('Input modulations', fontsize=10)
+axs[0].grid()
+
+combinedSignal=simpleTransducerFunction(inputModulation, maskModulation, c50,RMax)
+FT_combinedSignal=np.abs(np.fft.fft(combinedSignal)/ len(combinedSignal))
+axs[1].plot(support_S, combinedSignal,'k')
+axs[1].set_title('Combined signal after transducer', fontsize=10)
+axs[1].grid()
+
+axs[2].bar(np.arange(1,19), FT_combinedSignal[1:19])
+
+axs[2].grid()
+plt.tight_layout()
+plt.show()
+
+
+```
+
+
 
 *2: Sweeps and CRFs. Measurements of contrast sensitivity, extrapolating
 the sweep to zero response to get t'hold. Infants and adults?*

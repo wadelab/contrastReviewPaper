@@ -7,3 +7,4 @@
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf
+*.png
