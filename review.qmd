@@ -179,6 +179,9 @@ The sweep VEP (really, a sweep 'SSVEP') technique is now commonly-used to obtain
 Neurons have a limited dynamic range yet they can transmit information about  visual stimuli that span many order of magnitude. In the domain of contrast, to some extent this is accomplished at a population level - individual neurons typically implement a non-linear,sigmoidal contrast vs response (CRF) transducer and different neurons exhibit peak sensitivity (defined as the maximum slope of the function) at different contrast levels [@Early matteo stuff, Busse refs]. A neuronal population will therefor span a sensitivity range greater than any individual member,
 Neurons have a limited dynamic range yet they can transmit information about visual stimuli that span many orders of magnitude. In the domain of contrast, to some extent this is accomplished at a population level - individual neurons typically implement a non-linear, sigmoidal contrast vs response (CRF) transducer and different neurons exhibit peak sensitivity (defined as the maximum slope of the function) at different contrast levels [@EarlyMatteoStuff; @BusseRefs]. A neuronal population will therefore span a sensitivity range greater than any individual member.
 
+
+
+
  Individual neurons at multiple stages of the visual hierarchy also change their sensitivity depending on the average spatiotemporal contrast energy of their environment. This "normalisation" process is dynamic and nonlinear and is well-modeled by a hyperbolic ratio function in which the response of each neuron is modulated by a local 'gain pool' composed of the summed respnses of the local neuronal population.[@Heeger 92, @Carandini and Heeger 2011 @Busse 2008, @Baker and Wade] 
 Individual neurons at multiple stages of the visual hierarchy also change their sensitivity depending on the average spatiotemporal contrast energy of their environment. This "normalisation" process is dynamic and nonlinear and is well-modeled by a hyperbolic ratio function in which the response of each neuron is modulated by a local 'gain pool' composed of the summed responses of the local neuronal population [@Heeger1992; @CarandiniHeeger2011; @Busse2008; @BakerWade].
 
@@ -236,12 +239,12 @@ plt.show()
 
 The two inputs are represented here as amplitude modulations across time. 
 
-If the two inputs are simply added together, the representation of the resulting signal in the Fourier domain is just the linear sum of the two independent signals. However, it is important to take physiology into account. Contrast is represented as a combination of rectified signals from 'on and 'off'-sensitive cells (broadly, cells sensitive to positive or negative changes in spatiotemporal luminace). To model the population response to a contrast-reversing luminance sine wave, we therefore introduce an initial full-wave rectification stage that simulates the outputs of two equal populations of on- and off-polarity detectors. Once this is done, we see that the FT of the resulting signal contains power only at the second harmonics and above. It is possible to generate first-hamonic responses in contrast-response SSVEPs but only when the inputs are modulated in an 'on/off' manner rather than contrast reversed. 
+If the two inputs are simply added together, the representation of the resulting signal in the Fourier domain is just the linear sum of the two independent signals. However, it is important to take physiology into account. If we ignore cells sensitive to contrast transients, contrast is represented as a combination of rectified signals from 'on and 'off'-sensitive cells (broadly, cells that code positive or negative changes in spatiotemporal luminance). To model the population response of these cells to a contrast-reversing luminance sine wave, we therefore introduce an initial full-wave rectification stage that simulates the outputs of two, equal populations of on- and off-polarity detectors. Once this is done, we see that the FT of the resulting signal contains power only at the second harmonics and above. It is possible to generate first-hamonic responses in contrast-response SSVEPs but only when the inputs are modulated in an 'on/off' manner rather than contrast reversed. 
 
 ```{python}
 
 #| label: plotspectra
-#| fig-cap: "a"
+#| fig-cap: "Temporal frequency representations of linar combinations of inputs."
 #| fig-cap-location: bottom
 
 #| label: plotsinewaves
@@ -301,11 +304,17 @@ plt.show()
 
 ```
 
-Althoug
+Even without considering a spatial component, the early visual system is far more complex than the model here suggests. For example as well as cells that code positive or negative contrast in a more or less continuous manner, the retina also contains 'transient' cells that code termporal changes in contrast. These cells (@ Movshon? Levitt? Earlier... Kuffler? H+W? Alpern?) will introduce second harmonic components even when the stimulus itself is modulated in an on-off fashion. Analogously, in the spatial domain, so-called 'simple cells' are sensitive to the polarity of a spatial contrast modulation while 'complex cells' respond to the presence of patterned spatial contrast irrespective of its spatial position. The SSVEP response to a contrast-reversing sine-wave grating therefore contains information about nonlinear computations performed across a range of retinal and cortical cell types.
+
+
+One of the simplest nonlinearities is the response function that describes a cell's response to different levels of contrast. In Figure xxx this is modeled as described above by a hyperbolic ratio function resulting in a saturating non-linearity. 
+${R{\mathrm{max}}}\frac{C{\mathrm{in}}^n}{C{\mathrm{in}}^n+ C{\mathrm{50}}^n}$ where ${R{\mathrm{max}}}$ describes the maximum response level, $C{\mathrm{50}}$ is the 'semi-saturation constant' (the point at which the reponse is at half-maximum) and n controls the steepness of the curve.
+
+
 ```{python}
 
 #| label: ContrastResponseFunction
-#| fig-cap: "a"
+#| fig-cap: "Non-linear contrast response function"
 #| fig-cap-location: bottom
 
 
@@ -384,13 +393,13 @@ plt.show()
 ```
 
 
-Notice the slight roll-off in the amplitude of the second harmonic at high input contrasts. This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity. Power at other harmonics increases and the total power generated by the input is monotonic. This roll-off is often seen in experimental data and has been referred to as 'supersaturation' [@Tyler] 
+The hyperbolic ration function is monotinc but notice the slight roll-off in the amplitude of the second harmonic at high input contrasts. This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity. Power at other harmonics increases and the total power generated by the input is monotonic. This roll-off is often seen in experimental data and has been referred to as 'supersaturation' [@Tyler] 
 
 
 Here, we include a second component that contributes to the gain pool of the first. At a single pair of (matched) contrast levels, we see a complex pattern of intermodulation terms in the FT.
 
 ```{python}
-#| label: MaskedContrastResponseFunction
+#| label: Intermodulation
 #| fig-cap: "a"
 #| fig-cap-location: bottom
 
