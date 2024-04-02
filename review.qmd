@@ -26,7 +26,7 @@ Contrast is one of the most fundamental pieces of information that the eye trans
 
 Contrast is relatively simple to define: typically, contrast is specified as the percentage deviation of uniform stimulus from the background. So, for example, a disk of 100 units, $I_{\mathrm{stim}}$ of cone activation surrounded by a 'background' of 50 units of activation $I_{\mathrm{background}}$ has a contrast of $\frac{I_{\mathrm{stim}} - I_{\mathrm{background}}}{I_{\mathrm{background}}}$ = 100%. Where patterns are more complex (for example, the sine-wave gratings or Gabor patches common in vision science), the Michaelson definition of contrast is specified by the maximum and minimum excursions from the mean: $${{\frac {I_{\mathrm {stimmax} }-I_{\mathrm {stimmin} }}{I_{\mathrm {stimmax} }+I_{\mathrm {stimmin} }}},} $$. These contrast definitions are appropriate both to photometric measures of stimulus contrast (for example, luminance [LenniePokornySmith]) and also to definitions based on cone excitations [DKL, MacBoynton] which are more common in work on chromatic processing.
 
-Although its definition as a stimulus is simple, the computations that underlie contrast processing in the brain have been the subject of intense research for many decades. The neural code for contrast, even in the earliest parts of visual cortex, is not simply a linear transform of the contrast at the retina - instead, contrast signals undergo a cascade of nonlinear processing stages that, broadly, attempt to normalise the output relative to the spatiotemporal environment. This normalization, achieved through a computation called 'contrast gain control' [Heeger 92, Heeger and Carandini 2011] maximises the sensitivity of the visual system by making optimal use of neuronal bandwidth. As an example, a grating placed at the centre of a low-contrast background tpyically appears more intense than the same grating when superimposed on a high contrast background.
+Although its definition as a stimulus is simple, the computations that underlie contrast processing in the brain have been the subject of intense research for many decades. The neural code for contrast, even in the earliest parts of visual cortex, is not simply a linear transform of the contrast at the retina - instead, contrast signals undergo a cascade of nonlinear processing stages that, broadly, attempt to normalise the output relative to the spatiotemporal environment. This normalization, achieved through a computation called 'contrast gain control' [Nachmas and Sansbury? Foley? Heeger 92, Heeger and Carandini 2011] maximises the sensitivity of the visual system by making optimal use of neuronal bandwidth. As an example, a grating placed at the centre of a low-contrast background tpyically appears more intense than the same grating when superimposed on a high contrast background.
 ```{python}
 import numpy as np
 import matplotlib.pyplot as plt
@@ -87,99 +87,12 @@ plt.show()
 
 Because it provides a direct read-out of neural population activity, the SSVEP signal can reveal key features of neural signal transduction. For example, by varying the peak stimulus contrast parametrically, a 'contrast vs response' function can be measured - where the 'response' is typically defined as the amplitude of the SSVEP frequency component at the stimulus frequency or a low multiple thereof. This corresponds closely to similar functions measured in single unit studies, or those measuring local field potentials invasively in the cortex[@ShapleyVictor etc]. However the SSVEP has the advantage that it is non-invasive, and so can be measured in awake, behaving human participants. 
 
-### Measuring the development of contrast processing
-
-An early use of the contrast response function was to provide an objective estimate of spatial contrast sensitivity in infants, without requiring behavioural responses. 
-
-In well-motivated adults, psychophysical measurements of contrast sensitivity remain the gold standard. However, it is difficult and time consuming to obtain reliable psychophysical data from infants. In these cases, SSVEP measurements represent a fast and efficient method for measuring low-level visual responses [Norcia, Tyler, Braddick] and the high SNR of SSVEP means that infants need only look at the screen for short periods of time. 
-
-Because SSVEP response at detection threshold are very small, estimating this threshold is achieved by measuring the contrast response function at relatively high levels, and extrapolating back along the function (either contrast vs response measured at a constant spatial frequency or spatial frequency vs response at a constant contrast level) to estimate its intercept with the x-axis. This contrast level was shown to correspond approximately with psychophysically measured detection thresholds [@DaleNorciaTyler86]. 
-
-Measuring the SSVEP at multiple levels was made faster by the development of the ‘sweep VEP’ paradigm in which the stimulus changed its contrast, spatial frequency or some other property, throughout a trial [@Tyler, Nakayama etc 1979]. To avoid hysteresis effects, the sweep is sometimes conducted both up and down in the same experiment [Tyler, Norcia etc: 1985, 1990 etc]. 
-
-This general approach has revealed much about the development of visual abilities in infants [@braddick, @atkinson]. In general, SSVEP measurements of infant vision have revealed that spatial acuity for both achromatic and chromatic contrast as well as stereoscopic depth perception develops earlier than had been supposed previously based on behavioural readouts [@dobsonVisualAcuityHuman1978; @norciaSpatialFrequencySweep1985, ] with both chromatic and achromatic contrast detection reaching near-adult levels by around six months. At least some of this difference is likely due to the relatively objectivity and high SNR of the SSVEP technique compared to other methods such as preferential looking which require careful measurement of the infant's gaze direction. One open question is how more complex contrast computations develop - and in particular how the human brain develop the tightly-tuned 'gain control' mechanisms that allow it to detect and discriminate contrast across very different visual scenes.
-
-```{python}
-
-#| label: SweepVEP Deteection threshold estimate
-#| fig-cap: "a"
-#| fig-cap-location: bottom
-
-
-import matplotlib.pyplot as plt
-from matplotlib import colormaps
-import numpy as np
-import scipy as scp
-from sklearn.linear_model import LinearRegression
-
-
-
-def simpleTransducerFunction(inputContrast, c50, RMax):
- # Here we model a simple hyperbolic ratio function. Also called a "Naka-Rushton" function.
- # RMax defines the reponse gain of the transducer (how big the biggest output is). 
- # c50 defines the conrast sensitivity. Smaller values are more sensitive.
- # The exponent can also vary - here we fix it to 2
-  expnt=2
-  output=RMax*(inputContrast**expnt)/(inputContrast**expnt + c50**expnt)
-  return output
-
-# Define some constants
-nLevels=8
-internalNoise=1
-inputFrequency_Hz=np.array([5]) # We simulate a system with on input at many different contrasts
-contrastRange=np.logspace(1,1.9,nLevels)/100 # Equally spaced log contrast between 1 and 10^1.5
-duration_S=1 # All variables in this code have an _[units] where possible
-digitisationRate_Hz=1000
-freqCutoff_Hz=30
-
-support_S=np.linspace(0,duration_S,duration_S*digitisationRate_Hz)
-
-
-fig, axs = plt.subplots(1,1, figsize=(4, 3))
-
-initialSignal = np.zeros(len(contrastRange))
-transducedSignal = np.zeros(len(contrastRange))
-for contrastIndex,thisContrast in enumerate(contrastRange):
-  inputModulation = np.sin(2 * np.pi * inputFrequency_Hz * support_S) * thisContrast + np.random.rand(len(support_S))*internalNoise
-
-  FT_Signal = np.fft.fft(inputModulation) / len(inputModulation)
-
-  responseAmplitude = np.abs(FT_Signal[inputFrequency_Hz])
-  initialSignal[contrastIndex]=responseAmplitude[0]
-  transducedSignal[contrastIndex]=simpleTransducerFunction(responseAmplitude[0], 0.05, 10)
-
-# Now fit a linear regression to the first 4 contrast levels (before it saturates) and find out where this crosses the Y-axis
-X = np.log10(contrastRange[:4]).reshape(-1, 1)
-y = transducedSignal[:4]
-reg = LinearRegression().fit(X, y)
-x_intercept = 10 ** (-reg.intercept_ / reg.coef_[0])
-
-axs.set_title(f'Simulated sweep VEP at {nLevels} different contrasts', fontsize=10)
-axs.semilogx(contrastRange, transducedSignal, 'o')
-axs.semilogx(contrastRange[:4], reg.predict(X), 'r--', label='Linear Fit')
-axs.semilogx([x_intercept], [0], 'ro', label='Threshold')
-axs.set_xlabel('Contrast')
-axs.set_ylabel('Amplitude (a.u.)')
-axs.set_xlim(0.01, 1)
-axs.set_ylim(0, 10)
-axs.legend()
-axs.grid()
-plt.tight_layout()
-plt.show()
-
-
-
-```
-
-The sweep VEP (really, a sweep 'SSVEP') technique is now commonly-used to obtain a rapid and objective measurement of visual acuity. In particular, because of its relative speed and simplicity, this technique has now become a standard for conducting tests of visual acuity in very young subjects or where behavioural tests are not appropriate [@Ridder2004 Diva vs Enfant, @Hoffman, @Bach and @Farmer].
-The sweep VEP (really, a sweep 'SSVEP') technique is now commonly-used to obtain a rapid and objective measurement of visual acuity. In particular, because of its relative speed and simplicity, this technique has now become a standard for conducting tests of visual acuity in very young subjects or where behavioural tests are not appropriate [@Ridder2004; @Hoffman; @Bach; @Farmer].
+To understand the utility of the contrast SSVEP, it is helpful to identify the cascade of processing stages in the early visual system that give rise to it. In the following section we illustrate how a typical SSVEP signal measured over early visual cortex might contain information about a large number of early visual computations. 
 
 # Contrast processing - linear and nonlinear 
 
 Neurons have a limited dynamic range yet they can transmit information about  visual stimuli that span many order of magnitude. In the domain of contrast, to some extent this is accomplished at a population level - individual neurons typically implement a non-linear,sigmoidal contrast vs response (CRF) transducer and different neurons exhibit peak sensitivity (defined as the maximum slope of the function) at different contrast levels [@Early matteo stuff, Busse refs]. A neuronal population will therefor span a sensitivity range greater than any individual member,
 Neurons have a limited dynamic range yet they can transmit information about visual stimuli that span many orders of magnitude. In the domain of contrast, to some extent this is accomplished at a population level - individual neurons typically implement a non-linear, sigmoidal contrast vs response (CRF) transducer and different neurons exhibit peak sensitivity (defined as the maximum slope of the function) at different contrast levels [@EarlyMatteoStuff; @BusseRefs]. A neuronal population will therefore span a sensitivity range greater than any individual member.
-
-
 
 
  Individual neurons at multiple stages of the visual hierarchy also change their sensitivity depending on the average spatiotemporal contrast energy of their environment. This "normalisation" process is dynamic and nonlinear and is well-modeled by a hyperbolic ratio function in which the response of each neuron is modulated by a local 'gain pool' composed of the summed respnses of the local neuronal population.[@Heeger 92, @Carandini and Heeger 2011 @Busse 2008, @Baker and Wade] 
@@ -393,8 +306,7 @@ plt.show()
 ```
 
 
-The hyperbolic ration function is monotinc but notice the slight roll-off in the amplitude of the second harmonic at high input contrasts. This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity. Power at other harmonics increases and the total power generated by the input is monotonic. This roll-off is often seen in experimental data and has been referred to as 'supersaturation' [@Tyler] 
-
+The hyperbolic ration function is monotonic but notice the slight roll-off in the amplitude of the second harmonic at high input contrasts. This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity. Power at other harmonics increases and the total power generated by the input is monotonic. This roll-off is often seen in experimental data and has been referred to as 'supersaturation' [@Tyler] 
 
 Here, we include a second component that contributes to the gain pool of the first. At a single pair of (matched) contrast levels, we see a complex pattern of intermodulation terms in the FT.
 
@@ -460,6 +372,93 @@ plt.show()
 
 ```
 
+
+### Measuring the development of contrast processing
+
+An early use of the SSVEP was to provide an objective estimate of spatial contrast sensitivity in infants, without requiring behavioural responses. 
+
+In well-motivated adults, psychophysical measurements of contrast sensitivity remain the gold standard. However, it is difficult and time consuming to obtain reliable psychophysical data from infants. In these cases, SSVEP measurements represent a fast and efficient method for measuring low-level visual responses [Norcia, Tyler, Braddick] and the high SNR of SSVEP means that infants need only look at the screen for short periods of time. 
+
+Because SSVEP response at detection threshold are very small, estimating this threshold is achieved by measuring the contrast response function at relatively high levels, and extrapolating back along the function (either contrast vs response measured at a constant spatial frequency or spatial frequency vs response at a constant contrast level) to estimate its intercept with the x-axis. This contrast level was shown to correspond approximately with psychophysically measured detection thresholds [@DaleNorciaTyler86]. 
+
+Measuring the SSVEP at multiple levels was made faster by the development of the ‘sweep VEP’ paradigm in which the stimulus changed its contrast, spatial frequency or some other property, throughout a trial [@Tyler, Nakayama etc 1979]. To avoid hysteresis effects, the sweep is sometimes conducted both up and down in the same experiment [Tyler, Norcia etc: 1985, 1990 etc]. 
+
+This general approach has revealed much about the development of visual abilities in infants [@braddick, @atkinson]. In general, SSVEP measurements of infant vision have revealed that spatial acuity for both achromatic and chromatic contrast as well as stereoscopic depth perception develops earlier than had been supposed previously based on behavioural readouts [@dobsonVisualAcuityHuman1978; @norciaSpatialFrequencySweep1985, ] with both chromatic and achromatic contrast detection reaching near-adult levels by around six months. At least some of this difference is likely due to the relatively objectivity and high SNR of the SSVEP technique compared to other methods such as preferential looking which require careful measurement of the infant's gaze direction. One open question is how more complex contrast computations develop - and in particular how the human brain develop the tightly-tuned 'gain control' mechanisms that allow it to detect and discriminate contrast across very different visual scenes.
+
+```{python}
+
+#| label: SweepVEP Deteection threshold estimate
+#| fig-cap: "a"
+#| fig-cap-location: bottom
+
+
+import matplotlib.pyplot as plt
+from matplotlib import colormaps
+import numpy as np
+import scipy as scp
+from sklearn.linear_model import LinearRegression
+
+
+
+def simpleTransducerFunction(inputContrast, c50, RMax):
+ # Here we model a simple hyperbolic ratio function. Also called a "Naka-Rushton" function.
+ # RMax defines the reponse gain of the transducer (how big the biggest output is). 
+ # c50 defines the conrast sensitivity. Smaller values are more sensitive.
+ # The exponent can also vary - here we fix it to 2
+  expnt=2
+  output=RMax*(inputContrast**expnt)/(inputContrast**expnt + c50**expnt)
+  return output
+
+# Define some constants
+nLevels=8
+internalNoise=1
+inputFrequency_Hz=np.array([5]) # We simulate a system with on input at many different contrasts
+contrastRange=np.logspace(1,1.9,nLevels)/100 # Equally spaced log contrast between 1 and 10^1.5
+duration_S=1 # All variables in this code have an _[units] where possible
+digitisationRate_Hz=1000
+freqCutoff_Hz=30
+
+support_S=np.linspace(0,duration_S,duration_S*digitisationRate_Hz)
+
+
+fig, axs = plt.subplots(1,1, figsize=(4, 3))
+
+initialSignal = np.zeros(len(contrastRange))
+transducedSignal = np.zeros(len(contrastRange))
+for contrastIndex,thisContrast in enumerate(contrastRange):
+  inputModulation = np.sin(2 * np.pi * inputFrequency_Hz * support_S) * thisContrast + np.random.rand(len(support_S))*internalNoise
+
+  FT_Signal = np.fft.fft(inputModulation) / len(inputModulation)
+
+  responseAmplitude = np.abs(FT_Signal[inputFrequency_Hz])
+  initialSignal[contrastIndex]=responseAmplitude[0]
+  transducedSignal[contrastIndex]=simpleTransducerFunction(responseAmplitude[0], 0.05, 10)
+
+# Now fit a linear regression to the first 4 contrast levels (before it saturates) and find out where this crosses the Y-axis
+X = np.log10(contrastRange[:4]).reshape(-1, 1)
+y = transducedSignal[:4]
+reg = LinearRegression().fit(X, y)
+x_intercept = 10 ** (-reg.intercept_ / reg.coef_[0])
+
+axs.set_title(f'Simulated sweep VEP at {nLevels} different contrasts', fontsize=10)
+axs.semilogx(contrastRange, transducedSignal, 'o')
+axs.semilogx(contrastRange[:4], reg.predict(X), 'r--', label='Linear Fit')
+axs.semilogx([x_intercept], [0], 'ro', label='Threshold')
+axs.set_xlabel('Contrast')
+axs.set_ylabel('Amplitude (a.u.)')
+axs.set_xlim(0.01, 1)
+axs.set_ylim(0, 10)
+axs.legend()
+axs.grid()
+plt.tight_layout()
+plt.show()
+
+
+
+```
+
+The sweep VEP (really, a sweep 'SSVEP') technique is now commonly-used to obtain a rapid and objective measurement of visual acuity. In particular, because of its relative speed and simplicity, this technique has now become a standard for conducting tests of visual acuity in very young subjects or where behavioural tests are not appropriate [@Ridder2004 Diva vs Enfant, @Hoffman, @Bach and @Farmer].
+The sweep VEP (really, a sweep 'SSVEP') technique is now commonly-used to obtain a rapid and objective measurement of visual acuity. In particular, because of its relative speed and simplicity, this technique has now become a standard for conducting tests of visual acuity in very young subjects or where behavioural tests are not appropriate [@Ridder2004; @Hoffman; @Bach; @Farmer].
 
 
 *2: Sweeps and CRFs. Measurements of contrast sensitivity, extrapolating
