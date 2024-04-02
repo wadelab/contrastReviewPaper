@@ -26,8 +26,13 @@ Contrast is one of the most fundamental pieces of information that the eye trans
 
 Contrast is relatively simple to define: typically, contrast is specified as the percentage deviation of uniform stimulus from the background. So, for example, a disk of 100 units, $I_{\mathrm{stim}}$ of cone activation surrounded by a 'background' of 50 units of activation $I_{\mathrm{background}}$ has a contrast of $\frac{I_{\mathrm{stim}} - I_{\mathrm{background}}}{I_{\mathrm{background}}}$ = 100%. Where patterns are more complex (for example, the sine-wave gratings or Gabor patches common in vision science), the Michaelson definition of contrast is specified by the maximum and minimum excursions from the mean: $${{\frac {I_{\mathrm {stimmax} }-I_{\mathrm {stimmin} }}{I_{\mathrm {stimmax} }+I_{\mathrm {stimmin} }}},} $$. These contrast definitions are appropriate both to photometric measures of stimulus contrast (for example, luminance [LenniePokornySmith]) and also to definitions based on cone excitations [DKL, MacBoynton] which are more common in work on chromatic processing.
 
-Although its definition as a stimulus is simple, the computations that underlie contrast processing in the brain have been the subject of intense research for many decades. The neural code for contrast, even in the earliest parts of visual cortex, is not simply a linear transform of the contrast at the retina - instead, contrast signals undergo a cascade of nonlinear processing stages that, broadly, attempt to normalise the output relative to the spatiotemporal environment. This normalization, achieved through a computation called 'contrast gain control' [Nachmas and Sansbury? Foley? Heeger 92, Heeger and Carandini 2011] maximises the sensitivity of the visual system by making optimal use of neuronal bandwidth. As an example, a grating placed at the centre of a low-contrast background tpyically appears more intense than the same grating when superimposed on a high contrast background.
+Although its definition as a stimulus is simple, the computations that underlie contrast processing in the brain have been the subject of intense research for many decades. The neural code for contrast, even in the earliest parts of visual cortex, is not simply a linear transform of the contrast at the retina - instead, contrast signals undergo a cascade of nonlinear processing stages that, broadly, attempt to normalise the output relative to the spatiotemporal environment. This normalization, achieved through a computation called 'contrast gain control' [Nachmas and Sansbury? Foley? Heeger 92, Heeger and Carandini 2011] maximises the sensitivity of the visual system by making optimal use of neuronal bandwidth. As an example, a grating placed at the centre of a low-contrast background typically appears more intense than the same grating when superimposed on a high contrast background.
 ```{python}
+
+#| label: Perceptual gain control
+#| fig-cap: The perceived contrast of a stimulus depends on its context. A high contrast surround reduces the apparent contrast of the central 'probe' region"
+#| fig-cap-location: bottom
+#|
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -91,7 +96,7 @@ To understand the utility of the contrast SSVEP, it is helpful to identify the c
 
 # Contrast processing - linear and nonlinear 
 
-Neurons have a limited dynamic range yet they can transmit information about  visual stimuli that span many order of magnitude. In the domain of contrast, to some extent this is accomplished at a population level - individual neurons typically implement a non-linear,sigmoidal contrast vs response (CRF) transducer and different neurons exhibit peak sensitivity (defined as the maximum slope of the function) at different contrast levels [@Early matteo stuff, Busse refs]. A neuronal population will therefor span a sensitivity range greater than any individual member,
+Neurons have a limited dynamic range yet they can transmit information about  visual stimuli that span many order of magnitude. In the domain of contrast, to some extent this is accomplished at a population level - individual neurons typically implement a non-linear,sigmoidal contrast vs response (CRF) transducer (@Albrecht and Hamilton1982, @Tolhurst et al1981) and different neurons exhibit peak sensitivity (defined as the maximum slope of the function) at different contrast levels [@Early matteo stuff, Busse refs]. A neuronal population will therefor span a sensitivity range greater than any individual member. 
 Neurons have a limited dynamic range yet they can transmit information about visual stimuli that span many orders of magnitude. In the domain of contrast, to some extent this is accomplished at a population level - individual neurons typically implement a non-linear, sigmoidal contrast vs response (CRF) transducer and different neurons exhibit peak sensitivity (defined as the maximum slope of the function) at different contrast levels [@EarlyMatteoStuff; @BusseRefs]. A neuronal population will therefore span a sensitivity range greater than any individual member.
 
 
@@ -157,7 +162,7 @@ If the two inputs are simply added together, the representation of the resulting
 ```{python}
 
 #| label: plotspectra
-#| fig-cap: "Temporal frequency representations of linar combinations of inputs."
+#| fig-cap: "Temporal frequency representations of combining two inputs at frequencies F1=5Hz and F2=7Hz combination. A pure sine-wave input would generate responses only at F1 and F2. However, the rectification that accompanies early visual processing converts this contrast reversal into a more complex frequency-domain representation with power predominantly at the second harmonics 2F1 and 2F2"
 #| fig-cap-location: bottom
 
 #| label: plotsinewaves
@@ -227,7 +232,7 @@ ${R{\mathrm{max}}}\frac{C{\mathrm{in}}^n}{C{\mathrm{in}}^n+ C{\mathrm{50}}^n}$ w
 ```{python}
 
 #| label: ContrastResponseFunction
-#| fig-cap: "Non-linear contrast response function"
+#| fig-cap: "Non-linear contrast response function resulting from the population average of two full-wave rectified signals passing through a non-linear transducer. Note the 'supersaturation' at high contrast levels."
 #| fig-cap-location: bottom
 
 
@@ -305,14 +310,13 @@ plt.show()
 
 ```
 
+The hyperbolic ratio function is monotonic but the CRF resulting from measuring the amplitude of the 2F component contains slight roll-off  at high input contrasts. This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity. Power at other harmonics increases and the total power generated by the input is monotonic. This roll-off is often seen in experimental data and has been referred to as 'supersaturation' [@Tyler].
 
-The hyperbolic ration function is monotonic but notice the slight roll-off in the amplitude of the second harmonic at high input contrasts. This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity. Power at other harmonics increases and the total power generated by the input is monotonic. This roll-off is often seen in experimental data and has been referred to as 'supersaturation' [@Tyler] 
-
-Here, we include a second component that contributes to the gain pool of the first. At a single pair of (matched) contrast levels, we see a complex pattern of intermodulation terms in the FT.
+To illustrate the effect of contrast gain control[@Heeger92], we include a second component that contributes to the gain pool of the first. At a single pair of (matched) contrast levels, we see a complex pattern of intermodulation terms in the FT.
 
 ```{python}
 #| label: Intermodulation
-#| fig-cap: "a"
+#| fig-cap: "Non-linear combination of two independent contrast modulations at F1 and F2 results in 'intermodulation' terms that appear at low-order sums and differences of those frequencies"
 #| fig-cap-location: bottom
 
 import matplotlib.pyplot as plt
@@ -373,22 +377,27 @@ plt.show()
 ```
 
 
+
+
+
 ### Measuring the development of contrast processing
 
 An early use of the SSVEP was to provide an objective estimate of spatial contrast sensitivity in infants, without requiring behavioural responses. 
 
-In well-motivated adults, psychophysical measurements of contrast sensitivity remain the gold standard. However, it is difficult and time consuming to obtain reliable psychophysical data from infants. In these cases, SSVEP measurements represent a fast and efficient method for measuring low-level visual responses [Norcia, Tyler, Braddick] and the high SNR of SSVEP means that infants need only look at the screen for short periods of time. 
+In well-motivated adults, psychophysical measurements of contrast sensitivity remain the gold standard. However, it is difficult and time consuming to obtain reliable psychophysical data from infants. In these cases, SSVEP measurements represent a fast and efficient method for measuring low-level visual responses [@Norcia, Tyler, Braddick] and the high SNR of SSVEP means that infants need only look at the screen for short periods of time. 
 
 Because SSVEP response at detection threshold are very small, estimating this threshold is achieved by measuring the contrast response function at relatively high levels, and extrapolating back along the function (either contrast vs response measured at a constant spatial frequency or spatial frequency vs response at a constant contrast level) to estimate its intercept with the x-axis. This contrast level was shown to correspond approximately with psychophysically measured detection thresholds [@DaleNorciaTyler86]. 
 
 Measuring the SSVEP at multiple levels was made faster by the development of the ‘sweep VEP’ paradigm in which the stimulus changed its contrast, spatial frequency or some other property, throughout a trial [@Tyler, Nakayama etc 1979]. To avoid hysteresis effects, the sweep is sometimes conducted both up and down in the same experiment [Tyler, Norcia etc: 1985, 1990 etc]. 
 
-This general approach has revealed much about the development of visual abilities in infants [@braddick, @atkinson]. In general, SSVEP measurements of infant vision have revealed that spatial acuity for both achromatic and chromatic contrast as well as stereoscopic depth perception develops earlier than had been supposed previously based on behavioural readouts [@dobsonVisualAcuityHuman1978; @norciaSpatialFrequencySweep1985, ] with both chromatic and achromatic contrast detection reaching near-adult levels by around six months. At least some of this difference is likely due to the relatively objectivity and high SNR of the SSVEP technique compared to other methods such as preferential looking which require careful measurement of the infant's gaze direction. One open question is how more complex contrast computations develop - and in particular how the human brain develop the tightly-tuned 'gain control' mechanisms that allow it to detect and discriminate contrast across very different visual scenes.
+This general approach has revealed much about the development of visual abilities in infants [@braddick, @atkinson]. In general, SSVEP measurements of infant vision have revealed that contrast sensitivity for both achromatic and chromatic contrast as well as stereoscopic depth perception develops earlier than had been supposed previously based on behavioural readouts [@dobsonVisualAcuityHuman1978; @norciaSpatialFrequencySweep1985, ] with both chromatic and achromatic contrast detection reaching near-adult levels by around six months while spatial acuity as measured by SSVEP reaches adult levels more slowly but near-adult levels are recorded around 1 year [[@NorciaTyler1985, @HamerVisRed1989]] compared to  around 6-7 years with behavioural measures [@Ellemberg vis res 1999, @Atkinson]. At least some of this difference is likely due to the relatively objectivity and high SNR of the SSVEP technique compared to other methods such as preferential looking which require careful measurement of the infant's gaze direction. 
+The SSVEP technique has also been used to study the development of the contrast gain control mechanisms described in the previous section.[@Candy 2001, @PeiNorcia 2017]. Although contrast gain control is measurable in infants as young as six weeks old (@Candy2001, @MorroneBurr1986, @Skoczenski & Norcia, 1998), development appears to be slower with adult levels being reached in approximately 11 years. [@PeiNorcia].
+
 
 ```{python}
 
 #| label: SweepVEP Deteection threshold estimate
-#| fig-cap: "a"
+#| fig-cap: "Sweep VEP simulation showing how a contrast detection threshold can be estimated from sweep VEP data measured at higher contrasts"
 #| fig-cap-location: bottom
 
 
