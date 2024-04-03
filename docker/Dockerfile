@@ -16,7 +16,7 @@ RUN pip3 install matplotlib
 
 RUN install2.r –error \
 --deps TRUE \
-rmarkdown \
+quarto \
 reticulate
 
 RUN R 'reticulate::use_python("/usr/bin/python3")'
