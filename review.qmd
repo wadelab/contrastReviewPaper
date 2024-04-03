@@ -1,6 +1,6 @@
 ---
 title: "Measuring contrast processing in the visual system using SSVEP (and VEP?)"
-format: html
+format: pdf
 bibliography: WadeBaker_Review.bib
 execute:
   echo: false

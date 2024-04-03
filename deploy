@@ -1,6 +1,6 @@
 #!/bin/bash
 
 mkdir build
-cp review.html build/
+cp *.pdf build/
 
 cd ..
