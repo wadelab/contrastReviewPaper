@@ -14,6 +14,7 @@ RUN apt-get -y install jupyter
 RUN pip3 install numpy
 RUN pip3 install scipy
 RUN pip3 install matplotlib
+RUN pip3 install sklearn
 
 RUN install2.r –error \
 --deps TRUE \
