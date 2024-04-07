@@ -579,7 +579,6 @@ plt.legend()
 
 ```
 
-![Example contrast response functions for different clinical conditions. Panel (a) shows modelled contrast response functions for epilepsy patients (blue) and control participants (black), based on the data of Tsai et al. (2011). Panel (b) shows functions for the amblyopic (red) and fellow (black) eyes of adults with amblyopia, based on the data of Baker et al. (2015). Panel (c) shows functions for children with (green) and without (black) a diagnosis of autism, based on the data of Vilidaite et al. (2018). Panel (d)...](Figures/clinicalplot.pdf){#fig-plotclinical}
 
 # Brain-computer interfaces
 
