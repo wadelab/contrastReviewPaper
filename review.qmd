@@ -469,6 +469,10 @@ Amblyopia is a disorder of binocular vision, characterised by one eye contributi
 Autism is a condition often associated with differences in vision [@Simmons2009] and other senses [@MacLennan2022]. @Pei2014 used a sweep-VEP method with counterphase flickering stimuli, and found weaker responses in autistic children at spatial frequencies around 8c/deg, compared with age-matched controls. This was subsequently replicated in a further pediatric sample by @Vilidaite2018 (see [@fig-plotclinical]c), who additionally found weaker responses in autistic adults at the second harmonic (using on/off flicker). Interestingly this study replicated its key findings in a *drosophila* genetic model of autism (*Nhe3* mutations), illustrating the translational potential of the steady-state approach, as well as identifying a possible biomarker for autism. 
 
 Parkinson's
+
+Alex - it would be good to add some CRFs from @Afsari2014 to the figure. Is it possible to extract either the fitted parameter values or the raw data for some control flies and some mutants? Whatever you think is most compelling.
+
+
 ```{python}
 import numpy as np
 import matplotlib.pyplot as plt
@@ -502,8 +506,30 @@ plt.ylabel('SSVEP response')
 plt.title('(a) Epilepsy')
 plt.legend()
 
-# Amblyopia parameters would follow a similar structure if they were provided.
-# Since they're not detailed in your R code, I'll move on to the autism plot.
+
+amblyparams = np.array([
+    [0.39, 37.2, 1.4, 0.22],  # amblyopic eye
+    [2.33, 111.69, 1.4, 0.22]   # fellow eye
+])
+
+# Calculate responses
+respambly = amblyparams[0,0] * ((finecontrasts)**amblyparams[0,2] /
+                (amblyparams[0,1] + (finecontrasts)**amblyparams[0,2])) + amblyparams[0,3]
+
+respfellow = amblyparams[1,0] * ((finecontrasts)**amblyparams[1,2] /
+                (amblyparams[1,1] + (finecontrasts)**amblyparams[1,2])) + amblyparams[1,3]
+
+plt.figure(figsize=(12, 10))
+plt.subplot(2, 2, 2)
+plt.plot(finecontrastsdB, respambly, lw=4, color='red', label='Amblyopic eye')
+plt.plot(finecontrastsdB, respfellow, lw=4, color='black', linestyle='--', label='Fellow eye')
+plt.xticks(ticklocsx, ticklabelsx)
+plt.yticks(np.arange(0, 2, 0.5))
+plt.xlabel('Target contrast (%)')
+plt.ylabel('SSVEP response')
+plt.title('(b) Amblyopia')
+plt.legend()
+
 
 # Autism and control groups for the autism plot
 autismparams = np.array([
@@ -546,7 +572,7 @@ plt.ylabel('SSVEP response')
 plt.title("(d) Parkinson's")
 plt.legend()
 # To save the figure
-plt.savefig('clinicalplot.pdf')
+plt.savefig('Figures/clinicalplot.pdf')
 ```
 
 <!---
@@ -589,21 +615,34 @@ lines(finecontrastsdB,respEPIcontrols,lwd=4,lty=2,col='black')
 legend(-18,6,c('Epilepsy patients','Control participants'),lwd=4,lty=c(1,2),col=c('blue','black'),box.lwd=2)
 
 
-ticklocsy <- seq(0,6,2)
+# fits to data from Baker et al.. (2015)
+amblyparams <- matrix(0,nrow=2,ncol=4)
+amblyparams[1,] <- c(0.39,37.2,1.4,0.22)  # amblyopic eye
+amblyparams[2,] <- c(2.33,111.69,1.4,0.22)  # good eye
+
+respambly <- amblyparams[1,1] * (finecontrasts^amblyparams[1,3]/(amblyparams[1,2] + finecontrasts^amblyparams[2,3])) + amblyparams[1,4]
+
+respfellow <- amblyparams[2,1] * (finecontrasts^amblyparams[2,3]/(amblyparams[2,2] + finecontrasts^amblyparams[2,3])) + amblyparams[2,4]
+
+
+ticklocsy <- seq(0,2,0.5)
 ticklabelsy <- ticklocsy
 
 par(pty="s")  # make axis square
-plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=c(-18,36), ylim=c(0,6))   
+plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=c(-18,36), ylim=c(0,2))   
 axis(1, at=ticklocsx, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
 axis(2, at=ticklocsy, tck=0.01, lab=F, lwd=2)
 mtext(text = ticklabelsx, side = 1, at=ticklocsx, line=0.3)     
 mtext(text = ticklabelsy, side = 2, at=ticklocsy, line=0.2, las=1)
 title(xlab="Target contrast (%)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)   
 title(ylab="SSVEP response", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)
-
-
-
 title(main='(b) Amblyopia',cex.main=2)
+
+lines(finecontrastsdB,respambly,lwd=4,col='red')
+lines(finecontrastsdB,respfellow,lwd=4,lty=2,col='black')
+
+legend(-18,2,c('Amblyopic eye','Fellow eye'),lwd=4,lty=c(1,2),col=c('red','black'),box.lwd=2)
+
 
 # fits to data from Vilidaite et al (2018)
 autismparams <- matrix(0,nrow=2,ncol=4)
