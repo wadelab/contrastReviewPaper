@@ -462,7 +462,7 @@ The SSVEP technique has also been used to study the development of the contrast 
 
 The SSVEP technique has also been used to study clinical conditions, such as diseases and developmental disorders. This can often be informative regarding the underlying mechanism that characterises the condition. Here we focus on four conditions, but there is potential to apply the method more broadly, either as a diagnostic technique, or to monitor disease severity and progression, or the efficacy of treatments.
 
-Epilepsy is a neurological condition in which patients experience seizures - episodes of uncontrolled neural activity that can cause unconsciousness, involuntary movements and convulsions, and atypical sensory experiences. @Porciatti2000 showed that individuals with photosensitive epilepsy generate larger steady-state signals in response to flickering visual stimuli, and their contrast response functions saturate less than those of healthy controls. This is consistent with the idea that epilepsy involves a cortical hyperexciteability that makes seizures more likely. It is also the case for individuals with idiopathic generalised epilepsy [@Tsai2011], a subtype of epilepsy that has a less obvious link to vision. The differences apply across the whole contrast-response function, and so resemble a response gain effect, which might be due to reduced inhibition from neighbouring neurons. Differences in SSVEP amplitudes have also been reported in individuals with migraine [@Shibata2008], a condition also associated with cortical hyperexciteability.
+Epilepsy is a neurological condition in which patients experience seizures - episodes of uncontrolled neural activity that can cause unconsciousness, involuntary movements and convulsions, and atypical sensory experiences. @Porciatti2000 showed that individuals with photosensitive epilepsy generate larger steady-state signals in response to flickering visual stimuli, and their contrast response functions saturate less than those of healthy controls. This is consistent with the idea that epilepsy involves a cortical hyperexciteability that makes seizures more likely. It is also the case for individuals with idiopathic generalised epilepsy [@Tsai2011], a subtype of epilepsy that has a less obvious link to vision. The differences apply across the whole contrast-response function, and so resemble a response gain effect (see [@fig-plotclinical]a), which might be due to reduced inhibition from neighbouring neurons. Differences in SSVEP amplitudes have also been reported in individuals with migraine [@Shibata2008], a condition also associated with cortical hyperexciteability.
 
 Amblyopia is a disorder of binocular vision, characterised by one eye contributing much less to perception than the other. This is often due to strabismus (squint) or anisometropia (difference in optical prescription between the eyes) during development. Contemporary accounts suggest that the amblyopic eye is suppressed by signals from the fellow eye. SSVEPs provide a convenient and objective method to characterise the difference in neural response to signals in each eye, and typically show reduced responses to stimuli in the amblyopic eye across the contrast range [@Baker2015; @Lygo2021]. There are currently many novel binocular treatments for amblyopia under development, often involving virtual reality or stereo display systems designed to encourage the two eyes to work together. The steady-state approach may be more sensitive and objective than typical acuity measurements, and also has the potential to measure suppression between the eyes directly [e.g. @Zheng2019; @Du2023; @Hu2023].
 
@@ -475,7 +475,7 @@ Alex - it would be good to add some CRFs from @Afsari2014 to the figure. Is it p
 
 ```{python}
 #| label: fig-plotclinical
-#| fig-cap: "Example contrast response functions for different clinical conditions. Panel (a) shows modelled contrast response functions for epilepsy patients (blue) and control participants (black), based on the data of Tsai et al. (2011). Panel (b) shows functions for the amblyopic (red) and fellow (black) eyes of adults with amblyopia, based on the data of Baker et al. (2015). Panel (c) shows functions for children with (green) and without (black) a diagnosis of autism, based on the data of Vilidaite et al. (2018). Panel (d)..."
+#| fig-cap: "Example contrast response functions for different clinical conditions. Panel (a) shows modelled contrast response functions for epilepsy patients (blue) and control participants (black), based on the data of Tsai et al. (2011). Panel (b) shows functions for the amblyopic (red) and fellow (black) eyes of adults with amblyopia, based on the data of Baker et al. (2015). Panel (c) shows functions for children with (green) and without (black) a diagnosis of autism, based on the data of Vilidaite et al. (2018). Panel (d)"
 #| fig-cap-location: bottom
 
 import numpy as np
@@ -576,6 +576,7 @@ plt.title("(d) Parkinson's")
 plt.legend()
 # To save the figure
 # plt.savefig('Figures/clinicalplot.pdf')
+plt.show()
 
 ```
 
