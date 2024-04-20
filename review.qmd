@@ -10,6 +10,8 @@ bibliography: WadeBaker_Review.bib
 csl: visual-neuroscience.csl
 execute:
   echo: false
+  output: false
+  include: false
 ---
 Department of Psychology and York Biomedical Research Institute, University of York, UK
 
@@ -139,6 +141,7 @@ fig, axs = plt.subplots(1,3, figsize=(8, 3))
   
 axs[0].plot(support_S, inputModulation)
 axs[0].set_title('Input sine wave', fontsize=10)
+axs[0].set_xlabel('Time (s)')
 
 # Plot the absolute values of the FFT in the second axis as a bar plot
 axs[1].bar(frequencySupport, np.abs(FT_Signal[frequencySupport]))
@@ -201,6 +204,7 @@ fig, axs = plt.subplots(1,3, figsize=(8, 3))
   
 axs[0].plot(support_S, transducedModulation)
 axs[0].set_title('Transduced signal', fontsize=10)
+axs[0].set_xlabel('Time (s)')
 
 # Plot the absolute values of the FFT in the second axis as a bar plot
 axs[1].bar(frequencySupport, np.abs(FT_transducedModulation[frequencySupport]))
@@ -268,6 +272,7 @@ fig, axs = plt.subplots(1,3, figsize=(8, 3))
   
 axs[0].plot(support_S, transducedModulation)
 axs[0].set_title('Transduced signal', fontsize=10)
+axs[0].set_xlabel('Time (s)')
 
 # Plot the absolute values of the FFT in the second axis as a bar plot
 axs[1].bar(frequencySupport, np.abs(FT_transducedModulation[frequencySupport]))
@@ -329,11 +334,11 @@ Neurons have a limited dynamic range, yet they can transmit information about vi
 
 Individual neurons at multiple stages of the visual hierarchy also change their sensitivity depending on the average spatiotemporal contrast energy of their environment. This "normalisation" process is dynamic and nonlinear and is well-modeled by a hyperbolic ratio function in which the response of each neuron is modulated by a local 'gain pool' composed of the summed responses of the local neuronal population [@Heeger1992; @Carandini2011; @Busse2009; @Baker2017].
 
-![Linear.](Figures/linearsystem.pdf){#fig-linear}
+![Linear](Figures/linearsystem.pdf){#fig-linear}
 
-![Linear.](Figures/transducer.pdf){#fig-transducer}
+![Nonliner](Figures/transducer.pdf){#fig-transducer}
 
-![Linear.](Figures/twoinputs.pdf){#fig-twoinputs}
+![Two inputs](Figures/twoinputs.pdf){#fig-twoinputs}
 
 **Previous figures** showed how a single-input SSVEP might generate a single set of peaks in the frequency domain response which, in turn, can be used as a read-out of neuronal activity. In @fig-plotspectra, we show the effect of adding a second contrast component: the two components interact generating nonlinear intermodulation terms at sums and differences of the input frequencies (F1, F2). The nature of the interaction --- and therefore the pattern of intermodulation terms ---  is determined by the computations happening as the contrast signal moves from retina to cortex [@Regan1988]
 
