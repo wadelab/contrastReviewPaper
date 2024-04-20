@@ -556,8 +556,9 @@ Recent work on understanding Parkinson's disease has also used *Drosophila* gene
 
 # Brain-computer interfaces
 
-I wonder if this is a good place to mention attention.
+One widespread application of the SSVEP technique is in the design of brain-computer interfaces, which seek to control some aspect of a computer using neural signals. The high SNR and good frequency resolution of SSVEPs make them an ideal candidate for this approach. Typical studies involve presenting an array of stimuli at different flicker frequencies, and having the participant select one either by overt attention (i.e. shifting fixation to foveate the selected stimulus) or covert attention (i.e. deploying attention to one stimulus whilst keeping fixated). EEG signals are highly sensitive to both visual field position [@Ales2010] and attentional state [@Verghese2012; @Lauritzen2010], so the response to the selected stimulus will typically increase relative to the others, allowing it to be identified by an on-line algorithm.
 
+Probably a summary of BCIs here.
 
 # Conclusions
 
