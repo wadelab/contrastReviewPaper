@@ -324,13 +324,15 @@ for contrastIndex,thisContrast in enumerate(contrastRange):
 
 # Now fit a linear regression to the first 4 contrast levels (before it saturates) and find out where this crosses the Y-axis
 X = np.log10(contrastRange[:4]).reshape(-1, 1)
+X2 = np.log10(np.logspace(0.1,1.1,nLevels)/100).reshape(-1, 1)
 y = transducedSignal[:4]
 reg = LinearRegression().fit(X, y)
 x_intercept = 10 ** (-reg.intercept_ / reg.coef_[0])
 
 axs.set_title(f'Simulated sweep VEP at {nLevels} different contrasts', fontsize=10)
 axs.semilogx(contrastRange, transducedSignal, 'o')
-axs.semilogx(contrastRange[:4], reg.predict(X), 'r--', label='Linear Fit')
+axs.semilogx(contrastRange[:4], reg.predict(X), 'r-', label='Linear Fit')
+axs.semilogx(np.logspace(0.1,1.1,nLevels)/100, reg.predict(X2), 'r--')
 axs.semilogx([x_intercept], [0], 'ro', label='Threshold')
 axs.set_xlabel('Contrast')
 axs.set_ylabel('Amplitude (a.u.)')
@@ -415,7 +417,7 @@ plt.subplot(2, 2, 3)  # Assuming this is the third plot for Autism
 plt.plot(finecontrastsdB, respASD, lw=4, color='darkgreen', label='ASD children')
 plt.plot(finecontrastsdB, respCON, lw=4, color='black', linestyle='--', label='Control children')
 plt.xticks(ticklocsx, ticklabelsx)
-plt.yticks(np.arange(0, 1.6, 0.5))
+plt.yticks(np.arange(0, 2, 0.5))
 plt.xlabel('Target contrast (%)')
 plt.ylabel('SSVEP response')
 plt.title('(c) Autism')
@@ -442,7 +444,7 @@ plt.subplot(2, 2, 4)  # Fourth plot for Parkinson's
 plt.plot(finecontrastsdB, respParkPatients, lw=4, color='red', label='hLRRK2 transgenic flies')
 plt.plot(finecontrastsdB, respParkControls, lw=4, color='black', linestyle='--', label='TH+ (control) flies')
 plt.xticks(ticklocsx, ticklabelsx)
-plt.yticks(np.arange(0, 7, 2))
+plt.yticks(np.arange(0, 20, 4))
 plt.xlabel('Target contrast (%)')
 plt.ylabel('SSVEP response')
 plt.title("(d) Parkinson's")
@@ -529,7 +531,7 @@ An early use of the SSVEP was to provide an objective estimate of spatial contra
 
 Because SSVEP responses at detection threshold are very small, estimating a threshold is achieved by measuring the contrast response function at relatively high levels, and extrapolating back along the function (either contrast vs response measured at a constant spatial frequency or spatial frequency vs response at a constant contrast level) to estimate its intercept with the x-axis (see @fig-sweepvep). This contrast level was shown to correspond approximately with psychophysically measured detection thresholds [@Norcia1986]. 
 
-![Sweep VEP simulation showing how a contrast detection threshold can be estimated from sweep VEP data measured at higher contrasts.](Figures/sweepplot.pdf){#fig-sweepvep}
+![Sweep VEP simulation showing how a contrast detection threshold can be estimated from sweep VEP data measured at higher contrasts. The solid line is the regression fit to the lowest four data points, and the dashed line extrapolates the fit back to determine the contrast value when y=0, which gives a threshold estimate (red point).](Figures/sweepplot.pdf){#fig-sweepvep}
 
 A robust estimate of the threshold therefore requires the measurement of the SSVEP amplitude at many different super-threshold contrasr levels. This was made faster by the development of the ‘sweep VEP’ paradigm in which the stimulus changed its contrast, spatial frequency or some other property, throughout a trial [@Tyler1979]. To avoid hysteresis effects, the sweep is sometimes conducted both up and down in the same experiment [@Tyler1979, @Norcia1985a; @Norcia1990]. The sweep VEP (really, a sweep 'SSVEP') technique is now commonly-used to obtain a rapid and objective measurement of visual acuity. In particular, because of its relative speed and simplicity, this technique has now become a standard for conducting tests of visual acuity in very young subjects or where behavioural tests are not appropriate [@Ridder2004; @Hoffmann2017; @Bach2008; @Bach2020].
 
@@ -543,7 +545,7 @@ The SSVEP technique has also been used to study clinical conditions, such as dis
 
 Epilepsy is a neurological condition in which patients experience seizures - episodes of uncontrolled neural activity that can cause unconsciousness, involuntary movements and convulsions, and atypical sensory experiences. @Porciatti2000 showed that individuals with photosensitive epilepsy generate larger steady-state signals in response to flickering visual stimuli, and their contrast response functions saturate less than those of healthy controls. This is consistent with the idea that epilepsy involves a cortical hyperexciteability that makes seizures more likely. It is also the case for individuals with idiopathic generalised epilepsy [@Tsai2011], a subtype of epilepsy that has a less obvious link to vision. The differences apply across the whole contrast-response function, and so resemble a response gain effect (see [@fig-plotclinical]a), which might be due to reduced inhibition from neighbouring neurons. Differences in SSVEP amplitudes have also been reported in individuals with migraine [@Shibata2008], a condition also associated with cortical hyperexciteability.
 
-Amblyopia is a disorder of binocular vision, characterised by one eye contributing much less to perception than the other. This is often due to strabismus (squint) or anisometropia (difference in optical prescription between the eyes) during development. Contemporary accounts suggest that the amblyopic eye is suppressed by signals from the fellow eye. SSVEPs provide a convenient and objective method to characterise the difference in neural response to signals in each eye, and typically show reduced responses to stimuli in the amblyopic eye across the contrast range [@Baker2015; @Lygo2021]. There are currently many novel binocular treatments for amblyopia under development, often involving virtual reality or stereo display systems designed to encourage the two eyes to work together. The steady-state approach may be more sensitive and objective than typical acuity measurements, and also has the potential to measure suppression between the eyes directly [e.g. @Zheng2019; @Du2023; @Hu2023].
+Amblyopia is a disorder of binocular vision, characterised by one eye contributing much less to perception than the other. This is often due to strabismus (squint) or anisometropia (difference in optical prescription between the eyes) during development. Contemporary accounts suggest that the amblyopic eye is suppressed by signals from the fellow eye. SSVEPs provide a convenient and objective method to characterise the difference in neural response to signals in each eye, and typically show reduced responses to stimuli in the amblyopic eye (see [@fig-plotclinical]b) across the contrast range [@Baker2015; @Lygo2021]. There are currently many novel binocular treatments for amblyopia under development, often involving virtual reality or stereo display systems designed to encourage the two eyes to work together. The steady-state approach may be more sensitive and objective than typical acuity measurements, and also has the potential to measure suppression between the eyes directly [e.g. @Zheng2019; @Du2023; @Hu2023].
 
 Autism is a condition often associated with differences in vision [@Simmons2009] and other senses [@MacLennan2022]. @Pei2014 used a sweep-VEP method with counterphase flickering stimuli, and found weaker responses in autistic children at spatial frequencies around 8c/deg, compared with age-matched controls. This was subsequently replicated in a further pediatric sample by @Vilidaite2018 (see [@fig-plotclinical]c), who additionally found weaker responses in autistic adults at the second harmonic (using on/off flicker). Interestingly this study replicated its key findings in a *Drosophila* genetic model of autism (*Nhe3* mutations), illustrating the translational potential of the steady-state approach, as well as identifying a possible biomarker for autism. 
 
