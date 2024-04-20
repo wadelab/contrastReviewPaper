@@ -24,6 +24,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colormaps
 import scipy as scp
+from sklearn.linear_model import LinearRegression
 
 def simpleTransducerFunction(inputContrast, c50, RMax):
  # Here we model a simple hyperbolic ratio function. Also called a "Naka-Rushton" function.
@@ -291,6 +292,166 @@ axs[2].grid()
 axs[2].grid()
 plt.tight_layout()
 plt.savefig('Figures/twoinputs.pdf')
+
+```
+
+```{python makesweep}
+
+# Define some constants
+nLevels=8
+internalNoise=1
+inputFrequency_Hz=np.array([5]) # We simulate a system with on input at many different contrasts
+contrastRange=np.logspace(1,1.9,nLevels)/100 # Equally spaced log contrast between 1 and 10^1.5
+duration_S=1 # All variables in this code have an _[units] where possible
+digitisationRate_Hz=1000
+freqCutoff_Hz=30
+
+support_S=np.linspace(0,duration_S,duration_S*digitisationRate_Hz)
+
+
+fig, axs = plt.subplots(1,1, figsize=(4, 3))
+
+initialSignal = np.zeros(len(contrastRange))
+transducedSignal = np.zeros(len(contrastRange))
+for contrastIndex,thisContrast in enumerate(contrastRange):
+  inputModulation = np.sin(2 * np.pi * inputFrequency_Hz * support_S) * thisContrast + np.random.rand(len(support_S))*internalNoise
+
+  FT_Signal = np.fft.fft(inputModulation) / len(inputModulation)
+
+  responseAmplitude = np.abs(FT_Signal[inputFrequency_Hz])
+  initialSignal[contrastIndex]=responseAmplitude[0]
+  transducedSignal[contrastIndex]=simpleTransducerFunction(responseAmplitude[0], 0.05, 10)
+
+# Now fit a linear regression to the first 4 contrast levels (before it saturates) and find out where this crosses the Y-axis
+X = np.log10(contrastRange[:4]).reshape(-1, 1)
+y = transducedSignal[:4]
+reg = LinearRegression().fit(X, y)
+x_intercept = 10 ** (-reg.intercept_ / reg.coef_[0])
+
+axs.set_title(f'Simulated sweep VEP at {nLevels} different contrasts', fontsize=10)
+axs.semilogx(contrastRange, transducedSignal, 'o')
+axs.semilogx(contrastRange[:4], reg.predict(X), 'r--', label='Linear Fit')
+axs.semilogx([x_intercept], [0], 'ro', label='Threshold')
+axs.set_xlabel('Contrast')
+axs.set_ylabel('Amplitude (a.u.)')
+axs.set_xlim(0.01, 1)
+axs.set_ylim(0, 10)
+axs.legend()
+axs.grid()
+plt.tight_layout()
+plt.savefig('Figures/sweepplot.pdf')
+
+```
+
+```{python makeclinicalplot}
+
+# Parameters
+finecontrastsdB = np.arange(-18, 37, 1)
+finecontrasts = 10**(finecontrastsdB / 20)
+ticklocsx = np.arange(-18, 37, 6)
+ticklabelsx = ['1/8', '1/4', '1/2', 1, 2, 4, 8, 16, 32, 64]
+
+epilepsyparams = np.array([
+    [3.4, 0.15, 1.4, 1],  # controls
+    [5.3, 0.23, 1.4, 1]   # patients
+])
+
+# Calculate responses
+respEPIcontrols = epilepsyparams[0,0] * ((finecontrasts/100)**epilepsyparams[0,2] /
+                (epilepsyparams[0,1]**epilepsyparams[0,2] + (finecontrasts/100)**epilepsyparams[0,2])) + epilepsyparams[0,3]
+
+respEPIpatients = epilepsyparams[1,0] * ((finecontrasts/100)**epilepsyparams[1,2] /
+                (epilepsyparams[1,1]**epilepsyparams[1,2] + (finecontrasts/100)**epilepsyparams[1,2])) + epilepsyparams[1,3]
+
+plt.figure(figsize=(12, 10))
+plt.subplot(2, 2, 1)
+plt.plot(finecontrastsdB, respEPIpatients, lw=4, color='blue', label='Epilepsy patients')
+plt.plot(finecontrastsdB, respEPIcontrols, lw=4, color='black', linestyle='--', label='Control participants')
+plt.xticks(ticklocsx, ticklabelsx)
+plt.yticks(np.arange(0, 7, 2))
+plt.xlabel('Target contrast (%)')
+plt.ylabel('SSVEP response')
+plt.title('(a) Epilepsy')
+plt.legend()
+plt.grid()
+
+
+amblyparams = np.array([
+    [0.39, 37.2, 1.4, 0.22],  # amblyopic eye
+    [2.33, 111.69, 1.4, 0.22]   # fellow eye
+])
+
+# Calculate responses
+respambly = amblyparams[0,0] * ((finecontrasts)**amblyparams[0,2] /
+                (amblyparams[0,1] + (finecontrasts)**amblyparams[0,2])) + amblyparams[0,3]
+
+respfellow = amblyparams[1,0] * ((finecontrasts)**amblyparams[1,2] /
+                (amblyparams[1,1] + (finecontrasts)**amblyparams[1,2])) + amblyparams[1,3]
+
+plt.subplot(2, 2, 2)
+plt.plot(finecontrastsdB, respambly, lw=4, color='red', label='Amblyopic eye')
+plt.plot(finecontrastsdB, respfellow, lw=4, color='black', linestyle='--', label='Fellow eye')
+plt.xticks(ticklocsx, ticklabelsx)
+plt.yticks(np.arange(0, 2.5, 0.5))
+plt.xlabel('Target contrast (%)')
+plt.ylabel('SSVEP response')
+plt.title('(b) Amblyopia')
+plt.legend()
+plt.grid()
+
+
+# Autism and control groups for the autism plot
+autismparams = np.array([
+    [0.6253, 0.2701, 125550, 5.6199],   # ASD group
+    [1.0131, 0.3369, 3589900, 6.8622]   # control group
+])
+
+respASD = (autismparams[0,0] * (finecontrasts**autismparams[0,3]) /
+           (autismparams[0,2] + finecontrasts**autismparams[0,3])) + autismparams[0,1]
+respCON = (autismparams[1,0] * (finecontrasts**autismparams[1,3]) /
+           (autismparams[1,2] + finecontrasts**autismparams[1,3])) + autismparams[1,1]
+
+plt.subplot(2, 2, 3)  # Assuming this is the third plot for Autism
+plt.plot(finecontrastsdB, respASD, lw=4, color='darkgreen', label='ASD children')
+plt.plot(finecontrastsdB, respCON, lw=4, color='black', linestyle='--', label='Control children')
+plt.xticks(ticklocsx, ticklabelsx)
+plt.yticks(np.arange(0, 1.6, 0.5))
+plt.xlabel('Target contrast (%)')
+plt.ylabel('SSVEP response')
+plt.title('(c) Autism')
+plt.legend()
+plt.grid()
+
+# PD parameters for Drosophila from Afsari et al HMG 2014
+PDparams2F1 = np.array([
+    [22, 0.7, 2, 1],  # controls
+    [24, 0.4, 2, 1]])   # hLRRK2
+
+PDparams1F1 = np.array([
+    [104, 0.76, 2, 1],  # controls
+    [170, 0.382, 2, 1]])   # hLRRK2
+
+# Note: Here we plot the 2F1 curves which, we think, most closely correspond to the more central neuronal (as opposed to the photoreceptor-derived) signals
+respParkControls = PDparams2F1[0,0] * ((finecontrasts/100)**PDparams2F1[0,2] /
+                      (PDparams2F1[0,1]**PDparams2F1[0,2] + (finecontrasts/100)**PDparams2F1[0,2])) + PDparams2F1[0,3]
+
+respParkPatients = PDparams2F1[1,0] * ((finecontrasts/100)**PDparams2F1[1,2] /
+                      (PDparams2F1[1,1]**PDparams2F1[1,2] + (finecontrasts/100)**PDparams2F1[1,2])) + PDparams2F1[1,3]
+
+plt.subplot(2, 2, 4)  # Fourth plot for Parkinson's
+plt.plot(finecontrastsdB, respParkPatients, lw=4, color='red', label='hLRRK2 transgenic flies')
+plt.plot(finecontrastsdB, respParkControls, lw=4, color='black', linestyle='--', label='TH+ (control) flies')
+plt.xticks(ticklocsx, ticklabelsx)
+plt.yticks(np.arange(0, 7, 2))
+plt.xlabel('Target contrast (%)')
+plt.ylabel('SSVEP response')
+plt.title("(d) Parkinson's")
+plt.legend()
+plt.grid()
+
+# To save the figure
+plt.savefig('Figures/clinicalplot.pdf')
+
 
 ```
 
@@ -620,72 +781,7 @@ An early use of the SSVEP was to provide an objective estimate of spatial contra
 
 Because SSVEP responses at detection threshold are very small, estimating a threshold is achieved by measuring the contrast response function at relatively high levels, and extrapolating back along the function (either contrast vs response measured at a constant spatial frequency or spatial frequency vs response at a constant contrast level) to estimate its intercept with the x-axis (see @fig-sweepvep). This contrast level was shown to correspond approximately with psychophysically measured detection thresholds [@Norcia1986]. 
 
-```{python}
-
-#| label: fig-sweepvep
-#| fig-cap: "Sweep VEP simulation showing how a contrast detection threshold can be estimated from sweep VEP data measured at higher contrasts."
-#| fig-cap-location: bottom
-
-import matplotlib.pyplot as plt
-from matplotlib import colormaps
-import numpy as np
-import scipy as scp
-from sklearn.linear_model import LinearRegression
-
-def simpleTransducerFunction(inputContrast, c50, RMax):
- # Here we model a simple hyperbolic ratio function. Also called a "Naka-Rushton" function.
- # RMax defines the reponse gain of the transducer (how big the biggest output is). 
- # c50 defines the conrast sensitivity. Smaller values are more sensitive.
- # The exponent can also vary - here we fix it to 2
-  expnt=2
-  output=RMax*(inputContrast**expnt)/(inputContrast**expnt + c50**expnt)
-  return output
-
-# Define some constants
-nLevels=8
-internalNoise=1
-inputFrequency_Hz=np.array([5]) # We simulate a system with on input at many different contrasts
-contrastRange=np.logspace(1,1.9,nLevels)/100 # Equally spaced log contrast between 1 and 10^1.5
-duration_S=1 # All variables in this code have an _[units] where possible
-digitisationRate_Hz=1000
-freqCutoff_Hz=30
-
-support_S=np.linspace(0,duration_S,duration_S*digitisationRate_Hz)
-
-
-fig, axs = plt.subplots(1,1, figsize=(4, 3))
-
-initialSignal = np.zeros(len(contrastRange))
-transducedSignal = np.zeros(len(contrastRange))
-for contrastIndex,thisContrast in enumerate(contrastRange):
-  inputModulation = np.sin(2 * np.pi * inputFrequency_Hz * support_S) * thisContrast + np.random.rand(len(support_S))*internalNoise
-
-  FT_Signal = np.fft.fft(inputModulation) / len(inputModulation)
-
-  responseAmplitude = np.abs(FT_Signal[inputFrequency_Hz])
-  initialSignal[contrastIndex]=responseAmplitude[0]
-  transducedSignal[contrastIndex]=simpleTransducerFunction(responseAmplitude[0], 0.05, 10)
-
-# Now fit a linear regression to the first 4 contrast levels (before it saturates) and find out where this crosses the Y-axis
-X = np.log10(contrastRange[:4]).reshape(-1, 1)
-y = transducedSignal[:4]
-reg = LinearRegression().fit(X, y)
-x_intercept = 10 ** (-reg.intercept_ / reg.coef_[0])
-
-axs.set_title(f'Simulated sweep VEP at {nLevels} different contrasts', fontsize=10)
-axs.semilogx(contrastRange, transducedSignal, 'o')
-axs.semilogx(contrastRange[:4], reg.predict(X), 'r--', label='Linear Fit')
-axs.semilogx([x_intercept], [0], 'ro', label='Threshold')
-axs.set_xlabel('Contrast')
-axs.set_ylabel('Amplitude (a.u.)')
-axs.set_xlim(0.01, 1)
-axs.set_ylim(0, 10)
-axs.legend()
-axs.grid()
-plt.tight_layout()
-plt.show()
-
-```
+![Sweep VEP simulation showing how a contrast detection threshold can be estimated from sweep VEP data measured at higher contrasts.](Figures/sweepplot.pdf){#fig-sweepvep}
 
 A robust estimate of the threshold therefore requires the measurement of the SSVEP amplitude at many different super-threshold contrasr levels. This was made faster by the development of the ‘sweep VEP’ paradigm in which the stimulus changed its contrast, spatial frequency or some other property, throughout a trial [@Tyler1979]. To avoid hysteresis effects, the sweep is sometimes conducted both up and down in the same experiment [@Tyler1979, @Norcia1985a; @Norcia1990]. The sweep VEP (really, a sweep 'SSVEP') technique is now commonly-used to obtain a rapid and objective measurement of visual acuity. In particular, because of its relative speed and simplicity, this technique has now become a standard for conducting tests of visual acuity in very young subjects or where behavioural tests are not appropriate [@Ridder2004; @Hoffmann2017; @Bach2008; @Bach2020].
 
@@ -705,124 +801,8 @@ Autism is a condition often associated with differences in vision [@Simmons2009]
 
 Recent work on understanding Parkinson's disease has also used *Drosophila* genetic models. @Afsari2014 found that mutant flies produced stronger SSVEP responses to flickering lights than control flies (see [@fig-plotclinical]d). The authors theorised that differences in early gain control during development might lead to visual deficits later in life. Although visual responses are a convenient assay of neural function, it is likely that same general process applies throughout the whole brain, including in the motor system where the core Parkinson's symptoms (tremor, rigidity, slow movement) manifest. The SSVEP differences were reduced by a kinase inhibitor that targets the dopamine system, demonstrating how model organisms can be used to test new pharmacological treatments. SSVEP responses also provide a potential method to diagnose Parkinson's before any symptoms manifest, and to monitor the effect of treatments.
 
-```{python}
+![Example contrast response functions for different clinical conditions. Panel (a) shows modelled contrast response functions for epilepsy patients (blue) and control participants (black), based on the data of Tsai et al. (2011). Panel (b) shows functions for the amblyopic (red) and fellow (black) eyes of adults with amblyopia, based on the data of Baker et al. (2015). Panel (c) shows functions for children with (green) and without (black) a diagnosis of autism, based on the data of Vilidaite et al. (2018). Panel (d) shows data from *Drosophila melanogaster* (fruit flies) from Afsari et al. (2014). One day-old flies expressing a human gene linked to Parkinson's (hLRRK-G2019S) show increased SSVEP response amplitude and sensitivity (red) compared to control animals (black).](Figures/clinicalplot.pdf){#fig-plotclinical}
 
-#| label: fig-plotclinical
-#| fig-cap: "Example contrast response functions for different clinical conditions. Panel (a) shows modelled contrast response functions for epilepsy patients (blue) and control participants (black), based on the data of Tsai et al. (2011). Panel (b) shows functions for the amblyopic (red) and fellow (black) eyes of adults with amblyopia, based on the data of Baker et al. (2015). Panel (c) shows functions for children with (green) and without (black) a diagnosis of autism, based on the data of Vilidaite et al. (2018). Panel (d) shows data from *Drosophila melanogaster* (fruit flies) from Afsari et al. (2014). One day-old flies expressing a human gene linked to Parkinson's (hLRRK-G2019S) show increased SSVEP response amplitude and sensitivity (red) compared to control animals (black)."
-#| fig-cap-location: bottom
-
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Parameters
-finecontrastsdB = np.arange(-18, 37, 1)
-finecontrasts = 10**(finecontrastsdB / 20)
-ticklocsx = np.arange(-18, 37, 6)
-ticklabelsx = ['1/8', '1/4', '1/2', 1, 2, 4, 8, 16, 32, 64]
-
-epilepsyparams = np.array([
-    [3.4, 0.15, 1.4, 1],  # controls
-    [5.3, 0.23, 1.4, 1]   # patients
-])
-
-# Calculate responses
-respEPIcontrols = epilepsyparams[0,0] * ((finecontrasts/100)**epilepsyparams[0,2] /
-                (epilepsyparams[0,1]**epilepsyparams[0,2] + (finecontrasts/100)**epilepsyparams[0,2])) + epilepsyparams[0,3]
-
-respEPIpatients = epilepsyparams[1,0] * ((finecontrasts/100)**epilepsyparams[1,2] /
-                (epilepsyparams[1,1]**epilepsyparams[1,2] + (finecontrasts/100)**epilepsyparams[1,2])) + epilepsyparams[1,3]
-
-plt.figure(figsize=(12, 10))
-plt.subplot(2, 2, 1)
-plt.plot(finecontrastsdB, respEPIpatients, lw=4, color='blue', label='Epilepsy patients')
-plt.plot(finecontrastsdB, respEPIcontrols, lw=4, color='black', linestyle='--', label='Control participants')
-plt.xticks(ticklocsx, ticklabelsx)
-plt.yticks(np.arange(0, 7, 2))
-plt.xlabel('Target contrast (%)')
-plt.ylabel('SSVEP response')
-plt.title('(a) Epilepsy')
-plt.legend()
-plt.grid()
-
-
-amblyparams = np.array([
-    [0.39, 37.2, 1.4, 0.22],  # amblyopic eye
-    [2.33, 111.69, 1.4, 0.22]   # fellow eye
-])
-
-# Calculate responses
-respambly = amblyparams[0,0] * ((finecontrasts)**amblyparams[0,2] /
-                (amblyparams[0,1] + (finecontrasts)**amblyparams[0,2])) + amblyparams[0,3]
-
-respfellow = amblyparams[1,0] * ((finecontrasts)**amblyparams[1,2] /
-                (amblyparams[1,1] + (finecontrasts)**amblyparams[1,2])) + amblyparams[1,3]
-
-plt.subplot(2, 2, 2)
-plt.plot(finecontrastsdB, respambly, lw=4, color='red', label='Amblyopic eye')
-plt.plot(finecontrastsdB, respfellow, lw=4, color='black', linestyle='--', label='Fellow eye')
-plt.xticks(ticklocsx, ticklabelsx)
-plt.yticks(np.arange(0, 2.5, 0.5))
-plt.xlabel('Target contrast (%)')
-plt.ylabel('SSVEP response')
-plt.title('(b) Amblyopia')
-plt.legend()
-plt.grid()
-
-
-# Autism and control groups for the autism plot
-autismparams = np.array([
-    [0.6253, 0.2701, 125550, 5.6199],   # ASD group
-    [1.0131, 0.3369, 3589900, 6.8622]   # control group
-])
-
-respASD = (autismparams[0,0] * (finecontrasts**autismparams[0,3]) /
-           (autismparams[0,2] + finecontrasts**autismparams[0,3])) + autismparams[0,1]
-respCON = (autismparams[1,0] * (finecontrasts**autismparams[1,3]) /
-           (autismparams[1,2] + finecontrasts**autismparams[1,3])) + autismparams[1,1]
-
-plt.subplot(2, 2, 3)  # Assuming this is the third plot for Autism
-plt.plot(finecontrastsdB, respASD, lw=4, color='darkgreen', label='ASD children')
-plt.plot(finecontrastsdB, respCON, lw=4, color='black', linestyle='--', label='Control children')
-plt.xticks(ticklocsx, ticklabelsx)
-plt.yticks(np.arange(0, 1.6, 0.5))
-plt.xlabel('Target contrast (%)')
-plt.ylabel('SSVEP response')
-plt.title('(c) Autism')
-plt.legend()
-plt.grid()
-
-# PD parameters for Drosophila from Afsari et al HMG 2014
-PDparams2F1 = np.array([
-    [22, 0.7, 2, 1],  # controls
-    [24, 0.4, 2, 1]])   # hLRRK2
-
-PDparams1F1 = np.array([
-    [104, 0.76, 2, 1],  # controls
-    [170, 0.382, 2, 1]])   # hLRRK2
-
-# Note: Here we plot the 2F1 curves which, we think, most closely correspond to the more central neuronal (as opposed to the photoreceptor-derived) signals
-respParkControls = PDparams2F1[0,0] * ((finecontrasts/100)**PDparams2F1[0,2] /
-                      (PDparams2F1[0,1]**PDparams2F1[0,2] + (finecontrasts/100)**PDparams2F1[0,2])) + PDparams2F1[0,3]
-
-respParkPatients = PDparams2F1[1,0] * ((finecontrasts/100)**PDparams2F1[1,2] /
-                      (PDparams2F1[1,1]**PDparams2F1[1,2] + (finecontrasts/100)**PDparams2F1[1,2])) + PDparams2F1[1,3]
-
-plt.subplot(2, 2, 4)  # Fourth plot for Parkinson's
-plt.plot(finecontrastsdB, respParkPatients, lw=4, color='red', label='hLRRK2 transgenic flies')
-plt.plot(finecontrastsdB, respParkControls, lw=4, color='black', linestyle='--', label='TH+ (control) flies')
-plt.xticks(ticklocsx, ticklabelsx)
-plt.yticks(np.arange(0, 7, 2))
-plt.xlabel('Target contrast (%)')
-plt.ylabel('SSVEP response')
-plt.title("(d) Parkinson's")
-plt.legend()
-plt.grid()
-
-# To save the figure
-# plt.savefig('Figures/clinicalplot.pdf')
-plt.show()
-
-```
 
 # Brain-computer interfaces
 
