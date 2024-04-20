@@ -95,7 +95,7 @@ ax2.axis('off')
 ax2.set_title('High-Contrast Background')
 
 plt.tight_layout()
-plot.savefig('Figures/centresurround.pdf')
+plt.savefig('Figures/centresurround.pdf')
 
 ```
 
@@ -155,7 +155,7 @@ axs[2].grid()
 
 axs[2].grid()
 plt.tight_layout()
-plot.savefig('Figures/linearsystem.pdf')
+plt.savefig('Figures/linearsystem.pdf')
 
 
 ```
@@ -217,7 +217,7 @@ axs[2].grid()
 
 axs[2].grid()
 plt.tight_layout()
-plot.savefig('Figures/transducer.pdf')
+plt.savefig('Figures/transducer.pdf')
 
 
 ```
@@ -285,7 +285,7 @@ axs[2].grid()
 
 axs[2].grid()
 plt.tight_layout()
-plot.savefig('Figures/twoinputs.pdf')
+plt.savefig('Figures/twoinputs.pdf')
 
 ```
 
