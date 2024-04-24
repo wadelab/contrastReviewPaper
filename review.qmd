@@ -553,10 +553,25 @@ Recent work on understanding Parkinson's disease has also used *Drosophila* gene
 
 ![Example contrast response functions for different clinical conditions. Panel (a) shows modelled contrast response functions for epilepsy patients (blue) and control participants (black), based on the data of Tsai et al. (2011). Panel (b) shows functions for the amblyopic (red) and fellow (black) eyes of adults with amblyopia, based on the data of Baker et al. (2015). Panel (c) shows functions for children with (green) and without (black) a diagnosis of autism, based on the data of Vilidaite et al. (2018). Panel (d) shows data from *Drosophila melanogaster* (fruit flies) from Afsari et al. (2014). One day-old flies expressing a human gene linked to Parkinson's (hLRRK-G2019S) show increased SSVEP response amplitude and sensitivity (red) compared to control animals (black).](Figures/clinicalplot.pdf){#fig-plotclinical}
 
+# Attention
+
+Attention exerts a profound influence on performance: Allowing people to attend covertly to a spatial location for example, improves their performance on a target detection task significantly (Posner, https://pubmed.ncbi.nlm.nih.gov/11934448/, https://pubmed.ncbi.nlm.nih.gov/10788636/,  (Morrone, Denti, & Spinelli,
+2004; Pestelli, Ling, & Carrasco, 2009) ). In principle, this effect may be driven both by modulation of the underlying signal or by additional decision-theoretic factors such as reduction in spatial uncertainty (https://jov.arvojournals.org/article.aspx?articleid=2121966, https://jov.arvojournals.org/article.aspx?articleid=2192826). Early experiments with non-human primates showed little evidence for attentionally-driven changes in neuronal spike rates (Luck,
+Chelazzi, Hillyard, & Desimone, 1997; Marcus & van
+Essen, 2002; McAdams & Maunsell, 1999, Mehta, Ulbert, and
+Schroeder (2000)), but with the advent of spatially-resolved human brain imaging methods in the late 90s it became apparent that spatial attention was linked to frank changes in both fMRI bold responses (Tootell, 98: (Brefczynski &
+De Yoe, 1999; Buracas & Boynton, 2007; Gandhi,
+Heeger, & Boynton, 1999; Kastner, Pinsk, De Weerd,
+Desimone, & Ungerleider, 1999; Li, Lu, Tjan, Dosher, &
+Chu, 2008; Murray, 2008; Silver, Ress, & Heeger, 2007;
+Somers, Dale, Seiffert, & Tootell, 1999; Tootell et al.,
+1998),) and EEG signals (https://pubmed.ncbi.nlm.nih.gov/16221931/). 
+
+In the late 2000s a comprehensive theoretical model for attentional modulation was developed that framed it as a gain control modulation (Reynolds and Heeger 2009, Boynton Vis Res 2009). This framework has proven to be influential - explaining a wide range of phenomena from the earlier literature and demonstrating ... (effect of stimulus configuration critical). Then... talk about Lauriten et al, Verghese (2 papers) maybe mention Crognale / Highsmith, Wang+Wade and Jasna's paper from 2018. https://www.sciencedirect.com/science/article/abs/pii/S1053811918303860) Probably lots more Carasco ...
 
 # Brain-computer interfaces
 
-One widespread application of the SSVEP technique is in the design of brain-computer interfaces, which seek to control some aspect of a computer using neural signals. The high SNR and good frequency resolution of SSVEPs make them an ideal candidate for this approach. Typical studies involve presenting an array of stimuli at different flicker frequencies, and having the participant select one either by overt attention (i.e. shifting fixation to foveate the selected stimulus) or covert attention (i.e. deploying attention to one stimulus whilst keeping fixated). EEG signals are highly sensitive to both visual field position [@Ales2010] and attentional state [@Verghese2012; @Lauritzen2010], so the response to the selected stimulus will typically increase relative to the others, allowing it to be identified by an on-line algorithm.
+One widespread recent application of the SSVEP technique is in the design of brain-computer interfaces, which seek to control some aspect of a computer using neural signals. The high SNR and frequency resolution of SSVEPs make them an ideal candidate for this approach. Typical studies may involve presenting an array of stimuli at different flicker frequencies, and having the participant select one either by overt attention (i.e. shifting fixation to foveate the selected stimulus) or covert attention (i.e. deploying attention to one stimulus whilst keeping fixated). EEG signals are highly sensitive to both visual field position [@Ales2010] and attentional state [@Verghese2012; @Lauritzen2010], so the response to the selected stimulus will typically increase relative to the others, allowing it to be identified by an on-line algorithm.
 
 Probably a summary of BCIs here.
 
