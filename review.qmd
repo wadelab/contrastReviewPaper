@@ -555,7 +555,7 @@ Recent work on understanding Parkinson's disease has also used *Drosophila* gene
 
 # Attention
 
-Attention exerts a profound influence on performance: Allowing people to attend covertly to a spatial location for example, improves their performance on a target detection task significantly (Posner, https://pubmed.ncbi.nlm.nih.gov/11934448/, https://pubmed.ncbi.nlm.nih.gov/10788636/,  (Morrone, Denti, & Spinelli,
+Attention exerts a profound influence on visual performance: For example, allowing people to attend covertly to a spatial location for example, improves their performance on a target detection task significantly (Posner, https://pubmed.ncbi.nlm.nih.gov/11934448/, https://pubmed.ncbi.nlm.nih.gov/10788636/,  (Morrone, Denti, & Spinelli,
 2004; Pestelli, Ling, & Carrasco, 2009) ). In principle, this effect may be driven both by modulation of the underlying signal or by additional decision-theoretic factors such as reduction in spatial uncertainty (https://jov.arvojournals.org/article.aspx?articleid=2121966, https://jov.arvojournals.org/article.aspx?articleid=2192826). Early experiments with non-human primates showed little evidence for attentionally-driven changes in neuronal spike rates (Luck,
 Chelazzi, Hillyard, & Desimone, 1997; Marcus & van
 Essen, 2002; McAdams & Maunsell, 1999, Mehta, Ulbert, and
