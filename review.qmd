@@ -565,9 +565,9 @@ Heeger, & Boynton, 1999; Kastner, Pinsk, De Weerd,
 Desimone, & Ungerleider, 1999; Li, Lu, Tjan, Dosher, &
 Chu, 2008; Murray, 2008; Silver, Ress, & Heeger, 2007;
 Somers, Dale, Seiffert, & Tootell, 1999; Tootell et al.,
-1998),) and EEG signals (https://pubmed.ncbi.nlm.nih.gov/16221931/). 
+1998),) and EEG signals (https://pubmed.ncbi.nlm.nih.gov/16221931/), . 
 
-In the late 2000s a comprehensive theoretical model for attentional modulation was developed that framed it as a gain control modulation (Reynolds and Heeger 2009, Boynton Vis Res 2009). This framework has proven to be influential - explaining a wide range of phenomena from the earlier literature and demonstrating ... (effect of stimulus configuration critical). Then... talk about Lauriten et al, Verghese (2 papers) maybe mention Crognale / Highsmith, Wang+Wade and Jasna's paper from 2018. https://www.sciencedirect.com/science/article/abs/pii/S1053811918303860) Probably lots more Carasco ...
+SSVEP measurements of attentional effects on both luminance and chromatic contrast strongly implicated gain control an an underlying mechanism [@DiRusso2001GainControl] but the literature was.  In the late 2000s a comprehensive theoretical model for attentional modulation was developed that framed it as a gain control modulation (Reynolds and Heeger 2009, Boynton Vis Res 2009). This framework has proven to be influential - explaining a wide range of phenomena from the earlier literature and demonstrating the subtle interaction between the size of the attentional 'spotlight' and the stimulus which explains many apparent contradictions in the literature.  (effect of stimulus configuration critical). Then... talk about Lauriten et al, Verghese (2 papers) maybe mention Crognale / Highsmith, Wang+Wade and Jasna's paper from 2018. https://www.sciencedirect.com/science/article/abs/pii/S1053811918303860) Probably lots more Carasco ...
 
 # Brain-computer interfaces
 
