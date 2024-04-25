@@ -556,7 +556,11 @@ Recent work on understanding Parkinson's disease has also used *Drosophila* gene
 # Attention
 
 Attention exerts a profound influence on visual performance: For example, allowing people to attend covertly to a spatial location for example, improves their performance on a target detection task significantly (Posner, https://pubmed.ncbi.nlm.nih.gov/11934448/, https://pubmed.ncbi.nlm.nih.gov/10788636/,  (Morrone, Denti, & Spinelli,
-2004; Pestelli, Ling, & Carrasco, 2009) ). In principle, this effect may be driven both by modulation of the underlying signal or by additional decision-theoretic factors such as reduction in spatial uncertainty (https://jov.arvojournals.org/article.aspx?articleid=2121966, https://jov.arvojournals.org/article.aspx?articleid=2192826). Early experiments with non-human primates showed little evidence for attentionally-driven changes in neuronal spike rates (Luck,
+2004; Pestelli, Ling, & Carrasco, 2009) , [@bashinski1980enhancement]). 
+
+In principle, this enhancement may be driven both by modulation of the underlying signal or noise characteristics, or by additional decision-theoretic factors such as reduction in spatial uncertainty (https://jov.arvojournals.org/article.aspx?articleid=2121966, https://jov.arvojournals.org/article.aspx?articleid=2192826). 
+
+Early experiments with non-human primates showed little evidence for attentionally-driven changes in neuronal spike rates (Luck,
 Chelazzi, Hillyard, & Desimone, 1997; Marcus & van
 Essen, 2002; McAdams & Maunsell, 1999, Mehta, Ulbert, and
 Schroeder (2000)), but with the advent of spatially-resolved human brain imaging methods in the late 90s it became apparent that spatial attention was linked to frank changes in both fMRI bold responses (Tootell, 98: (Brefczynski &
@@ -567,7 +571,9 @@ Chu, 2008; Murray, 2008; Silver, Ress, & Heeger, 2007;
 Somers, Dale, Seiffert, & Tootell, 1999; Tootell et al.,
 1998),) and EEG signals (https://pubmed.ncbi.nlm.nih.gov/16221931/), . 
 
-SSVEP measurements of attentional effects on both luminance and chromatic contrast strongly implicated gain control an an underlying mechanism [@DiRusso2001GainControl] but the literature was.  In the late 2000s a comprehensive theoretical model for attentional modulation was developed that framed it as a gain control modulation (Reynolds and Heeger 2009, Boynton Vis Res 2009). This framework has proven to be influential - explaining a wide range of phenomena from the earlier literature and demonstrating the subtle interaction between the size of the attentional 'spotlight' and the stimulus which explains many apparent contradictions in the literature.  (effect of stimulus configuration critical). Then... talk about Lauriten et al, Verghese (2 papers) maybe mention Crognale / Highsmith, Wang+Wade and Jasna's paper from 2018. https://www.sciencedirect.com/science/article/abs/pii/S1053811918303860) Probably lots more Carasco ...
+SSVEP and psychophysical measurements of attentional effects on both luminance and chromatic contrast strongly implicated gain control an an underlying mechanism [@DiRusso2001GainControl, @lu1998external].  In the late 2000s a comprehensive theoretical model for attentional modulation was developed that framed it as a gain control computation (Reynolds and Heeger 2009, Boynton Vis Res 2009). This framework has proven to be influential - explaining a wide range of phenomena from the earlier literature and demonstrating subtle interactions between the size of the attentional 'spotlight' and the stimulus configuration which rationalise many apparent contradictions in the literature. Subsequent papers   (effect of stimulus configuration critical). Then... talk about Lauriten et al, Verghese (2 papers) maybe mention Crognale / Highsmith, Wang+Wade and Jasna's paper from 2018. https://www.sciencedirect.com/science/article/abs/pii/S1053811918303860) Probably lots more Carasco ...
+
+
 
 # Brain-computer interfaces
 
