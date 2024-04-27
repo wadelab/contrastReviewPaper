@@ -555,22 +555,10 @@ Recent work on understanding Parkinson's disease has also used *Drosophila* gene
 
 # Attention
 
-Attention exerts a profound influence on visual performance: For example, allowing people to attend covertly to a spatial location for example, improves their performance on a target detection task significantly [@Posner1980; @Cameron2002; @Carrasco2000; @Bashinski1980; @Morrone2004; @Pestilli2009].
+Attention exerts a profound influence on visual performance: for example, allowing people to attend covertly to a spatial location for example, improves their performance on a target detection task significantly [@Posner1980; @Cameron2002; @Carrasco2000; @Bashinski1980; @Morrone2004; @Pestilli2009]. In principle, this enhancement may be driven both by modulation of the underlying signal or noise characteristics, or by additional decision-theoretic factors such as reduction in spatial uncertainty [@Gould2007; @Petrov2006]. Early experiments with non-human primates showed little evidence for attentionally-driven changes in neuronal spike rates [@Luck1997; @Marcus2002; @McAdams1999; @Mehta2000a; @Mehta2000b], but with the advent of spatially-resolved human brain imaging methods in the late 1990s it became apparent that spatial attention was linked to frank changes in both fMRI bold responses 
+[@Tootell1998; @Brefczynski1999; @Buracas2007; @Gandhi1999; @Kastner1999; @Li2008; @Murray2008; @Silver2007; @Somers1999] and EEG signals [@Ding2006]. 
 
-In principle, this enhancement may be driven both by modulation of the underlying signal or noise characteristics, or by additional decision-theoretic factors such as reduction in spatial uncertainty [@Gould2007; @Petrov2006].
-
-Early experiments with non-human primates showed little evidence for attentionally-driven changes in neuronal spike rates (Luck,
-Chelazzi, Hillyard, & Desimone, 1997; Marcus & van
-Essen, 2002; McAdams & Maunsell, 1999, Mehta, Ulbert, and
-Schroeder (2000)), but with the advent of spatially-resolved human brain imaging methods in the late 90s it became apparent that spatial attention was linked to frank changes in both fMRI bold responses (Tootell, 98: (Brefczynski &
-De Yoe, 1999; Buracas & Boynton, 2007; Gandhi,
-Heeger, & Boynton, 1999; Kastner, Pinsk, De Weerd,
-Desimone, & Ungerleider, 1999; Li, Lu, Tjan, Dosher, &
-Chu, 2008; Murray, 2008; Silver, Ress, & Heeger, 2007;
-Somers, Dale, Seiffert, & Tootell, 1999; Tootell et al.,
-1998),) and EEG signals (https://pubmed.ncbi.nlm.nih.gov/16221931/), . 
-
-Electrophysiological and psychophysical measurements of attentional effects on both luminance and chromatic contrast strongly implicated gain control an an underlying mechanism [@DiRusso1999; @DiRusso2001; @Lu1998] and demonstrated that these effects differed between chromatic and achromatic pathways [@DiRusso1999b].  In the late 2000s a comprehensive theoretical model for attentional modulation was developed that framed it as a gain control computation (Reynolds and Heeger 2009, Boynton Vis Res 2009). This framework has proven to be influential - explaining a wide range of phenomena from the earlier literature and demonstrating subtle interactions between the size of the attentional 'spotlight' and the stimulus configuration which rationalise many apparent contradictions in the literature. Subsequent papers   (effect of stimulus configuration critical). Then... talk about Lauriten et al, Verghese (2 papers) maybe mention Crognale / Highsmith, Wang+Wade and Jasna's paper from 2018. https://www.sciencedirect.com/science/article/abs/pii/S1053811918303860) Probably lots more Carasco ...
+Electrophysiological and psychophysical measurements of attentional effects on both luminance and chromatic contrast strongly implicated gain control an an underlying mechanism [@DiRusso1999; @DiRusso2001; @Lu1998] and demonstrated that these effects differed between chromatic and achromatic pathways [@DiRusso1999b].  In the late 2000s a comprehensive theoretical model for attentional modulation was developed that framed it as a gain control computation [@Reynolds2009; @Boynton2009]. This framework has proven to be influential - explaining a wide range of phenomena from the earlier literature and demonstrating subtle interactions between the size of the attentional 'spotlight' and the stimulus configuration which rationalise many apparent contradictions in the literature. Subsequent papers   (effect of stimulus configuration critical). Then... talk about Lauriten et al, Verghese (2 papers) maybe mention Crognale / Highsmith, Wang+Wade and Jasna's paper from 2018. https://www.sciencedirect.com/science/article/abs/pii/S1053811918303860) Probably lots more Carasco ...
 
 
 
