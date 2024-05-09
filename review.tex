@@ -517,21 +517,21 @@ The complexity of even a simple simulation of the frequency-domain
 signal arising from non-linear interactions is intriguing. Presumably,
 the signal measured from early visual cortex is the result of a cascade
 of nonlinear retinal and cortical operations up to that point. It
-therefore contains a `signature' of the computational nature, order and
-parameters of those operations - including the shape of the transducer
-functions and the computations involved in signal combination. In
-principle, that information could be recovered from the SSVEP signal - a
-possibility recognised in the early days of the technique (Regan \&
-Regan, 1988). Although characterising the complete set of computations
-along entire processing pathway is challenging, careful parametric
-variation of the input stimuli does allow us to fit models of early
-visual gain control using SSVEP data. For example, Tsai \emph{et al.}
-(2012) demonstrated that a gain control model gave a good account of the
-pattern of intermodulation responses produced by two overlaid patterns
-flickering at different frequencies. This was achieved by passing full
-stimulus waveforms through the transducer nonlinearity, and calculating
-the Fourier spectrum of the model output. Our own work on signal
-combination across eyes and space similarly demonstrated close
+therefore contains a `signature' or `fingerprint' of the computational
+nature, order and parameters of those operations - including the shape
+of the transducer functions and the computations involved in signal
+combination. In principle, that information could be recovered from the
+SSVEP signal - a possibility recognised in the early days of the
+technique (Regan \& Regan, 1988). Although characterising the complete
+set of computations along entire processing pathway is challenging,
+careful parametric variation of the input stimuli does allow us to fit
+models of early visual gain control using SSVEP data. For example, Tsai
+\emph{et al.} (2012) demonstrated that a gain control model gave a good
+account of the pattern of intermodulation responses produced by two
+overlaid patterns flickering at different frequencies. This was achieved
+by passing full stimulus waveforms through the transducer nonlinearity,
+and calculating the Fourier spectrum of the model output. Our own work
+on signal combination across eyes and space similarly demonstrated close
 correspondence between the predictions of a computational model and
 empirical data in humans (Baker \& Wade, 2017). More detailed modelling
 of intracortical recordings (Groen \emph{et al.}, 2022) has revealed
@@ -566,7 +566,7 @@ periods of time.
 
 Because SSVEP responses at detection threshold are very small,
 estimating a threshold is achieved by measuring the contrast response
-function at relatively high levels, and extrapolating back along the
+function at relatively high levels, and extrapolaKting back along the
 function (either contrast vs response measured at a constant spatial
 frequency or spatial frequency vs response at a constant contrast level)
 to estimate its intercept with the x-axis (see
@@ -732,7 +732,7 @@ sensitivity (red) compared to control animals (black).}
 
 \end{figure}%
 
-\section{Attention}\label{attention}
+\section{Attention and arousal}\label{attention-and-arousal}
 
 Attention exerts a profound influence on visual performance: for
 example, allowing people to attend covertly to a spatial location
@@ -753,7 +753,8 @@ changes in both fMRI BOLD responses (Tootell \emph{et al.}, 1998; Somers
 \emph{et al.}, 1999; Gandhi \emph{et al.}, 1999; Brefczynski \& DeYoe,
 1999; Kastner \emph{et al.}, 1999; Buracas \& Boynton, 2007; Silver
 \emph{et al.}, 2007; Li \emph{et al.}, 2008; Murray, 2008) and EEG
-signals (\textbf{MullerHillyard2000?}).
+signals (Morgan \emph{et al.}, 1996; Müller \emph{et al.}, 1998; Müller
+\& Hillyard, 2000; Ding \emph{et al.}, 2006).
 
 Electrophysiological and psychophysical measurements of the effect of
 attention on both luminance and chromatic contrast have strongly
@@ -773,262 +774,172 @@ interactions between the size of the attentional `spotlight' and the
 stimulus configuration which rationalise many apparent contradictions in
 the literature. Direct measurements of attentional modulation of
 achromatic SSVEP signals are broadly consistent with this model
-Martinovic \& Andersen (2018) and confirm the relatively weaker role of
-spatial attention on responses driven by chromatic stimuli -
-particularly those that isolate the opponent S-(L+M) cone pathway
-Highsmith \& Crognale (2010). The gain control model of attention can
-also be extended to SSVEP studies of feature-based attention which show
-that the modulatory effects can be targeted to the most informative
-neuronal populations (Verghese \emph{et al.}, 2012).
+(Lauritzen \emph{et al.}, 2010; Hou \emph{et al.}, 2016; Martinovic \&
+Andersen, 2018) and confirm the relatively weaker role of spatial
+attention on responses driven by chromatic stimuli - particularly those
+that isolate the opponent S-(L+M) cone pathway (Highsmith \& Crognale,
+2010; Wang \& Wade, 2011). The gain control model of attention can also
+be extended to SSVEP studies of feature-based attention which show that
+the modulatory effects can be targeted to the most informative neuronal
+populations (Verghese \emph{et al.}, 2012).
+
+The SSVEP can also be used to study changes in visual processing
+\textit{driven} by different behavioural states or overall arousal. For
+example, locomotion has been shown to alter neuronal excitability and
+spatial normalization in mice (Niell \& Stryker, 2010; Ayaz \emph{et
+al.}, 2013) - running mice have higher visual sensitivity and lower
+surround suppression compared to stationary mice. Although measuring EEG
+responses from locomoting humans is technically challenging, SSVEP
+studies (which are able to distinguish broadband noise from input signal
+effectively) have shown that walking also alters early visual
+processing, although in a manner different to that observed in mice
+(Benjamin \emph{et al.}, 2018; Cao \& Händel, 2019).
+
+SSVEP measurements are typically used to measure time-invariant
+responses due to sustained attention. However, recent work has shown
+that moderately high modulation frequencies (ca 10Hz) and short analysis
+windows (1.5s) can also be used to track the dynamic allocation of
+attention across a task (Chota \emph{et al.}, 2024) or attention to
+moving targets (Lissa \emph{et al.}, 2020). The ability to track changes
+in attention over short time periods is also important if SSVEP is to be
+used for dynamic readouts - for example in a Brain Computer Interface.
 
 \section{Brain-computer interfaces}\label{brain-computer-interfaces}
 
 One widespread recent application of the SSVEP technique is in the
 design of brain-computer interfaces, which seek to control some aspect
-of a computer using neural signals. The high SNR and frequency
+of a computer using neural signals. The high SNR and precise frequency
 resolution of SSVEPs make them an ideal candidate for this approach.
 Typical studies may involve presenting an array of stimuli at different
 contrast flicker frequencies, and having the participant select one
 either by overt attention (i.e.~shifting fixation to foveate the
 selected stimulus) or covert attention (i.e.~deploying attention to one
-stimulus whilst keeping fixated) (\textbf{Middendorf?}). BEcause EEG
-signals are highly sensitive to both visual field position (Ales
-\emph{et al.}, 2010) and attentional state (Lauritzen \emph{et al.},
-2010; Verghese \emph{et al.}, 2012), the response to the selected
-stimulus will typically increase relative to the others, allowing it to
-be identified by an on-line algorithm. Because more than one stimulus
-frequency is typically present, this modulation and the associated
-changes in gain control, will affect the entire pattern of self- and
-intermodulation terms.
+stimulus whilst keeping fixated) (Middendorf \emph{et al.}, 2000).
+Because SSVEP signals are highly sensitive to both visual field position
+(Di Russo \emph{et al.}, 2007; Ales \emph{et al.}, 2010) and attentional
+state (Morgan \emph{et al.}, 1996; Müller \emph{et al.}, 1998; Lauritzen
+\emph{et al.}, 2010; Verghese \emph{et al.}, 2012), the response to the
+selected stimulus will typically increase relative to the others,
+allowing it to be identified by an on-line algorithm. Because more than
+one stimulus frequency is generally present, this modulation and the
+associated changes in gain control will affect the entire pattern of
+self- and intermodulation terms, allowing the choice to be decoded by a
+multivariate pattern classifier.
 
 This approach is primarily useful in situations that require the BCI to
-distinguish from among a small set of possibilties : For example, in
+distinguish from among a small set of possibilties: for example, in
 early work, visual stimuli representing `Left' and `Right' commands in a
-flight simulator were distinguished robustly (\textbf{Middendorf?}).
-Although SSVEP-based BCI interfaces typically do use contrast flicker,
-work in this field has largely focused on optimising the stimuli or
-decoders to increase decoding performance (e.g.~\ldots{} ) and reducing
-visual fatigue associated with the long-term presentation of arrays of
-high-contrast flicker (e.g.~\ldots..) rather than studying visual
-contrast processing \textit{per se}.
+flight simulator were distinguished robustly (Middendorf \emph{et al.},
+2000). Although SSVEP-based BCI interfaces typically do use contrast
+flicker, work in this field has largely focused on optimising the
+stimuli or decoders to increase decoding performance (e.g.~\ldots{} )
+and reducing visual fatigue associated with the long-term presentation
+of arrays of high-contrast flicker (Diez \emph{et al.}, 2024) rather
+than studying visual contrast processing \textit{per se}. We therefore
+note in passing that using SSVEPs to improve our understanding of early
+contrast processing may yield benefits to this related field.
 
-\section{Conclusions}\label{conclusions}
+\section{Future directions}\label{future-directions}
 
-\emph{2: Sweeps and CRFs. Measurements of contrast sensitivity,
-extrapolating the sweep to zero response to get t'hold. Infants and
-adults?}
+The SSVEP is a powerful tool for studying contrast processing. It
+provides a high SNR readout of neuronal activity that is unambigously
+linked to the input. It is sensitive to both the amplitude and phase of
+the input and when combined with source imaging, it can be extracted
+from different cortical regions allowing researchers to track contrast
+processing computations across the visual pathway. Because of the high
+SNR, it can be measured in subjects where long recording durations are
+impractical (for example, infants or patients with neurological
+disorders) and at frequencies high enough to be effectively invisible
+(Herrmann, 2001; Seijdel \emph{et al.}, 2023; Minarik \emph{et al.},
+2023). The SSVEP is also able to `fingerprint' modulators of the inputs
+through the harmonic and intermodulation terms they generate in the
+output. In principle, each nonlinearity in the visual pathway can be
+identified by its contribution to the frequency spectrum at different
+recording locations (Regan \& Regan, 1988). This, it turn, allows
+researchers to study how contrast processing depends on spatial and
+temporal context and as well as changes in task, cognitive and
+behavioural state and arousal.
 
-\emph{3: Measurements of modulation. Figures adapted from other papers:
-Attention to space, attention to features, adaptation (?).
-masking/surround suppression\textbackslash{}}
+Although visual neuroscience is a relatively old subfield, there are
+still outstanding questions relating to contrast processing that could
+be addressed by SSVEP methods. First, it is still not completely clear
+how contrast signals are computed in the human retina. Although we have
+more than a century of electrophysiological data from animals, and the
+broad structure of cone inputs to retinal ganglion cells is understood
+(Li \emph{et al.}, 2014), we are still discovering new aspects of
+retinal processing that could influence the `coining' of the visual
+system's currency (Gollisch \& Meister, 2010; Uprety \emph{et al.},
+2022; Wang \emph{et al.}, 2023). The ability to frequency tag both
+inputs (for example, cone-directed luminance contrast) and modulators
+(for example, stimuli that selectively drive the
+intrinsically-photosensitive retinal ganglion cells) is a powerful tool
+to explore this first stage of image generation.
 
-\emph{4: Clinical (Porciatti / Tsai/ Marmite/ Amblyopia / PD?)}
+Later in the visual pathway, we would like to know more about the role
+of corticothalamic feedback in the LGN. Although it is commonly thought
+of as a simple relay between the eye and the cortex, the majority of
+inputs to the LGN come from cortex not the eye, and there is good
+evidence that contrast processing in the LGN can be altered by top-down
+signals including attention (Sherman \& Guillery, 1996; O'Connor
+\emph{et al.}, 2002; Briggs \& Usrey, 2007; Gouws \emph{et al.}, 2014).
+Bottom-up inputs to the LGN are segregated by eye and so responses there
+are often considered to be purely monocular, but it is possible that
+feedback signals allow some binocular computations such as interocular
+normalisation (Baker \emph{et al.}, 2007; Dougherty \emph{et al.}, 2019)
+to begin even at this relatively early stage. Frequency tagging inputs
+to different eyes or in different precortical pathways allows us to
+address neurons in different parts of the LGN. These techniques combined
+with advances in recording technology (for example, sensitive
+source-imaged EEG and MEG recordings that can resolve subcortical
+structures (Tesche, 1996; Attal \emph{et al.}, 2012; Attal \& Schwartz,
+2013), noninvasive deep-brain stimulation techniques (Mohammadjavadi
+\emph{et al.}, 2022) or implanted electrode arrays (Krolak-Salmon
+\emph{et al.}, 2003)) may allow us to study these computations in more
+detail.
 
-\emph{5: Future directions (decoding in frequency domain?, animals?
-BCI?)}
+Finally, SSVEPs continue to provide a way of studying contrast in the
+cortex. Here, we are often interested in how different visual parameters
+interact. For example, how are signals from different eyes combined to
+generate both scalar contrast values and also binocular depth cues? How
+does contrast combination depend on the low level properties of the
+individual inputs such as their retinotopic location, cone contrast,
+spatiotemporal frequency, eye of origin and orientation? Colour vision
+scientists are particularly interested in how chromatic signals
+originating in a small number of cone-opponent retinal pathways are
+transformed into a perceptual colour space where the `unique hues'
+appear to be only weakly-related to the early retinal outputs and how
+these computations are conditioned by the spatial and temporal
+properties of the scene (Wandell, 1993; Gegenfurtner, 2003; Solomon \&
+Lennie, 2007; Stoughton \& Conway, 2008; Kaneko \emph{et al.}, 2020; Li
+\emph{et al.}, 2022). All of these questions can be addressed by using
+SSVEP and frequency tagging to examine the computations that combine and
+transform the inputs at different cortical stages (Busse \emph{et al.},
+2009; Baker \& Wade, 2017; Katyal \emph{et al.}, 2018; Chen \&
+Gegenfurtner, 2021; Watts \emph{et al.}, 2024). The original promise of
+the SSVEP approach was that the entire complex-valued frequency spectrum
+recorded at each lcoation provided detailed information about the
+processing nonlinearities up to and including that point. In principle,
+this would allow researchers to uniquely fit the parameters of their
+computations models of visual processing (Regan \& Regan, 1988). To
+date, the complexity of the neuronal computations at even the earliest
+stage of visual processing have hampered this effort - researchers
+typically restrict their analyses to the amplitudes of single, low-order
+frequency components (for example, the inputs frequencies or simple sums
+and differences of those frequencies). As our understanding of the early
+visual system improves, it is becoming possible to generate more
+realistic parameterised forward models of signal generation (Tsai
+\emph{et al.}, 2012; Baker \& Wade, 2017; Chariker \emph{et al.}, 2020;
+Schrimpf \emph{et al.}, 2020; Groen \emph{et al.}, 2022). Feeding
+frequency-tagged inputs into these types of model allows us to generate
+synthetic SSVEP responses that can be compared with those measured in
+human subject. In principle, we are therefore able to use the SSVEP to
+fit the parameters of early visual processing. This approach may also
+allow us to develop more sensitive tests for the changes in early visual
+processing that accompany a wide range of neurological diseases and
+disorders.
 
-\phantomsection\label{anchor-2}{}History
-
-\phantomsection\label{anchor-3}{}1. The basics of SSVEP and contrast
-sensitivity including a history of both fields
-
-SSVEP (Steady-State Visual Evoked Potential): A continuous electrical
-response evoked in the brain by visual stimuli flickering at a constant
-frequency (Regan, 1966).
-
-Contrast Sensitivity: The ability to detect differences in luminance
-between an object and its background (Campbell \& Green, 1965).
-
-Regan, D. (1966). Some characteristics of average steady-state and
-transient responses evoked by modulated light. Electroencephalography
-and clinical neurophysiology, 20(3), 238-248.
-
-Campbell, F. W., \& Green, D. G. (1965). Optical and retinal factors
-affecting visual resolution. J Physiology, 181, 576-593.
-
-Check Regan paper for earlier (e.g.~EEG refs). Norcia review will be
-helpful!
-
-(From Tyler / Levi / Apkarian paper):
-
-6. Regan, D.: Rapid methods for refracting the eye and assessing the
-visual acuity in amblyopia using steady-state visual evoked potentials.
-In Desmedt, J.E., editor: Visual Evoked Potentials in Man: New
-Developments, Oxford, 1977, Clarendon Press, pp.~418-426.
-
-7. Fricker, S.J.: Narrow-band filter techniques for the detection and
-measurement of evoked responses, Electroencephalogr. Clin. Neurophysiol.
-14:411, 1962.
-
-8. Van der Tweel, L. H., Sem-Jacobsen, C.W., Kamp, A., Van Leeuwen,
-W.S., and Verings, F.T.H.: Objective determination of response to
-modulated light, Acta Physiol. Pharmacol. Neerl. 7:528, 1958.
-
-9. Regan, D.: Latencies of evoked potentials to flicker and to pattern
-speedily estimated by simultaneous stimulation method,
-Electroencephalogr. Clin. Neurophysiol. 40:654, 1976.
-
-10. Tyler, C.W., Apkarian, P., and Nakayama, K.: Multiple spatial
-frequency tuning of electrical responses from the human.\ldots{}
-
-{[}Around here perhaps a section about what gain control is, mentioning
-other methods as well including psychophysics, MRI, electrophysiology,
-and other EEG markers including ERPs and evoked gamma band oscillations.
-Maybe outline the Heeger gain control model and its cousins.{]}
-
-{[}Sure. But in fact gain control is only a small part of this story -
-especially in the early days. They were, I think, more interested in
-using SSVEP to measure absolute contrast sensitivity and to get lower
-bounds on things like infant visual development. Gain control might be
-better as a separate section later.{]}
-
-\phantomsection\label{anchor-4}{}2. Spatial, temporal frequency and
-contrast sensitivity measurements
-
-Basically using SSVEP to measure a cortical output amplitude for any
-given input contrast. You can vary parameters like SF, TF, position,
-color and of course contrast. Early on people realised that you can
-`sweep' the stimulus to get a CRF. You broadly get a line in log
-contrast space if you do that (Tyler) - then you can extrapolate that
-line down to zero response to estimate the threshold. That doesn't
-\textgreater quite\textless{} work but it's pretty close.
-
-You can also use this for `difficult' populations like babies. One
-interesting story was about how SSVEP become a replacement for
-preferential looking (which was the other way of looking at infant
-visual development). See e.g.~Davida Teller. SSVEPs allowed people to
-make objective measurements of contrast sensitivity development and
-deduce that the visual system was more mature (e.g.~more functional) in
-infancy than previously expected. Also measures of colour sensitivity.
-Tinyeyes is based off those measurements. Other people: Tyler, Norcia,
-Gunilla H-P, many of the people at SKERI in the 1980s and 90s. Norcia
-86,88,90 - mentioned in Regan's nice autobiography :
-
-In parallel of course, people were using frequency tagging to do single
-unit work - the 1F vs 2F simple/complex cell classification scheme was
-all about this (Lennie and others).
-
-\phantomsection\label{anchor-5}{}3. SSVEP in functional localization
-
-Techniques like fMRI have been combined with SSVEP to achieve more
-precise spatial localization (Di Russo et al., 2007). See however the
-Ales cruciform paper.
-
-Ales and Norcia:... (showed that people's intuition about V1 upper /
-lower v.f reversing polarity wasn't really correct). This feels a little
-outside our scope though... We have also combined SSVEP with source
-imaging techniques to probe responses in different cortical locations
-(again, Ales papers, some early stuff from Stan K? Appelbaum, Wade,
-Norcia figure/ground...) and then a host of later work from that lab and
-others.
-
-\phantomsection\label{anchor-6}{}4. SSVEP and contrast gain control
-including adaptation, masking, and attention
-
-{[}The story goes: Up to the lte 90s people were primarily interested in
-measuring contrast sensitivity - the shape of the response function was
-assumed to be basically log-linear - and they fit it with straight lines
-to extrapolate back to zero response. But then (once Heeger's 1992 paper
-had sunk in - see also stuff like Shapley and Victor 1981
-\href{https://www.zotero.org/google-docs/?zAmtgj}{(Shapley \& Victor,
-1981)}), people started thinking about gain control - Candy and Norcia
-in about 1999, Porciatti, probably a load of Tyler papers that I don't
-even know about...{]}. Probably look in p
-
-And then people worked out that if you can use SSVEP to measure contrast
-responses, you can also use it to measure things that modulate contrast
-responses. These include adaptation, masking, suppression, attention
-(feature and space), clinical things.
-
-\phantomsection\label{anchor-7}{}Adaptation:
-
-Continuous exposure to high-contrast patterns reduces contrast
-sensitivity, which can be measured using SSVEP (Ross et al., 1989).
-Others? Baker recent gain control paper is perhaps worth mentioning here
-as a `confound' of sorts. Engel 2018
-\href{https://www.zotero.org/google-docs/?kdURiS}{\emph{(Vergeer et al.,
-2018)}}. This paper is interesting
-\href{https://www.zotero.org/google-docs/?J2EO3d}{\emph{(Rideaux et al.,
-2023)}} and \textgreater sort\textless{} of SSVEP.
-
-\phantomsection\label{anchor-8}{}Masking:
-
-High contrast masks can suppress the visibility of low contrast
-patterns, which has implications in SSVEP amplitude (Haynes et al.,
-2003).
-
-Attention: Directing attention can enhance contrast sensitivity, as
-shown in studies using SSVEP (Müller et al., 2006). Also Tsai
-(dynamics), Baker / Wade (several), Winawer? I think JW has a nice
-dynamic model of normalization with some MEG data. Busse et al cat/human
-comparison. Candy and Norcia 2001 JNS
-\href{https://www.zotero.org/google-docs/?7hhs5Z}{(Candy et al., 2001)}
-
-Ross, J., Speed, H. D., \& Morgan, M. J. (1989). The effects of
-adaptation and masking on incremental thresholds for contrast. Vision
-research, 29(2), 205-215.
-
-Haynes, J. D., Roth, G., Stadler, M., \& Heinze, H. J. (2003).
-Neuromagnetic correlates of perceived contrast in primary visual cortex.
-Journal of Neurophysiology, 89(6), 2655-2666.
-
-Müller, M. M., Picton, T. W., Valdes-Sosa, P., Riera, J.,
-Teder-Sälejärvi, W. A., \& Hillyard, S. A. (2006). Effects of spatial
-selective attention on the steady-state visual evoked potential in the
-20--28 Hz range. Cognitive Brain Research, 24(1), 1-13.
-
-5. Clinical implications
-
-\phantomsection\label{anchor-9}{}Clinical applications (this is a whole
-section)
-
-Not sure exactly how SSVEP used in clinic. mfVEP?
-
-, e.g., in monitoring visual impairments, tracking neuronal diseases, or
-neurofeedback (Norcia et al., 2015).
-
-Tsai epilepsy \href{https://www.zotero.org/google-docs/?AdhH3f}{(Tsai et
-al., 2011)}. Other photosensitive epilepsy: Porciatti
-\href{https://www.zotero.org/google-docs/?UTBQbV}{(Porciatti et al.,
-2000)}
-
-Citation:
-
-Migraine (Regan et al). Autism?
-
-Norcia, A. M., Appelbaum, L. G., Ales, J. M., Cottereau, B. R., \&
-Rossion, B. (2015). The steady-state visual evoked potential in vision
-research: A review. Journal of vision, 15(6), 4-4.
-
-Animal work: Flies (Eliott, West, Himmelberg, Ales, Norcia): Mice/rats
-(probably many - can't think off the top of my head - we were working
-with a mouse EEG person at UCSF about 12 years ago...), Monkeys
-(Kiorpes?),
-
-\phantomsection\label{anchor-10}{}6. Future directions
-
-Use as a readout of modulations. TMS? FUS? Marmite B12 / Fluoxetine /
-amblyopia in Rats,
-
-GABA Huang
-
-There is a lot of SSVEP interest these days because of BCIs. I think
-it's pretty weak but there is \textgreater so much\textless{} of it that
-it might be worth mentioning...
-
-Advanced signal processing techniques and machine learning can be
-integrated to improve SSVEP-based systems (Zhu et al., 2010).
-
-Exploring new clinical and diagnostic applications, understanding
-neurological diseases, and developing novel therapeutic interventions.
-
-Citation:
-
-Zhu, D., Bieger, J., Molina, G. G., \& Aarts, R. M. (2010). A survey of
-stimulation methods used in SSVEP-based BCIs. Computational intelligence
-and neuroscience, 2010.
-
-\section{References}\label{references}
+\section*{References}\label{references}
+\addcontentsline{toc}{section}{References}
 
 \phantomsection\label{refs}
 \begin{CSLReferences}{1}{1}
@@ -1066,6 +977,26 @@ Atkinson J, Braddick O \& French J (1979).
 \href{https://www.ncbi.nlm.nih.gov/pubmed/761974}{Contrast sensitivity
 of the human neonate measured by the visual evoked potential}.
 \emph{Invest Ophthalmol Vis Sci} \textbf{18,} 210--213.
+
+\bibitem[\citeproctext]{ref-Attal2012}
+Attal Y, Maess B, Friederici A \& David O (2012).
+\href{https://doi.org/10.1515/rns.2011.056}{Head models and dynamic
+causal modeling of subcortical activity using
+magnetoencephalographic/electroencephalographic data}. \emph{Rev
+Neurosci} \textbf{23,} 85--95.
+
+\bibitem[\citeproctext]{ref-Attal2013}
+Attal Y \& Schwartz D (2013).
+\href{https://doi.org/10.1371/journal.pone.0059856}{Assessment of
+subcortical source localization using deep brain activity imaging model
+with minimum norm operators: A MEG study}. \emph{PLoS One} \textbf{8,}
+e59856.
+
+\bibitem[\citeproctext]{ref-Ayaz2013}
+Ayaz A, Saleem AB, Schölvinck ML \& Carandini M (2013).
+\href{https://doi.org/10.1016/j.cub.2013.04.012}{Locomotion controls
+spatial integration in mouse visual cortex}. \emph{Curr Biol}
+\textbf{23,} 890--894.
 
 \bibitem[\citeproctext]{ref-Bach2020}
 Bach M \& Farmer JD (2020).
@@ -1116,6 +1047,12 @@ Bashinski HS \& Bacharach VR (1980). Enhancement of perceptual
 sensitivity as the result of selectively attending to spatial locations.
 \emph{Perception \& psychophysics} \textbf{28,} 241--248.
 
+\bibitem[\citeproctext]{ref-Benjamin2018}
+Benjamin AV, Wailes-Newson K, Ma-Wyatt A, Baker DH \& Wade AR (2018).
+\href{https://doi.org/10.1523/JNEUROSCI.1428-17.2017}{The {Effect} of
+{Locomotion} on {Early} {Visual} {Contrast} {Processing} in {Humans}}.
+\emph{Journal of Neuroscience} \textbf{38,} 3050--3059.
+
 \bibitem[\citeproctext]{ref-Betts2005}
 Betts LR, Taylor CP, Sekuler AB \& Bennett PJ (2005).
 \href{https://doi.org/10.1016/j.neuron.2004.12.041}{Aging reduces
@@ -1137,6 +1074,12 @@ responses develop in early infancy}. \emph{Nature} \textbf{320,}
 Brefczynski JA \& DeYoe EA (1999). \href{https://doi.org/10.1038/7280}{A
 physiological correlate of the 'spotlight' of visual attention}.
 \emph{Nat Neurosci} \textbf{2,} 370--374.
+
+\bibitem[\citeproctext]{ref-Briggs2007}
+Briggs F \& Usrey WM (2007).
+\href{https://doi.org/10.1523/JNEUROSCI.1035-07.2007}{A fast, reciprocal
+pathway between the lateral geniculate nucleus and visual cortex in the
+macaque monkey}. \emph{J Neurosci} \textbf{27,} 5431--5436.
 
 \bibitem[\citeproctext]{ref-Buracas2007}
 Buracas GT \& Boynton GM (2007).
@@ -1181,6 +1124,12 @@ models applied to orientation masking in the human infant}. \emph{The
 Journal of Neuroscience: The Official Journal of the Society for
 Neuroscience} \textbf{21,} 4530--4541.
 
+\bibitem[\citeproctext]{ref-Cao2019}
+Cao L \& Händel B (2019).
+\href{https://doi.org/10.1371/journal.pbio.3000511}{Walking enhances
+peripheral visual processing in humans}. \emph{PLoS Biol} \textbf{17,}
+e3000511.
+
 \bibitem[\citeproctext]{ref-Carandini1994}
 Carandini M \& Heeger DJ (1994).
 \href{https://doi.org/10.1126/science.8191289}{Summation and division by
@@ -1204,11 +1153,30 @@ Carrasco M, Penpeci-Talgar C \& Eckstein M (2000).
 attention increases contrast sensitivity across the CSF: Support for
 signal enhancement}. \emph{Vision Res} \textbf{40,} 1203--1215.
 
+\bibitem[\citeproctext]{ref-Chariker2020}
+Chariker L, Shapley R \& Young L-S (2020).
+\href{https://doi.org/10.1167/jov.20.4.16}{Contrast response in a
+comprehensive network model of macaque V1}. \emph{J Vis} \textbf{20,}
+16.
+
 \bibitem[\citeproctext]{ref-Chen2000}
 Chen C, Foley JM \& Brainard DH (2000).
 \href{https://doi.org/10.1016/s0042-6989(99)00227-8}{Detection of
 chromoluminance patterns on chromoluminance pedestals i: Threshold
 measurements}. \emph{Vision Res} \textbf{40,} 773--788.
+
+\bibitem[\citeproctext]{ref-Chen2021}
+Chen J \& Gegenfurtner KR (2021).
+\href{https://doi.org/10.1167/jov.21.8.12}{Electrophysiological evidence
+for higher-level chromatic mechanisms in humans}. \emph{J Vis}
+\textbf{21,} 12.
+
+\bibitem[\citeproctext]{ref-Chota2024}
+Chota S, Bruat AT, Van der Stigchel S \& Strauch C (2024).
+\href{https://doi.org/10.1162/jocn_a_02107}{Steady-state visual evoked
+potentials reveal dynamic (re)allocation of spatial attention during
+maintenance and utilization of visual working memory}. \emph{J Cogn
+Neurosci} \textbf{36,} 800--814.
 
 \bibitem[\citeproctext]{ref-Cunningham2017}
 Cunningham DGM, Baker DH \& Peirce JW (2017).
@@ -1277,6 +1245,12 @@ control contrast mechanisms are modulated by attention in humans:
 Evidence from visual evoked potentials}. \emph{Vision Res} \textbf{41,}
 2435--2447.
 
+\bibitem[\citeproctext]{ref-Diez2024}
+Diez P, Orosco L, Garcés Correa A \& Carmona L (2024).
+\href{https://doi.org/10.1007/s11517-023-03000-z}{Assessment of visual
+fatigue in SSVEP-based brain-computer interface: A comprehensive study}.
+\emph{Med Biol Eng Comput} \textbf{62,} 1475--1490.
+
 \bibitem[\citeproctext]{ref-Ding2006}
 Ding J, Sperling G \& Srinivasan R (2006). Attentional modulation of
 {SSVEP} power depends on the network tagged by the flicker frequency.
@@ -1287,6 +1261,12 @@ Dobson V, Teller DY \& Belgum J (1978).
 \href{https://doi.org/10.1016/0042-6989(78)90109-8}{Visual acuity in
 human infants assessed with stationary stripes and phase-alternated
 checkerboards}. \emph{Vision Res} \textbf{18,} 1233--1238.
+
+\bibitem[\citeproctext]{ref-Dougherty2019}
+Dougherty K, Schmid MC \& Maier A (2019).
+\href{https://doi.org/10.1002/cne.24417}{Binocular response modulation
+in the lateral geniculate nucleus}. \emph{J Comp Neurol} \textbf{527,}
+522--534.
 
 \bibitem[\citeproctext]{ref-Du2023}
 Du X, Liu L, Dong X \& Bao M (2023).
@@ -1311,11 +1291,29 @@ Gandhi SP, Heeger DJ \& Boynton GM (1999).
 brain activity in human primary visual cortex}. \emph{Proc Natl Acad Sci
 U S A} \textbf{96,} 3314--3319.
 
+\bibitem[\citeproctext]{ref-Gegenfurtner2003}
+Gegenfurtner KR (2003). \href{https://doi.org/10.1038/nrn1138}{Cortical
+mechanisms of colour vision}. \emph{Nat Rev Neurosci} \textbf{4,}
+563--572.
+
+\bibitem[\citeproctext]{ref-Gollisch2010}
+Gollisch T \& Meister M (2010).
+\href{https://doi.org/10.1016/j.neuron.2009.12.009}{Eye smarter than
+scientists believed: Neural computations in circuits of the retina}.
+\emph{Neuron} \textbf{65,} 150--164.
+
 \bibitem[\citeproctext]{ref-Gould2007}
 Gould IC, Wolfgang BJ \& Smith PL (2007).
 \href{https://doi.org/10.1167/7.13.4}{Spatial uncertainty explains
 exogenous and endogenous attentional cuing effects in visual signal
 detection}. \emph{J Vis} \textbf{7,} 4.1--17.
+
+\bibitem[\citeproctext]{ref-Gouws2014}
+Gouws AD, Alvarez I, Watson DM, Uesaki M, Rodgers J \& Morland AB
+(2014). \href{https://doi.org/10.1523/JNEUROSCI.0164-14.2014}{On the
+role of suppression in spatial attention: Evidence from negative BOLD in
+human subcortical and cortical structures}. \emph{J Neurosci}
+\textbf{34,} 10347--10360.
 
 \bibitem[\citeproctext]{ref-Groen2022}
 Groen IIA, Piantoni G, Montenegro S, Flinker A, Devore S, Devinsky O,
@@ -1341,6 +1339,12 @@ Heeger DJ (1992).
 \href{https://doi.org/10.1017/s0952523800009640}{Normalization of cell
 responses in cat striate cortex}. \emph{Vis Neurosci} \textbf{9,}
 181--197.
+
+\bibitem[\citeproctext]{ref-Herrmann2001}
+Herrmann CS (2001). \href{https://doi.org/10.1007/s002210100682}{Human
+EEG responses to 1-100 hz flicker: Resonance phenomena in visual cortex
+and their potential correlation to cognitive phenomena}. \emph{Exp Brain
+Res} \textbf{137,} 346--353.
 
 \bibitem[\citeproctext]{ref-Highsmith2010}
 Highsmith J \& Crognale MA (2010).
@@ -1377,6 +1381,13 @@ Hubel DH \& Wiesel TN (1962).
 binocular interaction and functional architecture in the cat's visual
 cortex}. \emph{J Physiol} \textbf{160,} 106--154.
 
+\bibitem[\citeproctext]{ref-Kaneko2020}
+Kaneko S, Kuriki I \& Andersen SK (2020).
+\href{https://doi.org/10.1093/texcom/tgaa059}{Steady-state visual evoked
+potentials elicited from early visual cortex reflect both perceptual
+color space and cone-opponent mechanisms}. \emph{Cereb Cortex Commun}
+\textbf{1,} tgaa059.
+
 \bibitem[\citeproctext]{ref-Kaplan1986}
 Kaplan E \& Shapley RM (1986).
 \href{https://doi.org/10.1073/pnas.83.8.2755}{The primate retina
@@ -1388,6 +1399,19 @@ Kastner S, Pinsk MA, De Weerd P, Desimone R \& Ungerleider LG (1999).
 \href{https://doi.org/10.1016/s0896-6273(00)80734-5}{Increased activity
 in human visual cortex during directed attention in the absence of
 visual stimulation}. \emph{Neuron} \textbf{22,} 751--761.
+
+\bibitem[\citeproctext]{ref-Katyal2018}
+Katyal S, Vergeer M, He S, He B \& Engel SA (2018).
+\href{https://doi.org/10.1038/s41598-018-19809-w}{Conflict-sensitive
+neurons gate interocular suppression in human visual cortex}. \emph{Sci
+Rep} \textbf{8,} 1239.
+
+\bibitem[\citeproctext]{ref-Krolak-Salmon2003}
+Krolak-Salmon P, Hénaff M-A, Tallon-Baudry C, Yvert B, Guénot M,
+Vighetto A, Mauguière F \& Bertrand O (2003).
+\href{https://doi.org/10.1002/ana.10403}{Human lateral geniculate
+nucleus and visual cortex respond to screen flicker}. \emph{Ann Neurol}
+\textbf{53,} 73--80.
 
 \bibitem[\citeproctext]{ref-Kuffler1957}
 Kuffler SW, Fitzhugh R \& Barlow HB (1957).
@@ -1424,12 +1448,31 @@ properties of neurons in the LGN of normally reared and visually
 deprived macaque monkeys}. \emph{J Neurophysiol} \textbf{85,}
 2111--2129.
 
+\bibitem[\citeproctext]{ref-Li2022}
+Li P, Garg AK, Zhang LA, Rashid MS \& Callaway EM (2022).
+\href{https://doi.org/10.1038/s41467-022-34020-2}{Cone opponent
+functional domains in primary visual cortex combine signals for color
+appearance mechanisms}. \emph{Nat Commun} \textbf{13,} 6344.
+
+\bibitem[\citeproctext]{ref-Li2014}
+Li PH, Field GD, Greschner M, Ahn D, Gunning DE, Mathieson K, Sher A,
+Litke AM \& Chichilnisky EJ (2014).
+\href{https://doi.org/10.1016/j.neuron.2013.10.043}{Retinal
+representation of the elementary visual signal}. \emph{Neuron}
+\textbf{81,} 130--139.
+
 \bibitem[\citeproctext]{ref-Li2008}
 Li X, Lu Z-L, Tjan BS, Dosher BA \& Chu W (2008).
 \href{https://doi.org/10.1073/pnas.0801390105}{Blood oxygenation
 level-dependent contrast response functions identify mechanisms of
 covert attention in early visual areas}. \emph{Proc Natl Acad Sci U S A}
 \textbf{105,} 6202--6207.
+
+\bibitem[\citeproctext]{ref-Lissa2020}
+Lissa P de, Caldara R, Nicholls V \& Miellet S (2020).
+\href{https://doi.org/10.1371/journal.pone.0236967}{In pursuit of visual
+attention: SSVEP frequency-tagging moving targets}. \emph{PLoS One}
+\textbf{15,} e0236967.
 
 \bibitem[\citeproctext]{ref-Lu1998}
 Lu Z-L \& Dosher BA (1998). External noise distinguishes attention
@@ -1511,6 +1554,32 @@ attention in monkeys. II: Physiological mechanisms of modulation}.
 Michelson A (1927). \emph{Studies in optics}. University of Chicago
 Press.
 
+\bibitem[\citeproctext]{ref-Middendorf2000}
+Middendorf M, McMillan G, Calhoun G \& Jones KS (2000).
+\href{https://doi.org/10.1109/86.847819}{Brain-computer interfaces based
+on the steady-state visual-evoked response}. \emph{IEEE Trans Rehabil
+Eng} \textbf{8,} 211--214.
+
+\bibitem[\citeproctext]{ref-Minarik2023}
+Minarik T, Berger B \& Jensen O (2023).
+\href{https://doi.org/10.1016/j.neuroimage.2023.120389}{Optimal
+parameters for rapid (invisible) frequency tagging using MEG}.
+\emph{Neuroimage} \textbf{281,} 120389.
+
+\bibitem[\citeproctext]{ref-Mohammadjavadi2022}
+Mohammadjavadi M, Ash RT, Li N, Gaur P, Kubanek J, Saenz Y, Glover GH,
+Popelka GR, Norcia AM \& Pauly KB (2022).
+\href{https://doi.org/10.1038/s41598-022-20554-4}{Transcranial
+ultrasound neuromodulation of the thalamic visual pathway in a large
+animal model and the dose-response relationship with MR-ARFI}. \emph{Sci
+Rep} \textbf{12,} 19588.
+
+\bibitem[\citeproctext]{ref-Morgan1996}
+Morgan ST, Hansen JC \& Hillyard SA (1996).
+\href{https://doi.org/10.1073/pnas.93.10.4770}{Selective attention to
+stimulus location modulates the steady-state visual evoked potential}.
+\emph{Proc Natl Acad Sci U S A} \textbf{93,} 4770--4774.
+
 \bibitem[\citeproctext]{ref-Morrone1986}
 Morrone MC \& Burr DC (1986).
 \href{https://doi.org/10.1038/321235a0}{Evidence for the existence and
@@ -1536,10 +1605,29 @@ Movshon JA (1975).
 tuning of single units in cat striate cortex}. \emph{J Physiol}
 \textbf{249,} 445--468.
 
+\bibitem[\citeproctext]{ref-Muller2000}
+Müller MM \& Hillyard S (2000).
+\href{https://doi.org/10.1016/s1388-2457(00)00371-0}{Concurrent
+recording of steady-state and transient event-related potentials as
+indices of visual-spatial selective attention}. \emph{Clin Neurophysiol}
+\textbf{111,} 1544--1552.
+
+\bibitem[\citeproctext]{ref-Muller1998}
+Müller MM, Teder-Sälejärvi W \& Hillyard SA (1998).
+\href{https://doi.org/10.1038/2865}{The time course of cortical
+facilitation during cued shifts of spatial attention}. \emph{Nat
+Neurosci} \textbf{1,} 631--634.
+
 \bibitem[\citeproctext]{ref-Murray2008}
 Murray SO (2008). \href{https://doi.org/10.1167/8.10.2}{The effects of
 spatial attention in early human visual cortex are stimulus
 independent}. \emph{J Vis} \textbf{8,} 2.1--11.
+
+\bibitem[\citeproctext]{ref-Niell2010}
+Niell CM \& Stryker MP (2010).
+\href{https://doi.org/10.1016/j.neuron.2010.01.033}{Modulation of visual
+responses by behavioral state in mouse visual cortex}. \emph{Neuron}
+\textbf{65,} 472--479.
 
 \bibitem[\citeproctext]{ref-Norcia2015}
 Norcia AM, Appelbaum LG, Ales JM, Cottereau BR \& Rossion B (2015).
@@ -1571,6 +1659,12 @@ Norcia AM, Tyler CW \& Hamer RD (1990).
 \href{https://doi.org/10.1016/0042-6989(90)90028-j}{Development of
 contrast sensitivity in the human infant}. \emph{Vision Res}
 \textbf{30,} 1475--1486.
+
+\bibitem[\citeproctext]{ref-OConnor2002}
+O'Connor DH, Fukui MM, Pinsk MA \& Kastner S (2002).
+\href{https://doi.org/10.1038/nn957}{Attention modulates responses in
+the human lateral geniculate nucleus}. \emph{Nat Neurosci} \textbf{5,}
+1203--1209.
 
 \bibitem[\citeproctext]{ref-Pei2014}
 Pei F, Baldassi S \& Norcia AM (2014). Electrophysiological measures of
@@ -1665,11 +1759,30 @@ Salelkar S \& Ray S (2020).
 steady-state visually evoked potentials at nearby flicker frequencies}.
 \emph{Sci Rep} \textbf{10,} 5344.
 
+\bibitem[\citeproctext]{ref-Schrimpf2020}
+Schrimpf M, Kubilius J, Lee MJ, Ratan Murty NA, Ajemian R \& DiCarlo JJ
+(2020). \href{https://doi.org/10.1016/j.neuron.2020.07.040}{Integrative
+benchmarking to advance neurally mechanistic models of human
+intelligence}. \emph{Neuron} \textbf{108,} 413--423.
+
+\bibitem[\citeproctext]{ref-Seijdel2023}
+Seijdel N, Marshall TR \& Drijvers L (2023).
+\href{https://doi.org/10.1093/cercor/bhac160}{Rapid invisible frequency
+tagging (RIFT): A promising technique to study neural and cognitive
+processing using naturalistic paradigms}. \emph{Cereb Cortex}
+\textbf{33,} 1626--1629.
+
 \bibitem[\citeproctext]{ref-Shapley1980}
 Shapley RM \& Victor JD (1980).
 \href{https://doi.org/10.1113/jphysiol.1980.sp013259}{The effect of
 contrast on the non-linear response of the y cell}. \emph{J Physiol}
 \textbf{302,} 535--547.
+
+\bibitem[\citeproctext]{ref-Sherman1996}
+Sherman SM \& Guillery RW (1996).
+\href{https://doi.org/10.1152/jn.1996.76.3.1367}{Functional organization
+of thalamocortical relays}. \emph{J Neurophysiol} \textbf{76,}
+1367--1395.
 
 \bibitem[\citeproctext]{ref-Shibata2008}
 Shibata K, Yamane K, Otuka K \& Iwata M (2008).
@@ -1699,17 +1812,33 @@ Solomon SG \& Lennie P (2005).
 controls in visual cortical neurons}. \emph{J Neurosci} \textbf{25,}
 4779--4792.
 
+\bibitem[\citeproctext]{ref-Solomon2007}
+Solomon SG \& Lennie P (2007).
+\href{https://doi.org/10.1038/nrn2094}{The machinery of colour vision}.
+\emph{Nat Rev Neurosci} \textbf{8,} 276--286.
+
 \bibitem[\citeproctext]{ref-Somers1999}
 Somers DC, Dale AM, Seiffert AE \& Tootell RB (1999).
 \href{https://doi.org/10.1073/pnas.96.4.1663}{Functional MRI reveals
 spatially specific attentional modulation in human primary visual
 cortex}. \emph{Proc Natl Acad Sci U S A} \textbf{96,} 1663--1668.
 
+\bibitem[\citeproctext]{ref-Stoughton2008}
+Stoughton CM \& Conway BR (2008).
+\href{https://doi.org/10.1016/j.cub.2008.06.018}{Neural basis for unique
+hues}. \emph{Curr Biol} \textbf{18,} R698--9.
+
 \bibitem[\citeproctext]{ref-Tadin2003}
 Tadin D, Lappin JS, Gilroy LA \& Blake R (2003).
 \href{https://doi.org/10.1038/nature01800}{Perceptual consequences of
 centre-surround antagonism in visual motion processing}. \emph{Nature}
 \textbf{424,} 312--315.
+
+\bibitem[\citeproctext]{ref-Tesche1996}
+Tesche CD (1996).
+\href{https://www.ncbi.nlm.nih.gov/pubmed/8876995}{Non-invasive imaging
+of neuronal population dynamics in human thalamus}. \emph{Brain Res}
+\textbf{729,} 253--258.
 
 \bibitem[\citeproctext]{ref-Tolhurst1981}
 Tolhurst DJ, Movshon JA \& Thompson ID (1981).
@@ -1749,6 +1878,11 @@ visual function: An electronic sweep technique for the pattern visual
 evoked potential}. \emph{Investigative Ophthalmology \& Visual Science}
 \textbf{18,} 703--713.
 
+\bibitem[\citeproctext]{ref-Uprety2022}
+Uprety S, Adhikari P, Feigl B \& Zele AJ (2022). Melanopsin
+photoreception differentially modulates rod-mediated and cone-mediated
+human temporal vision. \emph{Iscience}.
+
 \bibitem[\citeproctext]{ref-Vergeer2018}
 Vergeer M, Mesik J, Baek Y, Wilmerding K \& Engel SA (2018).
 \href{https://doi.org/10.1167/18.5.2}{Orientation-selective contrast
@@ -1768,11 +1902,29 @@ DH (2018). \href{https://doi.org/10.1098/rspb.2018.2255}{Autism sensory
 dysfunction in an evolutionarily conserved system}. \emph{Proceedings
 Biological Sciences} \textbf{285,} 20182255.
 
+\bibitem[\citeproctext]{ref-Wandell1993}
+Wandell BA (1993). \href{https://doi.org/10.1073/pnas.90.21.9778}{Color
+appearance: The effects of illumination and spatial pattern}. \emph{Proc
+Natl Acad Sci U S A} \textbf{90,} 9778--9784.
+
+\bibitem[\citeproctext]{ref-Wang2023}
+Wang AYM, Kulkarni MM, McLaughlin AJ, Gayet J, Smith BE, Hauptschein M,
+McHugh CF, Yao YY \& Puthussery T (2023).
+\href{https://doi.org/10.1038/s41586-023-06659-4}{An ON-type
+direction-selective ganglion cell in primate retina}. \emph{Nature}
+\textbf{623,} 381--386.
+
 \bibitem[\citeproctext]{ref-Wang2011}
 Wang J \& Wade AR (2011).
 \href{https://doi.org/10.1167/11.6.1}{Differential attentional
 modulation of cortical responses to {S}-cone and luminance stimuli}.
 \emph{Journal of Vision} \textbf{11,} 1.
+
+\bibitem[\citeproctext]{ref-Watts2024}
+Watts +Dylan+J, Rozman +Ana, Somers +Lucy+P, Gunel +Bora, Racey +Chris,
+Barnes +Katie \& Bosten +Jenny+M (2024). Tuning of cortical color
+mechanism revealed using steady-state visually evoked potentials.
+\emph{bioRxiv}.
 
 \bibitem[\citeproctext]{ref-Zheng2019}
 Zheng X, Xu G, Zhi Y, Wang Y, Han C, Wang B, Zhang S, Zhang K \& Liang R
