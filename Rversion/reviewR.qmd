@@ -1,0 +1,656 @@
+---
+title: "Measuring contrast processing in the visual system using SSVEP"
+author:
+  - name: Alex R. Wade
+  - name: Daniel H. Baker
+format: 
+  pdf:
+    keep-tex: true
+bibliography: WadeBaker_Review.bib
+csl: visual-neuroscience.csl
+execute:
+  echo: false
+  output: false
+  include: false
+---
+Department of Psychology and York Biomedical Research Institute, University of York, UK
+
+## Review for Vis Neurosci
+
+```{r setup}
+
+# set up helper functions
+
+simpleTransducerFunction <- function(inputContrast, c50, RMax){
+ # Here we model a simple hyperbolic ratio function. Also called a "Naka-Rushton" function.
+ # RMax defines the reponse gain of the transducer (how big the biggest output is). 
+ # c50 defines the conrast sensitivity. Smaller values are more sensitive.
+ # The exponent can also vary - here we fix it to 2
+  expnt <- 2
+
+  # Contrast cannot be negative. To model the responses of a set of on and off 
+  # contrast detectors we perform full-wave rectification of the signal
+  inputContrast <- abs(inputContrast)
+  output <- RMax*(inputContrast^expnt)/(inputContrast^expnt + c50^expnt)
+  return(output)
+}
+
+doubleTransducerFunction <- function(inputContrast, maskContrast, c50, RMax){
+ # This version has two inputs, but the second input is purely suppressive
+  expnt <- 2
+  inputContrast <- abs(inputContrast)
+  maskContrast <- abs(maskContrast)
+
+  output <- RMax*(inputContrast^expnt)/(inputContrast^expnt + maskContrast^expnt + c50^expnt)
+  return(output)  
+}
+
+create_grating <- function(size, frequency, phase, contrast){
+    x <- matrix(rep(seq(-1,1,length=size),size),nrow=size,ncol=size)
+    y <- t(x)
+    grating <- sin(2 * pi * frequency * sqrt(x^2 + y^2) + phase)
+    grating <- (grating + 1) / 2  # Normalize to [0, 1]
+    grating <- grating * contrast + (1 - contrast) / 2  # Adjust contrast 
+  return(grating)
+}
+
+create_circular_mask <- function(size){
+    x <- matrix(rep(seq(-1,1,length=size),size),nrow=size,ncol=size)
+    y <- t(x)
+    radius <- sqrt(x^2 + y^2)
+    mask <- sqrt(x**2 + y**2) <= 0.3
+  return(mask)
+}
+
+if (!dir.exists('/Figures')){dir.create('/Figures')}
+
+```
+
+```{r createcentresurround}
+
+# Set parameters
+size <- 256
+frequency <- 10
+phase <- 0
+contrast_center <- 0.5
+contrast_surround_low <- 0.1
+contrast_surround_high <- 0.9
+
+# Create gratings and circular masks
+grating_center <- create_grating(size, frequency, phase, contrast_center)
+grating_surround_low <- create_grating(size, frequency, phase, contrast_surround_low)
+grating_surround_high <- create_grating(size, frequency, phase, contrast_surround_high)
+mask <- create_circular_mask(size)
+
+# Combine gratings and masks
+image_low_contrast <- grating_surround_low
+image_low_contrast[mask] <- grating_center[mask]
+image_high_contrast <- grating_surround_high
+image_high_contrast[mask] <- grating_center[mask]
+
+pdf('Figures/centresurround.pdf',width=12,height=6.5)
+
+par(mfcol=c(1,2))
+
+plot(x=NULL,y=NULL,xlim=c(0,1),ylim=c(0,1),axes=FALSE, ann=FALSE)
+image(image_low_contrast,col=gray.colors(256),add=TRUE,useRaster=TRUE)
+title(main='Low-Contrast Background')
+
+plot(x=NULL,y=NULL,xlim=c(0,1),ylim=c(0,1),axes=FALSE, ann=FALSE)
+image(image_high_contrast,col=gray.colors(256),add=TRUE,useRaster=TRUE)
+title(main='High-Contrast Background')
+
+dev.off()
+
+```
+
+```{r linearsystem}
+
+inputFrequency_Hz <- 5 # We simulate a system with on input at many different contrasts
+contrastRange <- (10^seq(0,1.5,length=20))/100 # Equally spaced log contrast between 1 and 10^1.5
+duration_S <- 1 # All variables in this code have an _[units] where possible
+digitisationRate_Hz <- 1000
+freqCutoff_Hz <- 30
+c50 <- 0.10
+RMax <- 10
+
+support_S <- seq(0,duration_S,length=duration_S*digitisationRate_Hz)
+
+initialSignal <- NULL # Create lists to hold the initial contrast representation and the result of passign it through a simple Naka-Rushton function
+transducedSignal <- NULL
+
+for (contrastIndex in 1:length(contrastRange)){
+  
+  inputModulation <- sin(2 * pi * inputFrequency_Hz * support_S) * contrastRange[contrastIndex]
+
+  FT_Signal <- fft(inputModulation) / length(inputModulation)
+ 
+  inputAmplitude <- abs(FT_Signal[inputFrequency_Hz+1])
+  initialSignal[contrastIndex] <- inputAmplitude
+
+   # Now compute the FT on the signal after it has passed through a single non-linearity. Do this 
+   # using the transducer functiona above.
+  transducedModulation <- simpleTransducerFunction(inputModulation, c50, RMax)
+  FT_transducedModulation <- fft(transducedModulation)/ length(transducedModulation)
+  transducedAmplitude <- abs(FT_transducedModulation[1 + inputFrequency_Hz*2])
+  transducedSignal[contrastIndex] <- transducedAmplitude
+}
+
+frequencySupport <- seq(0,freqCutoff_Hz*duration_S+1) # We only want to plot the frequencies in the FFT up to this point
+  
+#Make a figure with three subplots
+
+pdf('Figures/linearsystem.pdf',width=12,height=4)
+par(mfrow=c(1,3))
+
+  plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=c(0,1), ylim=c(-0.3,0.3))   
+  axis(1, at=seq(0,1,0.5), tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=seq(-3,3,1)/10, tck=0.01, lab=F, lwd=2)
+  mtext(text = seq(0,1,0.5), side = 1, at=seq(0,1,0.5), line=0.2)     # add the tick labels
+  mtext(text = seq(-3,3,1)/10, side = 2, at=seq(-3,3,1)/10, line=0.2, las=1)  
+title(xlab="Time (s)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)    
+title(main="Input sine wave", cex.main=1.5)
+
+lines(support_S, inputModulation, lwd=3)
+
+# Plot the absolute values of the FFT in the second axis as a bar plot
+
+  plot(frequencySupport[2:length(frequencySupport)]-0.5,abs(FT_Signal[2:length(frequencySupport)]),type='s',lwd=3,axes=FALSE, ann=FALSE, xlim=c(0,30), ylim=c(0,0.16))
+  axis(1, at=seq(0,30,10), tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=seq(0,0.16,0.04), tck=0.01, lab=F, lwd=2)
+  mtext(text = seq(0,30,10), side = 1, at=seq(0,30,10), line=0.2)     # add the tick labels
+  mtext(text = seq(0,0.16,0.04), side = 2, at=seq(0,0.16,0.04), line=0.2, las=1)  
+title(xlab="Frequency (Hz)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)    
+title(ylab="Magnitude (a.u.)", col.lab=rgb(0,0,0), line=2.6, cex.lab=1.5)
+title(main="Fourier spectrum", cex.main=1.5)
+
+  plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=c(0,32), ylim=c(0,0.16))   
+  axis(1, at=seq(0,32,4), tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=seq(0,0.16,0.04), tck=0.01, lab=F, lwd=2)
+  mtext(text = seq(0,32,4), side = 1, at=seq(0,32,4), line=0.2)     # add the tick labels
+  mtext(text = seq(0,0.16,0.04), side = 2, at=seq(0,0.16,0.04), line=0.2, las=1)  
+title(xlab="Contrast (%)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)    
+title(ylab="Amplitude (a.u.)", col.lab=rgb(0,0,0), line=2.6, cex.lab=1.5)
+title(main="Linear computation stage", cex.main=1.5)
+
+lines(contrastRange*100,initialSignal,lwd=3)
+
+dev.off()
+
+```
+
+```{r transducerout}
+
+inputFrequency_Hz <- 5 # We simulate a system with on input at many different contrasts
+contrastRange <- (10^seq(0,1.5,length=20))/100 # Equally spaced log contrast between 1 and 10^1.5
+duration_S <- 1 # All variables in this code have an _[units] where possible
+digitisationRate_Hz <- 1000
+freqCutoff_Hz <- 30
+c50 <- 0.10
+RMax <- 10
+
+support_S <- seq(0,duration_S,length=duration_S*digitisationRate_Hz)
+
+initialSignal <- NULL # Create lists to hold the initial contrast representation and the result of passign it through a simple Naka-Rushton function
+transducedSignal <- NULL
+
+for (contrastIndex in 1:length(contrastRange)){
+  
+  inputModulation <- sin(2 * pi * inputFrequency_Hz * support_S) * contrastRange[contrastIndex]
+
+  FT_Signal <- fft(inputModulation) / length(inputModulation)
+ 
+  inputAmplitude <- abs(FT_Signal[inputFrequency_Hz+1])
+  initialSignal[contrastIndex] <- inputAmplitude
+
+   # Now compute the FT on the signal after it has passed through a single non-linearity. Do this 
+   # using the transducer functiona above.
+  transducedModulation <- simpleTransducerFunction(inputModulation, c50, RMax)
+  FT_transducedModulation <- fft(transducedModulation)/ length(transducedModulation)
+  transducedAmplitude <- abs(FT_transducedModulation[1 + inputFrequency_Hz*2])
+  transducedSignal[contrastIndex] <- transducedAmplitude
+}
+
+frequencySupport <- seq(0,freqCutoff_Hz*duration_S+1) # We only want to plot the frequencies in the FFT up to this point
+  
+#Make a figure with three subplots
+
+pdf('Figures/transducer.pdf',width=12,height=4)
+par(mfrow=c(1,3))
+
+  plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=c(0,1), ylim=c(0,10))   
+  axis(1, at=seq(0,1,0.5), tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=seq(0,10,2), tck=0.01, lab=F, lwd=2)
+  mtext(text = seq(0,1,0.5), side = 1, at=seq(0,1,0.5), line=0.2)     # add the tick labels
+  mtext(text = seq(0,10,2), side = 2, at=seq(0,10,2), line=0.2, las=1)  
+title(xlab="Time (s)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)    
+title(main="Input sine wave", cex.main=1.5)
+
+lines(support_S, transducedModulation, lwd=3)
+
+# Plot the absolute values of the FFT in the second axis as a bar plot
+
+  plot(frequencySupport[2:length(frequencySupport)]-0.5,abs(FT_transducedModulation[2:length(frequencySupport)]),type='s',lwd=3,axes=FALSE, ann=FALSE, xlim=c(0,30), ylim=c(0,2))
+  axis(1, at=seq(0,30,10), tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=seq(0,2,0.5), tck=0.01, lab=F, lwd=2)
+  mtext(text = seq(0,30,10), side = 1, at=seq(0,30,10), line=0.2)     # add the tick labels
+  mtext(text = seq(0,2,0.5), side = 2, at=seq(0,2,0.5), line=0.2, las=1)  
+title(xlab="Frequency (Hz)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)    
+title(ylab="Magnitude (a.u.)", col.lab=rgb(0,0,0), line=2.6, cex.lab=1.5)
+title(main="Fourier spectrum", cex.main=1.5)
+
+  plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=c(0,32), ylim=c(0,2))   
+  axis(1, at=seq(0,32,4), tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=seq(0,2,0.5), tck=0.01, lab=F, lwd=2)
+  mtext(text = seq(0,32,4), side = 1, at=seq(0,32,4), line=0.2)     # add the tick labels
+  mtext(text = seq(0,2,0.5), side = 2, at=seq(0,2,0.5), line=0.2, las=1)  
+title(xlab="Contrast (%)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)    
+title(ylab="Amplitude (a.u.)", col.lab=rgb(0,0,0), line=2.6, cex.lab=1.5)
+title(main="Linear computation stage", cex.main=1.5)
+
+lines(contrastRange*100,transducedSignal,lwd=3)
+
+dev.off()
+
+```
+
+```{r twoinputsout}
+
+inputFrequency_Hz <- 5 # We simulate a system with on input at many different contrasts
+contrastRange <- (10^seq(0,1.5,length=20))/100 # Equally spaced log contrast between 1 and 10^1.5
+maskFrequency_Hz <- 7
+maskContrast <- max(contrastRange)
+
+duration_S <- 1 # All variables in this code have an _[units] where possible
+digitisationRate_Hz <- 1000
+freqCutoff_Hz <- 30
+c50 <- 0.10
+RMax <- 10
+
+support_S <- seq(0,duration_S,length=duration_S*digitisationRate_Hz)
+
+initialSignal <- NULL # Create lists to hold the initial contrast representation and the result of passign it through a simple Naka-Rushton function
+transducedSignal <- NULL
+maskedSignal <- NULL
+
+for (contrastIndex in 1:length(contrastRange)){
+  
+  inputModulation <- sin(2 * pi * inputFrequency_Hz * support_S) * contrastRange[contrastIndex]
+  maskModulation <- sin(2 * pi * maskFrequency_Hz * support_S) * maskContrast
+
+   # Now compute the FT on the signal after it has passed through a single non-linearity. Do this 
+   # using the transducer functiona above.
+  transducedModulation <- doubleTransducerFunction(inputModulation, 0*maskModulation, c50,RMax)
+  FT_transducedModulation <- fft(transducedModulation)/ length(transducedModulation)
+  transducedAmplitude <- abs(FT_transducedModulation[1+inputFrequency_Hz*2])
+  transducedSignal[contrastIndex] <- transducedAmplitude
+  
+  transducedModulation <- doubleTransducerFunction(inputModulation, maskModulation, c50,RMax)
+  FT_transducedModulation <- fft(transducedModulation)/ length(transducedModulation)
+  transducedAmplitude <- abs(FT_transducedModulation[1+inputFrequency_Hz*2])
+  maskedSignal[contrastIndex] <- transducedAmplitude
+}
+
+frequencySupport <- seq(0,freqCutoff_Hz*duration_S+1) # We only want to plot the frequencies in the FFT up to this point
+  
+#Make a figure with three subplots
+
+pdf('Figures/twoinputs.pdf',width=12,height=4)
+par(mfrow=c(1,3))
+
+  plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=c(0,1), ylim=c(0,10))   
+  axis(1, at=seq(0,1,0.5), tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=seq(0,10,2), tck=0.01, lab=F, lwd=2)
+  mtext(text = seq(0,1,0.5), side = 1, at=seq(0,1,0.5), line=0.2)     # add the tick labels
+  mtext(text = seq(0,10,2), side = 2, at=seq(0,10,2), line=0.2, las=1)  
+title(xlab="Time (s)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)    
+title(main="Input sine wave", cex.main=1.5)
+
+lines(support_S, transducedModulation, lwd=3)
+
+# Plot the absolute values of the FFT in the second axis as a bar plot
+
+  plot(frequencySupport[2:length(frequencySupport)]-0.5,abs(FT_transducedModulation[2:length(frequencySupport)]),type='s',lwd=3,axes=FALSE, ann=FALSE, xlim=c(0,30), ylim=c(0,2))
+  axis(1, at=seq(0,30,10), tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=seq(0,2,0.5), tck=0.01, lab=F, lwd=2)
+  mtext(text = seq(0,30,10), side = 1, at=seq(0,30,10), line=0.2)     # add the tick labels
+  mtext(text = seq(0,2,0.5), side = 2, at=seq(0,2,0.5), line=0.2, las=1)  
+title(xlab="Frequency (Hz)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)    
+title(ylab="Magnitude (a.u.)", col.lab=rgb(0,0,0), line=2.6, cex.lab=1.5)
+title(main="Fourier spectrum", cex.main=1.5)
+
+  plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=c(0,32), ylim=c(0,2))   
+  axis(1, at=seq(0,32,4), tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=seq(0,2,0.5), tck=0.01, lab=F, lwd=2)
+  mtext(text = seq(0,32,4), side = 1, at=seq(0,32,4), line=0.2)     # add the tick labels
+  mtext(text = seq(0,2,0.5), side = 2, at=seq(0,2,0.5), line=0.2, las=1)  
+title(xlab="Contrast (%)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)    
+title(ylab="Amplitude (a.u.)", col.lab=rgb(0,0,0), line=2.6, cex.lab=1.5)
+title(main="Linear computation stage", cex.main=1.5)
+
+lines(contrastRange*100,transducedSignal,lwd=3)
+lines(contrastRange*100,maskedSignal,col='orange',lwd=3)
+
+dev.off()
+
+```
+
+```{r makesweep}
+
+# Define some constants
+nLevels <- 8
+internalNoise <- 1
+inputFrequency_Hz <- 5 # We simulate a system with on input at many different contrasts
+contrastRange <- (10^seq(1,1.9,length=nLevels))/100  # Equally spaced log contrast between 1 and 10^1.9
+duration_S <- 1 # All variables in this code have an _[units] where possible
+digitisationRate_Hz <- 1000
+freqCutoff_Hz <- 30
+
+support_S <- seq(0,duration_S,length=duration_S*digitisationRate_Hz)
+
+initialSignal <- NULL
+transducedSignal <- NULL
+for (contrastIndex in 1:length(contrastRange)){
+  inputModulation <- sin(2 * pi * inputFrequency_Hz * support_S) * contrastRange[contrastIndex] + runif(length(support_S))*internalNoise
+
+  FT_Signal <- fft(inputModulation) / length(inputModulation)
+
+  responseAmplitude <- abs(FT_Signal[inputFrequency_Hz+1])
+  initialSignal[contrastIndex] <- responseAmplitude
+  transducedSignal[contrastIndex] <- simpleTransducerFunction(responseAmplitude, 0.05, 10)
+}
+# Now fit a linear regression to the first 4 contrast levels (before it saturates) and find out where this crosses the Y-axis
+X = log10(contrastRange[1:4])
+X2 = log10((10^seq(0.1,1.1,length=nLevels))/100)
+y <- transducedSignal[1:4]
+reg <- lm(y ~ X)
+x_intercept <- 10 ^ (-reg$coefficients[1] / reg$coefficients[2])
+Yfit <- reg$coefficients[2]*X + reg$coefficients[1]
+Yextrap <- reg$coefficients[2]*X2 + reg$coefficients[1]
+
+pdf('Figures/sweepplot.pdf',width=6,height=6)
+
+  plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=c(-2,0), ylim=c(0,10))   
+  axis(1, at=seq(-2,0,1), tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=seq(0,10,2), tck=0.01, lab=F, lwd=2)
+  mtext(text = c(0.01,0.1,1), side = 1, at=seq(-2,0,1), line=0.2)     # add the tick labels
+  mtext(text = seq(0,10,2), side = 2, at=seq(0,10,2), line=0.2, las=1)  
+title(xlab="Contrast", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)    
+title(ylab="Amplitude (a.u.)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)    
+title(main=paste("Simulated sweep VEP at",nLevels,"different contrasts"), cex.main=1.5)
+
+points(log10(contrastRange),transducedSignal,pch=19,col='cornflowerblue',cex=2)
+points(log10(x_intercept),0,pch=19,col='red',cex=2)
+
+lines(X,Yfit,lwd=3,col='red')
+lines(X2,Yextrap,lwd=3,lty=2,col='red')
+
+legend(-2,10,c('Linear fit','Threshold'),lty=c(1,NA),pch=c(NA,19),lwd=3,col='red',box.lwd=2,cex=1.5)
+
+dev.off()
+
+# axs.semilogx(contrastRange[:4], reg.predict(X), 'r-', label='Linear Fit')
+# axs.semilogx(np.logspace(0.1,1.1,nLevels)/100, reg.predict(X2), 'r--')
+
+
+```
+
+```{r makeclinicalplot}
+
+# Parameters
+finecontrastsdB <- seq(-18,36,1)
+finecontrasts <- 10^(finecontrastsdB / 20)
+ticklocsx <- seq(-18,36,6)
+ticklabelsx <- c('1/8', '1/4', '1/2', 1, 2, 4, 8, 16, 32, 64)
+
+pdf('Figures/clinicalplot.pdf',width=12,height=12)
+par(mfrow=c(2,2))
+
+epilepsyparams <- matrix(0,nrow=2,ncol=4) 
+epilepsyparams[1,] <- c(3.4, 0.15, 1.4, 1)  # controls
+epilepsyparams[2,] <- c(5.3, 0.23, 1.4, 1)  # patients
+
+# Calculate responses
+respEPIcontrols <- epilepsyparams[1,1] * ((finecontrasts/100)^epilepsyparams[1,3] /
+                (epilepsyparams[1,2]^epilepsyparams[1,3] + (finecontrasts/100)^epilepsyparams[1,3])) + epilepsyparams[1,4]
+
+respEPIpatients <- epilepsyparams[2,1] * ((finecontrasts/100)^epilepsyparams[2,3] /
+                (epilepsyparams[2,2]^epilepsyparams[2,3] + (finecontrasts/100)^epilepsyparams[2,3])) + epilepsyparams[2,4]
+
+ticklocsy <- seq(0,6,2)
+  plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=c(-18,36), ylim=c(0,6))   
+  axis(1, at=ticklocsx, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=ticklocsy, tck=0.01, lab=F, lwd=2)
+  mtext(text = ticklabelsx, side = 1, at=ticklocsx, line=0.2)     # add the tick labels
+  mtext(text = ticklocsy, side = 2, at=ticklocsy, line=0.2, las=1)  
+  title(xlab="Target contrast (%)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)    
+  title(ylab="SSVEP response", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)
+  title(main="(a) Epilepsy", cex.main=1.5)
+
+lines(finecontrastsdB, respEPIpatients, lwd=4, col='blue')
+lines(finecontrastsdB, respEPIcontrols, lwd=4, col='black', lty=2)
+
+legend(-18,6,c('Epilepsy patients','Control participants'),lwd=4,lty=1:2,col=c('blue','black'),box.lwd=2,cex=1.5)
+
+
+
+amblyparams <- matrix(0,nrow=2,ncol=4) 
+amblyparams[1,] <- c(0.39, 37.2, 1.4, 0.22)  # amblyopic eye
+amblyparams[2,] <- c(2.33, 111.69, 1.4, 0.22)  # fellow eye
+
+# Calculate responses
+respambly <- amblyparams[1,1] * ((finecontrasts)^amblyparams[1,3] /
+                (amblyparams[1,2] + (finecontrasts)^amblyparams[1,3])) + amblyparams[1,4]
+
+respfellow <- amblyparams[2,1] * ((finecontrasts)^amblyparams[2,3] /
+                (amblyparams[2,2] + (finecontrasts)^amblyparams[2,3])) + amblyparams[2,4]
+
+ticklocsy <- seq(0,2,0.5)
+  plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=c(-18,36), ylim=c(0,2))   
+  axis(1, at=ticklocsx, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=ticklocsy, tck=0.01, lab=F, lwd=2)
+  mtext(text = ticklabelsx, side = 1, at=ticklocsx, line=0.2)     # add the tick labels
+  mtext(text = ticklocsy, side = 2, at=ticklocsy, line=0.2, las=1)  
+  title(xlab="Target contrast (%)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)     
+  title(ylab="SSVEP response", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)
+  title(main="(b) Amblyopia", cex.main=1.5)
+
+lines(finecontrastsdB, respambly, lwd=4, col='red')
+lines(finecontrastsdB, respfellow, lwd=4, col='black', lty=2)
+
+legend(-18,2,c('Amblyopic eye','Fellow eye'),lwd=4,lty=1:2,col=c('red','black'),box.lwd=2,cex=1.5)
+
+
+# Autism and control groups for the autism plot
+
+autismparams <- matrix(0,nrow=2,ncol=4) 
+autismparams[1,] <- c(0.6253, 0.2701, 125550, 5.6199)  # ASD group
+autismparams[2,] <- c(1.0131, 0.3369, 3589900, 6.8622)  # control group
+
+# Calculate responses
+respASD <- (autismparams[1,1] * (finecontrasts^autismparams[1,4]) /
+           (autismparams[1,3] + finecontrasts^autismparams[1,4])) + autismparams[1,2]
+respCON <- (autismparams[2,1] * (finecontrasts^autismparams[2,4]) /
+           (autismparams[2,3] + finecontrasts^autismparams[2,4])) + autismparams[2,2]
+
+ticklocsy <- seq(0,1.5,0.5)
+  plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=c(-18,36), ylim=c(0,1.5))   
+  axis(1, at=ticklocsx, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=ticklocsy, tck=0.01, lab=F, lwd=2)
+  mtext(text = ticklabelsx, side = 1, at=ticklocsx, line=0.2)     # add the tick labels
+  mtext(text = ticklocsy, side = 2, at=ticklocsy, line=0.2, las=1)  
+  title(xlab="Target contrast (%)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)    
+  title(ylab="SSVEP response", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)
+  title(main="(c) Autism", cex.main=1.5)
+
+lines(finecontrastsdB, respASD, lwd=4, col='darkgreen')
+lines(finecontrastsdB, respCON, lwd=4, col='black', lty=2)
+
+legend(-18,1.5,c('ASD children','Control children'),lwd=4,lty=1:2,col=c('darkgreen','black'),box.lwd=2,cex=1.5)
+
+
+# PD parameters for Drosophila from Afsari et al HMG 2014
+
+PDparams2F1 <- matrix(0,nrow=2,ncol=4) 
+PDparams2F1[1,] <- c(22, 0.7, 2, 1)  # controls
+PDparams2F1[2,] <- c(24, 0.4, 2, 1)  # hLRRK2
+
+PDparams1F1 <- matrix(0,nrow=2,ncol=4) 
+PDparams1F1[1,] <- c(104, 0.76, 2, 1)  # controls
+PDparams1F1[2,] <- c(170, 0.382, 2, 1)  # hLRRK2
+
+# Note: Here we plot the 2F1 curves which, we think, most closely correspond to the more central neuronal (as opposed to the photoreceptor-derived) signals
+respParkControls <- PDparams2F1[1,1] * ((finecontrasts/100)^PDparams2F1[1,3] /
+                      (PDparams2F1[1,2]^PDparams2F1[1,3] + (finecontrasts/100)^PDparams2F1[1,3])) + PDparams2F1[1,4]
+
+respParkPatients <- PDparams2F1[2,1] * ((finecontrasts/100)^PDparams2F1[2,3] /
+                      (PDparams2F1[2,2]^PDparams2F1[2,3] + (finecontrasts/100)^PDparams2F1[2,3])) + PDparams2F1[2,4]
+
+
+ticklocsy <- seq(0,20,4)
+  plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=c(-18,36), ylim=c(0,20))   
+  axis(1, at=ticklocsx, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+  axis(2, at=ticklocsy, tck=0.01, lab=F, lwd=2)
+  mtext(text = ticklabelsx, side = 1, at=ticklocsx, line=0.2)     # add the tick labels
+  mtext(text = ticklocsy, side = 2, at=ticklocsy, line=0.2, las=1)  
+  title(xlab="Target contrast (%)", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)       
+  title(ylab="SSVEP response", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)
+  title(main="(d) Parkinson's", cex.main=1.5)
+
+lines(finecontrastsdB, respParkPatients, lwd=4, col='purple')
+lines(finecontrastsdB, respParkControls, lwd=4, col='black', lty=2)
+
+legend(-18,20,c('hLRRK2 transgenic flies','TH+ (control) files'),lwd=4,lty=1:2,col=c('purple','black'),box.lwd=2,cex=1.5)
+
+dev.off()
+
+
+```
+
+# Abstract:
+
+Contrast is the currency of the early visual system. Measuring the way that the computations underlying contrast processing depend on factors such as spatial and temporal frequency, age, clinical conditions, eccentricity, chromaticity and the presence of other stimuli has been a focus of vision science for over a century. One of the most productive experimental approaches in this field has been the use of the 'steady-state visually-evoked potential' (SSVEP): a technique where contrast modulating inputs are 'frequency tagged' (presented at well-defined frequencies and phases) and the electrical signals that they generate in the brain are analyzed in the temporal frequency domain. SSVEPs have several advantages over conventional measures of visually-evoked responses: they have relatively unambiguous ouput measures, a high SNR, and they allow us to analyze interactions between stimulus components using a convenient mathematical framework. Here we describe how SSVEPs have been used to study visual contrast over the past 70 years [@Dawson1954]. Because our thinking about SSVEPs is well-described by simple mathematical models, we embed code that illustrates key steps in the modelling and analysis. This paper can therefore be used both as a review of the use of SSVEP in measuring human contrast processing, and as an interactive learning aid.
+
+# Introduction
+
+Neurons in the visual areas of the brain are primarily responsive to changes in cone photoreceptor activations across time and space. This property, referred to as 'contrast', sets the fundamental limits of our visual abilities, which remain steady over a remarkably wide range of environmental light levels. The human response to contrast can be studied using many different techniques. Early work used psychophysical methods to measure contrast sensitivity [@Campbell1965], defined as the inverse of the lowest contrast that can be reliably detected. But neural responses can also be measured more directly using techniques such as fMRI, MEG, and EEG. Here we will describe how an EEG method known as the steady state visually evoked potential (SSVEP) technique has contributed to our understanding of human contrast processing in health, disease and throughout development.
+
+The SSVEP is a continuous electrical response evoked in the brain by visual stimuli flickering at a constant frequency [@Regan1966]. For contrast-defined stimuli, such as sine-wave gratings, it is strongest at the occipital pole, adjacent to the early visual areas that generate the signal, although careful analysis of individual VEPs reveals multiple generators throughout visual cortex [@Di-Russo2005; @Di-Russo2007]. The flickering stimulus entrains neural population responses at multiples of the stimulus frequency, so continuous EEG data are typically analysed by taking the Fourier transform, and estimating the amplitude at these frequencies. Two common variants involve sinusoidal on-off flicker, where the stimulus alternates between a blank background and the peak contrast, and sinusoidal counterphase flicker, where the stimulus alternates in phase (i.e the black regions become white and the white regions become black). On-off flicker can drive independent populations of on- and off-cells in the retina once per cycle and can therefore produce a response at the fundamental flicker frequency, known as 1F, and its integer harmonics: 2F, 3F, 4F and so on. Counterphase flicker contains two transients per cycle and therefore does not produce a response at 1F, only at its even harmonics: 2F, 4F, 6F and so on. Because square-waves are spectrally broad-band, square wave flicker tends to produce more complex spectral harmonics than sine-wave flicker. 
+
+The higher harmonics of the steady-state signal are generally thought to reflect nonlinear processing in the visual system [@Regan1988]. SSVEP signals can also be elicited by periodic changes of stimulus properties other than achromatic and chromatic contrast, such as motion, stereo depth, and facial identity or expression [see @Norcia2015, for an overview]; however our focus here is on the contrast response.
+
+# Why measure responses to contrast?
+
+Contrast is one of the most fundamental pieces of information that the eye transmits to the brain. It can be defined as the change in cone photoreceptor activity over space ('spatial contrast') or time ('temporal contrast'). Cone photoreceptors - which drive precortical opponent pathways -  contribute to both chromatic and achromatic contrast, and although most of the research we describe here focuses on achromatic contrast, SSVEPs have proven to be an excellent measure of early chromatic processing as well [@McKeefry1996; @Di-Russo2001]   (see also [@Baseler1997]). 
+
+Contrast is typically specified as the percentage deviation of a uniform stimulus from the background. So, for example, a disk of 100 units of cone activation ($I_{\mathrm{stim}}$) surrounded by a 'background' of 50 units of activation ($I_{\mathrm{background}}$) has a contrast of $\frac{I_{\mathrm{stim}} - I_{\mathrm{background}}}{I_{\mathrm{background}}}$ = 100%. Where patterns are more complex (for example, the sine-wave gratings or Gabor patches common in vision science), the @Michelson1927 definition of contrast is specified by the maximum and minimum excursions from the mean: 
+
+$$\frac {I_{\mathrm{stimmax} }-I_{\mathrm{stimmin} }}{I_{\mathrm{stimmax} }+I_{\mathrm{stimmin} }}.$${#eq-michelson}
+
+These contrast definitions are appropriate both to photometric measures of stimulus contrast (for example, luminance; @Lennie1993) and also to definitions based on cone excitations [@Derrington1984; @MacLeod1979] which are more common in work on chromatic processing.
+
+Although its mathematical definition is straightforward, the computations that underlie contrast processing in the brain have been the subject of intense research for many decades. The neural code for contrast, even in the earliest parts of visual cortex, is not simply a linear transform of the contrast at the retina - instead, contrast signals undergo a cascade of nonlinear processing stages that, broadly, attempt to normalise the output relative to the spatiotemporal environment. This normalization, achieved through a computation called 'contrast gain control' [@Foley1994; @Heeger1992; @Carandini2011] maximises the sensitivity of the visual system by making optimal use of neuronal bandwidth. As an example, a grating placed at the centre of a low-contrast background typically appears more intense than the same grating when superimposed on a high contrast background (see @fig-centresurround; note that the code used to produce all figures in this review is available in python and R at: https://github.com/wadelab/contrastReviewPaper).
+
+![The perceived contrast of a stimulus depends on its context. A high contrast surround reduces the apparent contrast of the central 'probe' region.](Figures/centresurround.pdf){#fig-centresurround}
+
+A significant body of research into contrast processing is concerned with how these normalization mechanisms depend on colour [@Chen2000], orientation [@Foley1994], eye of origin [@Legge1979; @Baker2007], spatial and temporal frequency [@Meese2009], location [@Petrov2005; @Tadin2003; @Polat1993], age [@Betts2005], and the presence of neurological disorders [@Porciatti2000; @Tsai2011]. The SSVEP has proven to be invaluable in this research because it provides an objective readout of contrast representation at different stages of the visual system, and allows us to 'tag' the probe and background at separate frequencies.
+
+Because it provides a direct read-out of neural population activity, the SSVEP signal can reveal key features of neural signal transduction. For example, by varying the peak stimulus contrast parametrically, a 'contrast vs response'  function (CRF) can be measured - where the 'response' is typically defined as the amplitude of the SSVEP frequency component at the stimulus frequency, or a low multiple thereof. This corresponds closely to similar functions reported by studies measuring single unit activity or local field potentials in the cortex [@Shapley1980; @Morrone1982]. However the SSVEP has the advantage that it is non-invasive, and so can be measured in awake, behaving human participants. 
+
+To understand the utility of the contrast SSVEP, it is helpful to identify the cascade of processing stages in the early visual system that give rise to it. In the following section we illustrate how a typical SSVEP signal measured over early visual cortex might contain information about a large number of early visual computations. 
+
+# Contrast processing - linear and nonlinear 
+
+Neurons have a limited dynamic range, yet they can transmit information about visual stimuli that span many orders of magnitude. In the domain of contrast, to some extent this is accomplished at a population level - individual neurons typically implement a non-linear, sigmoidal CRF transducer [@Albrecht1982; @Tolhurst1981] and different neurons exhibit peak sensitivity (defined as the maximum slope of the function) at different contrast levels [@Carandini1994; @Carandini1998; @Busse2009]. A neuronal population will therefore span a sensitivity range greater than any individual member.
+
+Individual neurons at multiple stages of the visual hierarchy also change their sensitivity depending on the average spatiotemporal contrast energy of their environment. This "normalisation" process is dynamic and nonlinear and is well-modeled by a hyperbolic ratio function in which the response of each neuron is modulated by a local 'gain pool' composed of the summed responses of the local neuronal population [@Heeger1992; @Carandini2011; @Busse2009; @Baker2017].
+
+To  understand these processes better, we will show how sinusoidal input signals might be processed by the visual system to produce SSVEPs. @fig-linear illustrates how sine waves of different contrasts are processed in a linear system. The first panel shows the input sine wave, which would be used to modulate stimulus amplitude over time. Notice that there are five peaks in the waveform during the one second sample, so the stimulation frequency is 5Hz (F1). The second panel shows Fourier transform of the waveform, which contains a substantial peak at this frequency. If we  change the stimulus contrast (i.e. the amplitude of the waveform), the amplitude of the F1 component increases linearly with contrast (right panel).
+
+![Illustration of a sinusoidal input signal (left), its Fourier spectrum (middle), and how the amplitude of the first harmonic component increases with contrast (right). These calculations assume an entirely linear system.](Figures/linearsystem.pdf){#fig-linear}
+
+Next we can consider the impact of a nonlinearity in processing on the responses. One of the simplest nonlinearities is the function that describes a cell's response to different levels of contrast. In @fig-transducer this is modeled by a hyperbolic ratio function resulting in a saturating non-linearity:
+
+$$R_{\mathrm{max}} = \frac{C_{\mathrm{in}}^n}{C_{50}^n + C_{\mathrm{in}}^n},$${#eq-nakarushton}
+
+where ${R_{\mathrm{max}}}$ describes the maximum response level, $C_{\mathrm{in}}$ is the input contrast (or the time-varying waveform), $C_{50}$ is the 'semi-saturation constant' (the point at which the response is at half-maximum) and *n* controls the steepness of the curve (with a typical value around $n=2$.
+
+This nonlinearity has clear effects on signal transduction. The sinusoidal waveform is distorted by the nonlinearity, and appears frequency doubled (left panel of @fig-transducer; note that other nonlinearities such as rectification and squaring can have similar effects). The distortion is reflected in the Fourier spectrum (middle panel of @fig-transducer), which now includes responses at integer multiples (known as harmonics) of the stimulation frequency (10, 20 and 30Hz), but no response at the fundamental (5Hz). Finally, the contrast response function is now nonlinear (right panel of @fig-transducer). Although the hyperbolic ratio function (@eq-nakarushton) is monotonic, the CRF resulting from measuring the amplitude of the second harmonic (2F) component contains a slight roll-off at high input contrasts. This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity. Power at other harmonics increases, and the total power generated by the input is monotonic. This roll-off is often seen in experimental data and has been referred to as 'supersaturation' [@Tyler1985; @Peirce2007].
+
+![Illustration of how a sinusoidal input signal is affected by a nonlinear transducer. The input wavefore (left panel) is frequency doubled by the squaring operator, and now features energy at the second harmonic (10Hz) and its multiple (middle panel). The contrast response function at the second harmonic is now nonlinear, and saturates at high contrasts (right panel).](Figures/transducer.pdf){#fig-transducer}
+
+To illustrate the effect of contrast gain control [@Heeger1992], we next include a second component (a 'mask') that contributes to the gain pool of the first (the 'target'). The mask stimulus will suppress the response at the target frequency, reducing its amplitude. The suppression is reciprocal - activity at the mask frequency is also reduced by the presence of the target, in a contrast-dependent manner [@Busse2009]. At a single pair of (matched) contrast levels, we see a complex pattern of intermodulation terms in the transduced waveforms (left panel of @fig-twoinputs) and in the Fourier spectrum (middle panel of @fig-twoinputs). The two components interact generating nonlinear intermodulation terms at sums and differences of the input frequencies (F1, F2). The nature of the interaction --- and therefore the pattern of intermodulation terms ---  is determined by the computations happening as the contrast signal moves from retina to cortex [@Regan1988].
+
+![Demonstration of how two inputs of different frequencies are processed by a nonlinear transducer. Additional harmonics are apparent in the Fourier spectrum (middle panel), and the contrast response function is suppressed (right panel).](Figures/twoinputs.pdf){#fig-twoinputs}
+
+If the two inputs were simply added together, the representation of the resulting signal in the Fourier domain would be the linear sum of the two independent signals (i.e. peaks at F1 and F2). However, it is important to take physiology into account. Contrast gain control reduces the amplitude of the responses via a suppressive process, which can be incorporated into our transducer function via an additional denominator term:
+
+$$R_{\mathrm{max}} = \frac{C_{\mathrm{in}}^n}{C_{50}^n + C_{\mathrm{in}}^n + C_{\mathrm{mask}}^n},$${#eq-gaincontrol}
+
+where $C_\mathrm{mask}$ reflects the contrast of the mask component at a distinct frequency from that of the target. The effect of this extra term is to reduce the target response (see right panel of @fig-twoinputs). For a linear contrast axis, the contrast response function becomes shallower, whereas on a logarithmic contrast axis it maintains its steepness and shifts to the right. Suppressive effects of this kind have been obtained using SSVEP with a variety of different types of mask, including orthogonal overlaid masks, surround masks, and dichoptic masks [@Burr1987; @Ross1991; @Candy2001; @Busse2009; @Salelkar2020; @Cunningham2017; for a meta-analysis see @Baker2021].
+
+Even without considering a spatial component, the early visual system is far more complex than the model here suggests. For example as well as cells that code positive or negative contrast in a more or less continuous manner, the retina also contains 'transient' cells that code temporal changes in contrast. These cells [@Kuffler1957; @Alpern1971], and cells with similar properties in the LGN [@Levitt2001] and cortex [@Movshon1975; @Hubel1959], will introduce second harmonic components even when the stimulus itself is modulated in an on-off fashion. Analogously, in the spatial domain, so-called 'simple cells' are sensitive to the polarity of a spatial contrast modulation while 'complex cells' respond to the presence of patterned spatial contrast irrespective of its spatial position [@Hubel1962]. The SSVEP response to a contrast-reversing sine-wave grating therefore contains information about nonlinear computations performed across a range of retinal and cortical cell types.
+
+The complexity of even a simple simulation of the frequency-domain signal arising from non-linear interactions is intriguing. Presumably, the signal measured from early visual cortex is the result of a cascade of nonlinear retinal and cortical operations up to that point. It therefore contains a 'signature' or 'fingerprint' of the computational nature, order and parameters of those operations - including the shape of the transducer functions and the computations involved in signal combination. In principle, that information could be recovered from the SSVEP signal - a possibility recognised in the early days of the technique [@Regan1988]. Although characterising the complete set of computations along entire processing pathway is challenging, careful parametric variation of the input stimuli does allow us to fit models of early visual gain control using SSVEP data. For example, @Tsai2012 demonstrated that a gain control model gave a good account of the pattern of intermodulation responses produced by two overlaid patterns flickering at different frequencies. This was achieved by passing full stimulus waveforms through the transducer nonlinearity, and calculating the Fourier spectrum of the model output. Our more recent work on signal combination across eyes and space similarly demonstrated close correspondence between the predictions of a computational model and empirical data in humans [@Baker2017]. More detailed modelling of intracortical recordings [@Groen2022] has revealed details of the timecourse of gain control effects, specifically that normalization is delayed slightly relative to the initial visual response.
+
+Similar changes to the contrast response function might also be obtained using adaptation paradigms, in which the visual system is exposed to high contrast stimuli for long durations. Psychophysically, adaptation increases detection thresholds, but has little effect on contrast discrimination performance [@Ross1993], much like pattern masks [@Foley1994]. Although SSVEP adaptation effects show strong tuning for orientation [@Vergeer2018; @Campbell1970] and spatial frequency [@Mecacci1976], there appear to be no studies measuring the full SSVEP contrast response function before and after an extended period of adaptation.
+
+# Measuring the development of contrast processing
+
+An early use of the SSVEP was to provide an objective estimate of spatial contrast sensitivity in infants, without requiring behavioural responses. In well-motivated adults, psychophysical measurements of contrast sensitivity remain the gold standard. However, it is difficult and time consuming to obtain reliable psychophysical data from infants. In these cases, SSVEP measurements represent a fast and efficient method for measuring low-level visual responses [@Norcia1990; @Tyler1979; @Braddick1986] and the high SNR of SSVEP means that infants need only look at the screen for short periods of time. 
+
+Because SSVEP responses at detection threshold are very small, estimating a threshold is achieved by measuring the contrast response function at relatively high levels, and extrapolating back along the function (either contrast vs response measured at a constant spatial frequency or spatial frequency vs response at a constant contrast level) to estimate its intercept with the x-axis (see @fig-sweepvep). This contrast level was shown to correspond approximately with psychophysically measured detection thresholds [@Norcia1986]. 
+
+![Sweep VEP simulation showing how a contrast detection threshold can be estimated from sweep VEP data measured at higher contrasts. The solid line is the regression fit to the lowest four data points, and the dashed line extrapolates the fit back to determine the contrast value when y=0, which gives a threshold estimate (red point).](Figures/sweepplot.pdf){#fig-sweepvep}
+
+A robust estimate of the threshold therefore requires the measurement of the SSVEP amplitude at many different super-threshold contrast levels. This was made faster by the development of the ‘sweep VEP’ paradigm in which the stimulus changed its contrast, spatial frequency or some other property, throughout a trial [@Tyler1979]. To avoid hysteresis effects, the sweep is sometimes conducted both up and down in the same experiment [@Tyler1979; @Norcia1985a; @Norcia1990]. The sweep VEP (really, a sweep 'SSVEP') technique is now commonly-used to obtain a rapid and objective measurement of visual acuity. In particular, because of its relative speed and simplicity, this technique has now become a standard for conducting tests of visual acuity in very young subjects or where behavioural tests are not appropriate [@Ridder2004; @Hoffmann2017; @Bach2008; @Bach2020].
+
+This approach has revealed much about the development of visual abilities in infants [@Harris1976; @Braddick1986; @Atkinson1979]. In general, SSVEP measurements of infant vision have revealed that contrast sensitivity for both achromatic and chromatic contrast as well as stereoscopic depth perception develops earlier than had been supposed previously based on behavioural readouts [@Dobson1978; @Norcia1985b] with both chromatic and achromatic contrast detection reaching near-adult levels by around six months. Spatial acuity as measured by SSVEP reaches adult levels more slowly, but near-adult levels are recorded around one year [@Norcia1985b; @Hamer1989] compared to around six to seven years with behavioural measures [@Ellemberg1999; @Atkinson1983]. At least some of this difference is likely due to the relative objectivity and high SNR of the SSVEP technique compared to other methods such as preferential looking, which require careful measurement of the infant's gaze direction. However it should be noted that other groups have reported electrophysiological correlates of visual acuity that more closely match the behavioural measures [@De-Vries-Khoe1982].
+ 
+The SSVEP technique has also been used to study the development of the contrast gain control mechanisms described in the previous section [@Candy2001; @Pei2017]. Although contrast gain control is measurable in infants as young as six weeks old [@Candy2001; @Morrone1986; @Skoczenski1998], its development appears to be slower, with adult levels being reached at approximately 11 years [@Pei2017].
+
+# Contrast processing in clinical conditions
+
+The SSVEP technique has also been used to study clinical conditions, such as diseases and developmental disorders. This can often be informative regarding the underlying mechanism that characterises the condition. Here we focus on four conditions, but there is potential to apply the method more broadly: as a dignostic technique, to monitor disease severity and progression, or to assess the efficacy of treatments.
+
+Epilepsy is a neurological condition in which patients experience seizures - episodes of uncontrolled neural activity that can cause unconsciousness, involuntary movements and convulsions, and atypical sensory experiences. @Porciatti2000 showed that individuals with photosensitive epilepsy generate larger steady-state signals in response to flickering visual stimuli, and their contrast response functions saturate less than those of healthy controls. This is consistent with the idea that epilepsy involves a cortical hyperexciteability that makes seizures more likely. It is also the case for individuals with idiopathic generalised epilepsy [@Tsai2011], a subtype of epilepsy that has a less obvious link to vision. The differences apply across the whole contrast-response function, and so resemble a response gain effect (see [@fig-plotclinical]a), which might be due to reduced inhibition from neighbouring neurons. Differences in SSVEP amplitudes have also been reported in individuals with migraine [@Shibata2008], a condition also associated with cortical hyperexciteability.
+
+Amblyopia is a disorder of binocular vision, characterised by one eye contributing much less to perception than the other. This is often due to strabismus (squint) or anisometropia (difference in optical prescription between the eyes) during development. Contemporary accounts suggest that the amblyopic eye is suppressed by signals from the fellow eye. SSVEPs provide a convenient and objective method to characterise the difference in neural response to signals in each eye, and typically show reduced responses to stimuli in the amblyopic eye (see [@fig-plotclinical]b) across the contrast range [@Baker2015; @Lygo2021]. There are currently many novel binocular treatments for amblyopia under development, often involving virtual reality or stereo display systems designed to encourage the two eyes to work together. The steady-state approach may be more sensitive and objective than typical acuity measurements, and also has the potential to measure suppression between the eyes directly [e.g. @Zheng2019; @Du2023; @Hu2023].
+
+Autism is a condition often associated with differences in vision [@Simmons2009] and other senses [@MacLennan2022]. @Pei2014 used a sweep-VEP method with counterphase flickering stimuli, and found weaker responses in autistic children at spatial frequencies around 8c/deg, compared with age-matched controls. This was subsequently replicated in a further pediatric sample by @Vilidaite2018 (see [@fig-plotclinical]c), who additionally found weaker responses in autistic adults at the second harmonic (using on/off flicker). Interestingly this study replicated its key findings in a *Drosophila* genetic model of autism (*Nhe3* mutations), illustrating the translational potential of the steady-state approach, as well as identifying a possible biomarker for autism. 
+
+Recent work on understanding Parkinson's disease has also used *Drosophila* genetic models. @Afsari2014 found that mutant flies produced stronger SSVEP responses to flickering lights than control flies (see [@fig-plotclinical]d). The authors theorised that differences in early gain control during development might lead to visual deficits later in life. Although visual responses are a convenient assay of neural function, it is likely that the same general process applies throughout the whole brain, including in the motor system where the core Parkinson's symptoms (tremor, rigidity, slow movement) manifest. The SSVEP differences were reduced by a kinase inhibitor that targets the dopamine system, demonstrating how model organisms can be used to test new pharmacological treatments. SSVEP responses also provide a potential method to diagnose Parkinson's before any symptoms manifest, and to monitor the effect of treatments.
+
+![Example contrast response functions for different clinical conditions. Panel (a) shows modelled contrast response functions for epilepsy patients (blue) and control participants (black), based on the data of Tsai et al. (2011). Panel (b) shows functions for the amblyopic (red) and fellow (black) eyes of adults with amblyopia, based on the data of Baker et al. (2015). Panel (c) shows functions for children with (green) and without (black) a diagnosis of autism, based on the data of Vilidaite et al. (2018). Panel (d) shows data from *Drosophila melanogaster* (fruit flies) from Afsari et al. (2014). One day-old flies expressing a human gene linked to Parkinson's (hLRRK-G2019S) show increased SSVEP response amplitude and sensitivity (red) compared to control animals (black).](Figures/clinicalplot.pdf){#fig-plotclinical}
+
+# Attention and arousal
+
+Attention exerts a profound influence on visual performance: for example, instructing people to attend covertly to a spatial location improves their performance on a target detection task significantly [@Posner1980; @Cameron2002; @Carrasco2000; @Bashinski1980; @Morrone2004; @Pestilli2009]. In principle, this enhancement may be driven both by modulation of the underlying signal or noise characteristics, or by additional decision-theoretic factors such as reduction in spatial uncertainty [@Gould2007; @Petrov2006]. Early experiments with non-human primates showed little evidence for attentionally-driven changes in neuronal spike rates [@Luck1997; @Marcus2002; @McAdams1999; @Mehta2000a; @Mehta2000b], but with the advent of spatially-resolved human brain imaging methods in the late 1990s it became apparent that spatial attention was linked to frank changes in both fMRI BOLD responses 
+[@Tootell1998; @Brefczynski1999; @Buracas2007; @Gandhi1999; @Kastner1999; @Li2008; @Murray2008; @Silver2007; @Somers1999] and EEG signals [@Ding2006; @Muller2000; @Morgan1996; @Muller1998].
+
+Electrophysiological and psychophysical measurements of the effect of attention on both luminance and chromatic contrast have strongly implicated gain control as an underlying mechanism [@DiRusso1999; @DiRusso2001; @Lu1998]. These effects also appear to differ between chromatic and achromatic pathways [@DiRusso1999b] - perhaps as a result of the different levels of nonlinear gain control in the early pre-cortical magno-, parvo- and konio-cellular pathways [@Derrington1984b; @Kaplan1986; @Lee1990; @Solomon2005]. In the late 2000s a comprehensive theoretical model for attentional modulation was developed that framed it as a gain control computation [@Reynolds2009; @Boynton2009]. This framework has proven to be influential - explaining a wide range of phenomena from the earlier literature and demonstrating subtle interactions between the size of the attentional 'spotlight' and the stimulus configuration which rationalise many apparent contradictions in the literature. Direct measurements of attentional modulation of achromatic SSVEP signals are broadly consistent with this model [@Lauritzen2010; @Hou2016; @Martinovic2018] and confirm the relatively weaker role of spatial attention on responses driven by chromatic stimuli - particularly those that isolate the opponent S-(L+M) cone pathway [@Wang2011; @Highsmith2010]. The gain control model of attention can also be extended to SSVEP studies of feature-based attention which show that the modulatory effects can be targeted to the most informative neuronal populations [@Verghese2012]. 
+
+The SSVEP can also be used to study changes in visual processing \textit{driven} by different behavioural states or overall arousal. For example, locomotion has been shown to alter neuronal excitability and spatial normalization in mice [@Niell2010; @Ayaz2013] - running mice have higher visual sensitivity and lower surround suppression compared to stationary mice. Although measuring EEG responses from locomoting humans is technically challenging, SSVEP studies (which are able to distinguish broadband noise from input signal effectively) have shown that walking also alters early visual processing, although in a manner different to that observed in mice [@Benjamin2018; @Cao2019].
+
+SSVEP measurements are typically used to measure time-invariant responses due to sustained attention. However, recent work has shown that moderately high modulation frequencies (ca 10Hz) and short analysis windows (1.5s) can also be used to track the dynamic allocation of attention across a task [@Chota2024] or attention to moving targets [@Lissa2020]. The ability to track changes in attention over short time periods is also important if SSVEP is to be used for dynamic readouts - for example in a Brain Computer Interface.
+
+# Brain-computer interfaces
+
+One widespread recent application of the SSVEP technique is in the design of brain-computer interfaces, which seek to control some aspect of a computer using neural signals. The high SNR and precise frequency resolution of SSVEPs are advantages for this approach. Typical studies may involve presenting an array of stimuli at different flicker frequencies, and having the participant select one either by overt attention (i.e. shifting fixation to foveate the selected stimulus) or covert attention (i.e. deploying attention to one stimulus whilst keeping fixated) [@Middendorf2000]. Because SSVEP signals are highly sensitive to both visual field position [@Ales2010; @Di-Russo2007] and attentional state [@Morgan1996; @Muller1998; @Verghese2012; @Lauritzen2010], the response to the selected stimulus will typically increase relative to the others, allowing it to be identified by an on-line algorithm. Because more than one stimulus frequency is generally present, this modulation and the associated changes in gain control will affect the entire pattern of self- and intermodulation terms, allowing the choice to be decoded by a multivariate pattern classifier. 
+
+This approach is primarily useful in situations that require the BCI to distinguish from among a small set of possibilties: for example, in early work, visual stimuli representing 'Left' and 'Right' commands in a flight simulator were distinguished robustly [@Middendorf2000]. Although SSVEP-based BCI interfaces typically do use contrast flicker, work in this field has largely focused on optimising the stimuli or decoders to increase decoding performance and reducing visual fatigue associated with the long-term presentation of arrays of high-contrast flicker [@Diez2024], rather than studying visual contrast processing \textit{per se}. We therefore note in passing that using SSVEPs to improve our understanding of early contrast processing may yield benefits to this related field. 
+
+# Future directions
+
+The SSVEP is a powerful tool for studying contrast processing. It provides a high SNR readout of neuronal activity that is unambigously linked to the input. It is sensitive to both the amplitude and phase of the input and when combined with source imaging, it can be extracted from different cortical regions allowing researchers to track contrast processing computations across the visual pathway. Because of the high SNR, it can be measured in subjects where long recording durations are impractical (for example, infants or patients with neurological disorders) and at frequencies high enough to be effectively invisible [@Herrmann2001; @Minarik2023; @Seijdel2023]. The SSVEP is also able to 'fingerprint' modulators of the inputs through the harmonic and intermodulation terms they generate in the output. In principle, each nonlinearity in the visual pathway can be identified by its contribution to the frequency spectrum at different recording locations [@Regan1988]. This, it turn, allows researchers to study how contrast processing depends on spatial and temporal context, as well as changes in task, cognitive and behavioural state, and arousal. 
+
+Although visual neuroscience is a relatively old subfield, there are still outstanding questions relating to contrast processing that could be addressed by SSVEP methods. First, it is still not completely clear how contrast signals are computed in the human retina. Although we have more than a century of electrophysiological data from animals, and the broad structure of cone inputs to retinal ganglion cells is understood [@Li2014], we are still discovering new aspects of retinal processing that could influence the 'coining' of the visual system's currency [@Gollisch2010; @Wang2023; @Uprety2022]. The ability to frequency tag both inputs (for example, cone-directed luminance contrast) and modulators (for example, stimuli that selectively drive the intrinsically-photosensitive retinal ganglion cells) is a powerful tool to explore this first stage of image generation.
+
+Later in the visual pathway, we would like to know more about the role of corticothalamic feedback in the LGN. Although it is commonly thought of as a simple relay between the eye and the cortex,  the majority of inputs to the LGN come from cortex not the eye, and there is good evidence that contrast processing in the LGN can be altered by top-down signals including attention [@Briggs2007; @Sherman1996; @OConnor2002; @Gouws2014]. Bottom-up inputs to the LGN are segregated by eye and so responses there are often considered to be purely monocular, but it is possible that feedback signals allow some binocular computations such as interocular normalisation [@Baker2007; @Dougherty2019] to begin even at this relatively early stage. Frequency tagging inputs to different eyes or in different precortical pathways allows us to address neurons in different parts of the LGN. These techniques combined with advances in recording technology (for example, sensitive source-imaged EEG and MEG recordings that can resolve subcortical structures [@Attal2012; @Attal2013; @Tesche1996], noninvasive deep-brain stimulation techniques [@Mohammadjavadi2022] or implanted electrode arrays [@Krolak-Salmon2003]) may allow us to study these computations in more detail.
+
+Finally, SSVEPs continue to provide a way of studying contrast in the cortex. Here, we are often interested in how different visual parameters interact. For example, how are signals from different eyes combined to generate both scalar contrast values and also binocular depth cues? How does contrast combination depend on the low level properties of the individual inputs such as their retinotopic location, cone contrast, spatiotemporal frequency, eye of origin and orientation? Colour vision scientists are particularly interested in how chromatic signals originating in a small number of cone-opponent retinal pathways are transformed into a perceptual colour space where the 'unique hues' appear to be only weakly-related to the early retinal outputs and how these computations are conditioned by the spatial and temporal properties of the scene [@Li2022; @Stoughton2008; @Kaneko2020; @Gegenfurtner2003; @Solomon2007; @Wandell1993]. All of these questions can be addressed by using SSVEP and frequency tagging to examine the computations that combine and transform the inputs at different cortical stages [@Watts2024; @Baker2017; @Chen2021; @Katyal2018; @Busse2009]. The original promise of the SSVEP approach was that the  entire complex-valued frequency spectrum recorded at each location provided detailed information about the processing nonlinearities up to and including that point. In principle, this would allow researchers to uniquely fit the parameters of their computational models of visual processing [@Regan1988].  To date, the complexity of the neuronal computations at even the earliest stage of visual processing have hampered this effort - researchers typically restrict their analyses to the amplitudes of single, low-order frequency components (for example, the input frequencies or simple sums and differences of those frequencies). As our understanding of the early visual system improves, it is becoming possible to generate more realistic parameterised forward models of signal generation [@Chariker2020; @Groen2022; @Baker2017; @Tsai2012; @Schrimpf2020]. Feeding frequency-tagged inputs into these types of model allows us to generate synthetic SSVEP responses that can be compared with those measured in human subjects. In principle, we are therefore able to use the SSVEP to fit the parameters of early visual processing. This approach may also allow us to develop more sensitive tests for the changes in early visual processing that accompany a wide range of neurological diseases and disorders.
+
+
+
+# References
+
