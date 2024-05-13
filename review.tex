@@ -188,8 +188,8 @@ Contrast is the currency of the early visual system. Measuring the way
 that the computations underlying contrast processing depend on factors
 such as spatial and temporal frequency, age, clinical conditions,
 eccentricity, chromaticity and the presence of other stimuli has been a
-focus of vision science for at least 100 years. One of the most
-productive experimental approaches in this field has been the use of the
+focus of vision science for over a century. One of the most productive
+experimental approaches in this field has been the use of the
 `steady-state visually-evoked potential' (SSVEP): a technique where
 contrast modulating inputs are `frequency tagged' (presented at
 well-defined frequencies and phases) and the electrical signals that
@@ -209,7 +209,7 @@ human contrast processing, and as an interactive learning aid.
 
 Neurons in the visual areas of the brain are primarily responsive to
 changes in cone photoreceptor activations across time and space. This
-property, referred to as contrast, sets the fundamental limits of our
+property, referred to as `contrast', sets the fundamental limits of our
 visual abilities, which remain steady over a remarkably wide range of
 environmental light levels. The human response to contrast can be
 studied using many different techniques. Early work used psychophysical
@@ -261,14 +261,13 @@ photoreceptor activity over space (`spatial contrast') or time
 opponent pathways - contribute to both chromatic and achromatic
 contrast, and although most of the research we describe here focuses on
 achromatic contrast, SSVEPs have proven to be an excellent measure of
-early chromatic processing as well (McKeefry \emph{et al.}, 1996;
-Baseler \& Sutter, 1997; Di Russo \emph{et al.}, 2001\emph{a}).
+early chromatic processing as well (McKeefry \emph{et al.}, 1996; Di
+Russo \emph{et al.}, 2001\emph{a}) (see also (Baseler \& Sutter, 1997)).
 
-Contrast is relatively simple to define: typically, it is specified as
-the percentage deviation of a uniform stimulus from the background. So,
-for example, a disk of 100 units of cone activation
-(\(I_{\mathrm{stim}}\)) surrounded by a `background' of 50 units of
-activation (\(I_{\mathrm{background}}\)) has a contrast of
+Contrast is typically specified as the percentage deviation of a uniform
+stimulus from the background. So, for example, a disk of 100 units of
+cone activation (\(I_{\mathrm{stim}}\)) surrounded by a `background' of
+50 units of activation (\(I_{\mathrm{background}}\)) has a contrast of
 \(\frac{I_{\mathrm{stim}} - I_{\mathrm{background}}}{I_{\mathrm{background}}}\)
 = 100\%. Where patterns are more complex (for example, the sine-wave
 gratings or Gabor patches common in vision science), the Michelson
@@ -296,7 +295,9 @@ environment. This normalization, achieved through a computation called
 use of neuronal bandwidth. As an example, a grating placed at the centre
 of a low-contrast background typically appears more intense than the
 same grating when superimposed on a high contrast background (see
-Figure~\ref{fig-centresurround}).
+Figure~\ref{fig-centresurround}; note that the code used to produce all
+figures in this review is available in python and R at:
+https://github.com/wadelab/contrastReviewPaper).
 
 \begin{figure}
 
@@ -327,14 +328,14 @@ to `tag' the probe and background at separate frequencies.
 Because it provides a direct read-out of neural population activity, the
 SSVEP signal can reveal key features of neural signal transduction. For
 example, by varying the peak stimulus contrast parametrically, a
-`contrast vs response' function can be measured - where the `response'
-is typically defined as the amplitude of the SSVEP frequency component
-at the stimulus frequency, or a low multiple thereof. This corresponds
-closely to similar functions reported by studies measuring single unit
-activity or local field potentials in the cortex (Shapley \& Victor,
-1980; Morrone \emph{et al.}, 1982). However the SSVEP has the advantage
-that it is non-invasive, and so can be measured in awake, behaving human
-participants.
+`contrast vs response' function (CRF) can be measured - where the
+`response' is typically defined as the amplitude of the SSVEP frequency
+component at the stimulus frequency, or a low multiple thereof. This
+corresponds closely to similar functions reported by studies measuring
+single unit activity or local field potentials in the cortex (Shapley \&
+Victor, 1980; Morrone \emph{et al.}, 1982). However the SSVEP has the
+advantage that it is non-invasive, and so can be measured in awake,
+behaving human participants.
 
 To understand the utility of the contrast SSVEP, it is helpful to
 identify the cascade of processing stages in the early visual system
@@ -348,13 +349,13 @@ nonlinear}\label{contrast-processing---linear-and-nonlinear}
 Neurons have a limited dynamic range, yet they can transmit information
 about visual stimuli that span many orders of magnitude. In the domain
 of contrast, to some extent this is accomplished at a population level -
-individual neurons typically implement a non-linear, sigmoidal contrast
-vs response (CRF) transducer (Tolhurst \emph{et al.}, 1981; Albrecht \&
-Hamilton, 1982) and different neurons exhibit peak sensitivity (defined
-as the maximum slope of the function) at different contrast levels
-(Carandini \& Heeger, 1994; Carandini \emph{et al.}, 1998; Busse
-\emph{et al.}, 2009). A neuronal population will therefore span a
-sensitivity range greater than any individual member.
+individual neurons typically implement a non-linear, sigmoidal CRF
+transducer (Tolhurst \emph{et al.}, 1981; Albrecht \& Hamilton, 1982)
+and different neurons exhibit peak sensitivity (defined as the maximum
+slope of the function) at different contrast levels (Carandini \&
+Heeger, 1994; Carandini \emph{et al.}, 1998; Busse \emph{et al.}, 2009).
+A neuronal population will therefore span a sensitivity range greater
+than any individual member.
 
 Individual neurons at multiple stages of the visual hierarchy also
 change their sensitivity depending on the average spatiotemporal
@@ -365,7 +366,7 @@ composed of the summed responses of the local neuronal population
 (Heeger, 1992; Busse \emph{et al.}, 2009; Carandini \& Heeger, 2011;
 Baker \& Wade, 2017).
 
-To better understand these processes, we will show how sinusoidal input
+To understand these processes better, we will show how sinusoidal input
 signals might be processed by the visual system to produce SSVEPs.
 Figure~\ref{fig-linear} illustrates how sine waves of different
 contrasts are processed in a linear system. The first panel shows the
@@ -373,9 +374,9 @@ input sine wave, which would be used to modulate stimulus amplitude over
 time. Notice that there are five peaks in the waveform during the one
 second sample, so the stimulation frequency is 5Hz (F1). The second
 panel shows Fourier transform of the waveform, which contains a
-substantial peak at this frequency. If we parametrically vary the
-stimulus contrast (i.e.~the amplitude of the waveform), the amplitude of
-the F1 component increases linearly with contrast (right panel).
+substantial peak at this frequency. If we change the stimulus contrast
+(i.e.~the amplitude of the waveform), the amplitude of the F1 component
+increases linearly with contrast (right panel).
 
 \begin{figure}
 
@@ -530,14 +531,14 @@ models of early visual gain control using SSVEP data. For example, Tsai
 account of the pattern of intermodulation responses produced by two
 overlaid patterns flickering at different frequencies. This was achieved
 by passing full stimulus waveforms through the transducer nonlinearity,
-and calculating the Fourier spectrum of the model output. Our own work
-on signal combination across eyes and space similarly demonstrated close
-correspondence between the predictions of a computational model and
-empirical data in humans (Baker \& Wade, 2017). More detailed modelling
-of intracortical recordings (Groen \emph{et al.}, 2022) has revealed
-details of the timecourse of gain control effects, specifically that
-normalization is delayed slightly relative to the initial visual
-response.
+and calculating the Fourier spectrum of the model output. Our more
+recent work on signal combination across eyes and space similarly
+demonstrated close correspondence between the predictions of a
+computational model and empirical data in humans (Baker \& Wade, 2017).
+More detailed modelling of intracortical recordings (Groen \emph{et
+al.}, 2022) has revealed details of the timecourse of gain control
+effects, specifically that normalization is delayed slightly relative to
+the initial visual response.
 
 Similar changes to the contrast response function might also be obtained
 using adaptation paradigms, in which the visual system is exposed to
@@ -566,7 +567,7 @@ periods of time.
 
 Because SSVEP responses at detection threshold are very small,
 estimating a threshold is achieved by measuring the contrast response
-function at relatively high levels, and extrapolaKting back along the
+function at relatively high levels, and extrapolating back along the
 function (either contrast vs response measured at a constant spatial
 frequency or spatial frequency vs response at a constant contrast level)
 to estimate its intercept with the x-axis (see
@@ -592,18 +593,19 @@ determine the contrast value when y=0, which gives a threshold estimate
 \end{figure}%
 
 A robust estimate of the threshold therefore requires the measurement of
-the SSVEP amplitude at many different super-threshold contrasr levels.
+the SSVEP amplitude at many different super-threshold contrast levels.
 This was made faster by the development of the `sweep VEP' paradigm in
 which the stimulus changed its contrast, spatial frequency or some other
 property, throughout a trial (Tyler \emph{et al.}, 1979). To avoid
 hysteresis effects, the sweep is sometimes conducted both up and down in
-the same experiment Norcia \& Tyler (1985\emph{a}). The sweep VEP
-(really, a sweep `SSVEP') technique is now commonly-used to obtain a
-rapid and objective measurement of visual acuity. In particular, because
-of its relative speed and simplicity, this technique has now become a
-standard for conducting tests of visual acuity in very young subjects or
-where behavioural tests are not appropriate (Ridder, 2004; Bach \emph{et
-al.}, 2008; Hoffmann \emph{et al.}, 2017; Bach \& Farmer, 2020).
+the same experiment (Tyler \emph{et al.}, 1979; Norcia \& Tyler,
+1985\emph{a}; Norcia \emph{et al.}, 1990). The sweep VEP (really, a
+sweep `SSVEP') technique is now commonly-used to obtain a rapid and
+objective measurement of visual acuity. In particular, because of its
+relative speed and simplicity, this technique has now become a standard
+for conducting tests of visual acuity in very young subjects or where
+behavioural tests are not appropriate (Ridder, 2004; Bach \emph{et al.},
+2008; Hoffmann \emph{et al.}, 2017; Bach \& Farmer, 2020).
 
 This approach has revealed much about the development of visual
 abilities in infants (Harris \emph{et al.}, 1976; Atkinson \emph{et
@@ -641,8 +643,9 @@ The SSVEP technique has also been used to study clinical conditions,
 such as diseases and developmental disorders. This can often be
 informative regarding the underlying mechanism that characterises the
 condition. Here we focus on four conditions, but there is potential to
-apply the method more broadly, either as a diagnostic technique, or to
-monitor disease severity and progression, or the efficacy of treatments.
+apply the method more broadly: as a dignostic technique, to monitor
+disease severity and progression, or to assess the efficacy of
+treatments.
 
 Epilepsy is a neurological condition in which patients experience
 seizures - episodes of uncontrolled neural activity that can cause
@@ -700,7 +703,7 @@ mutant flies produced stronger SSVEP responses to flickering lights than
 control flies (see Figure~\ref{fig-plotclinical}d). The authors
 theorised that differences in early gain control during development
 might lead to visual deficits later in life. Although visual responses
-are a convenient assay of neural function, it is likely that same
+are a convenient assay of neural function, it is likely that the same
 general process applies throughout the whole brain, including in the
 motor system where the core Parkinson's symptoms (tremor, rigidity, slow
 movement) manifest. The SSVEP differences were reduced by a kinase
@@ -735,7 +738,7 @@ sensitivity (red) compared to control animals (black).}
 \section{Attention and arousal}\label{attention-and-arousal}
 
 Attention exerts a profound influence on visual performance: for
-example, allowing people to attend covertly to a spatial location
+example, instructing people to attend covertly to a spatial location
 improves their performance on a target detection task significantly
 (Bashinski \& Bacharach, 1980; Posner, 1980; Carrasco \emph{et al.},
 2000; Cameron \emph{et al.}, 2002; Morrone \emph{et al.}, 2004; Pestilli
@@ -809,21 +812,21 @@ used for dynamic readouts - for example in a Brain Computer Interface.
 One widespread recent application of the SSVEP technique is in the
 design of brain-computer interfaces, which seek to control some aspect
 of a computer using neural signals. The high SNR and precise frequency
-resolution of SSVEPs make them an ideal candidate for this approach.
-Typical studies may involve presenting an array of stimuli at different
-contrast flicker frequencies, and having the participant select one
-either by overt attention (i.e.~shifting fixation to foveate the
-selected stimulus) or covert attention (i.e.~deploying attention to one
-stimulus whilst keeping fixated) (Middendorf \emph{et al.}, 2000).
-Because SSVEP signals are highly sensitive to both visual field position
-(Di Russo \emph{et al.}, 2007; Ales \emph{et al.}, 2010) and attentional
-state (Morgan \emph{et al.}, 1996; Müller \emph{et al.}, 1998; Lauritzen
-\emph{et al.}, 2010; Verghese \emph{et al.}, 2012), the response to the
-selected stimulus will typically increase relative to the others,
-allowing it to be identified by an on-line algorithm. Because more than
-one stimulus frequency is generally present, this modulation and the
-associated changes in gain control will affect the entire pattern of
-self- and intermodulation terms, allowing the choice to be decoded by a
+resolution of SSVEPs are advantages for this approach. Typical studies
+may involve presenting an array of stimuli at different flicker
+frequencies, and having the participant select one either by overt
+attention (i.e.~shifting fixation to foveate the selected stimulus) or
+covert attention (i.e.~deploying attention to one stimulus whilst
+keeping fixated) (Middendorf \emph{et al.}, 2000). Because SSVEP signals
+are highly sensitive to both visual field position (Di Russo \emph{et
+al.}, 2007; Ales \emph{et al.}, 2010) and attentional state (Morgan
+\emph{et al.}, 1996; Müller \emph{et al.}, 1998; Lauritzen \emph{et
+al.}, 2010; Verghese \emph{et al.}, 2012), the response to the selected
+stimulus will typically increase relative to the others, allowing it to
+be identified by an on-line algorithm. Because more than one stimulus
+frequency is generally present, this modulation and the associated
+changes in gain control will affect the entire pattern of self- and
+intermodulation terms, allowing the choice to be decoded by a
 multivariate pattern classifier.
 
 This approach is primarily useful in situations that require the BCI to
@@ -832,12 +835,12 @@ early work, visual stimuli representing `Left' and `Right' commands in a
 flight simulator were distinguished robustly (Middendorf \emph{et al.},
 2000). Although SSVEP-based BCI interfaces typically do use contrast
 flicker, work in this field has largely focused on optimising the
-stimuli or decoders to increase decoding performance (e.g.~\ldots{} )
-and reducing visual fatigue associated with the long-term presentation
-of arrays of high-contrast flicker (Diez \emph{et al.}, 2024) rather
-than studying visual contrast processing \textit{per se}. We therefore
-note in passing that using SSVEPs to improve our understanding of early
-contrast processing may yield benefits to this related field.
+stimuli or decoders to increase decoding performance and reducing visual
+fatigue associated with the long-term presentation of arrays of
+high-contrast flicker (Diez \emph{et al.}, 2024), rather than studying
+visual contrast processing \textit{per se}. We therefore note in passing
+that using SSVEPs to improve our understanding of early contrast
+processing may yield benefits to this related field.
 
 \section{Future directions}\label{future-directions}
 
@@ -857,8 +860,8 @@ output. In principle, each nonlinearity in the visual pathway can be
 identified by its contribution to the frequency spectrum at different
 recording locations (Regan \& Regan, 1988). This, it turn, allows
 researchers to study how contrast processing depends on spatial and
-temporal context and as well as changes in task, cognitive and
-behavioural state and arousal.
+temporal context, as well as changes in task, cognitive and behavioural
+state, and arousal.
 
 Although visual neuroscience is a relatively old subfield, there are
 still outstanding questions relating to contrast processing that could
@@ -917,14 +920,14 @@ transform the inputs at different cortical stages (Busse \emph{et al.},
 2009; Baker \& Wade, 2017; Katyal \emph{et al.}, 2018; Chen \&
 Gegenfurtner, 2021; Watts \emph{et al.}, 2024). The original promise of
 the SSVEP approach was that the entire complex-valued frequency spectrum
-recorded at each lcoation provided detailed information about the
+recorded at each location provided detailed information about the
 processing nonlinearities up to and including that point. In principle,
 this would allow researchers to uniquely fit the parameters of their
-computations models of visual processing (Regan \& Regan, 1988). To
+computational models of visual processing (Regan \& Regan, 1988). To
 date, the complexity of the neuronal computations at even the earliest
 stage of visual processing have hampered this effort - researchers
 typically restrict their analyses to the amplitudes of single, low-order
-frequency components (for example, the inputs frequencies or simple sums
+frequency components (for example, the input frequencies or simple sums
 and differences of those frequencies). As our understanding of the early
 visual system improves, it is becoming possible to generate more
 realistic parameterised forward models of signal generation (Tsai
@@ -932,7 +935,7 @@ realistic parameterised forward models of signal generation (Tsai
 Schrimpf \emph{et al.}, 2020; Groen \emph{et al.}, 2022). Feeding
 frequency-tagged inputs into these types of model allows us to generate
 synthetic SSVEP responses that can be compared with those measured in
-human subject. In principle, we are therefore able to use the SSVEP to
+human subjects. In principle, we are therefore able to use the SSVEP to
 fit the parameters of early visual processing. This approach may also
 allow us to develop more sensitive tests for the changes in early visual
 processing that accompany a wide range of neurological diseases and
