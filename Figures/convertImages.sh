@@ -13,6 +13,7 @@ for file in *.pdf; do
   base_name="${file%.pdf}"
 
   # Convert PDF to TIFF
-  convert -density $DPI "$file" -resize ${WIDTH_PIXELS}x -units PixelsPerInch "${base_name}.tiff"
+  convert -density $DPI "$file" -resize ${WIDTH_PIXELS}x -units PixelsPerInch -compress LZW "${base_name}.tiff"
+
 done
 
