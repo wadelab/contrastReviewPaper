@@ -9,3 +9,9 @@ vignettes/*.html
 vignettes/*.pdf
 *.png
 *.ipynb
+Figures/1_centresurround.pdf
+Figures/2_linearsystem.pdf
+Figures/3_transducer.pdf
+Figures/4_twoinputs.pdf
+Figures/5_sweepplot.pdf
+Figures/6_clinicalplot.pdf
