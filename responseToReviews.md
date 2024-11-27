@@ -1,5 +1,5 @@
-## Comments to the Author
-# General Comments
+# Comments to the Author
+## General Comments
 
 Wade and Baker have written a very approachable and well-motivated review of the use of VEP measurements of visual contrast. The authors rightly focus on the importance of measuring contrast responses under a wide range of conditions, highlighting the ways in which human evoked responses can be made in informative in diverse contexts. The review should thus be of broad interest.
 
@@ -15,11 +15,17 @@ Harmonics with different CRFs.  Bobak et al., (IOVS, 1986), found that the first
 
 The lack of dynamics in the normalization model, as presented should be discussed, the brief mention of Tsai et al. aside. The authors may wish to cite another framework that explicitly models dynamics (e.g. amplitude and phase) in the context of the contrast response function (Zemon and Gordon, Vision Res, 2006) .  
 
+### Response
+> We thank the reviewer for these positive comments. In general this was intended to be an overview in the sense of a 'primer' for SSVEP rather than a detailed historical account of the field - hence the inclusion of code examples. However, the reviewer raises some important general issues and we now address them: Specifically, we include references to the idea that SSVEP can engage more than one type of neuron, that the population responses is not trivially derived from what is known about the properties of individual neurons and that fitting with a sigmoidal response function may mask some complexities in the CRF that are more readily seen with denser sampling. We think the Bobak reference is IOVS 1984 and we have also included the Kaestner TVST 2024 reference (thank you for drawing our attention to both of these). 
 
-Specific comments
+
+
+### Specific comments
 
 Adaptation effects.  Adapted contrast response functions have been measured by Nelson et al., (EEG Journal, 1984) by comparing CRFs measured by sweeping contrast from low to high vs high to low. They found that responses at low contrast were smaller in the “down” sweeps and attributed it to differences in prior adaptation.  Other studies also measured adaptation effects on the CRF Heinrich and Bach, (IOVS, 2001), Ross and Speed (1991, Proc Roy Soc). And the hard-to-find Bach, Greenlee and Buhler (Clin Vis Sci, 1996) paper that modeled the effect within a contrast gain control framework.
 Gain control development.  Morrone and Burr (Nature, 1986) used frequency tagging to measure orientation dependence of masking in infants and adults, as did Candy et al. The difference in the two studies is that in adults Morrone and Burr found response gain for cross-oriented maskers but Candy et al found contrast gain.   Skoczenski and Norcia used a high contrast 30 Hz dynamic 2D noise masker and variable contrast reversing gratings. They found masking consistent with a contrast gain effect.
+
+> 
 
 Page 5 bottom. The reciprocal effect of test and masker was first shown by Regan and Regan  (1988; cited)  for flicker modulation depth and then for gratings by Brown et al., (IOVS,  1999 for dichoptic masking) and  then  by candy et al., (J. Neurosci, 2001) along with Busse et al. (Neuron, 2009) as cited. It’s good to have cited Regan and Regan paper that introduced the notion of fingerprints in the spectrum being tied to the nature of the non-linearity. Maybe expand their “fingerprint” approacg a little more.
 
@@ -57,3 +63,17 @@ In the last section, it would be worth mentioning that in order to “identify�
 
 .
 
+## Reviewer: 2
+
+# Comments to the Author
+This manuscript is intended to be a review of the field of steady-state visual evoked potentials (ssVEPs) over the past 70 years.  The authors state in the introductory paragraph “Here we will describe how an EEG method known as the steady state visually evoked potential (SSVEP) technique has contributed to our understanding of human contrast processing in health, disease and throughout development.” The material included and the references cited, however, are quite limited and omit seminal work in this area.
+
+1. All abbreviations should be defined upon first use.
+2. The following statement is unclear and inaccurate: “On-off flicker can drive independent populations of on- and off-cells in the retina once per cycle and can therefore produce a response at the fundamental flicker frequency, known as 1F, and its integer harmonics: 2F, 3F, 4F and so on. Counterphase flicker contains two transients per cycle and therefore does not produce a response at 1F, only at its even harmonics: 2F, 4F, 6F and so on.” The term “on-off flicker” is typically used for simple luminance flicker without spatial pattern contrast. In the context of pattern stimulation, “on-off” can refer to “appearance-disappearance” of a spatial pattern with its contrast modulated in time. When the pattern appears and disappears into a uniform field of equal space-average luminance, the light and dark elements are modulated in counterphase. Any linear contribution to the response elicited by each set of elements (e.g., bars or checks) is expected to be canceled when summed at the electrode site on the scalp. Thus, the response at 1F to this stimulus is in fact a nonlinear response. This type of stimulation does not separate contributions from “independent populations of on- and off-cells.” There are other ssVEP techniques developed that do tap ON and OFF pathways selectively, which are not cited here. Contrast-reversal stimuli which involve symmetrical modulation of light and dark elements cancel odd harmonic frequency components in the response, however, both kinds of stimulus techniques mentioned here elicit only nonlinear responses.
+3. The statement “SSVEPs have proven to be an excellent measure of early chromatic processing as well” again fails to cite seminal work in this area.
+4. The statement “This normalization, achieved through a computation called ‘contrast gain control’” again neglects to cite the original work that defined “contrast gain control” and the authors ignored a nonlinear biophysical model proposed to explain this phenomenon in ssVEP contrast response functions (which was also applied in developmental work on infants and children).
+5. The description of Figure 3 and the nonlinear operations performed are unclear. They state in the text that Equation 2 (“hyperbolic ratio function”) is used as a nonlinear transducer, but the figure legend states that a squaring operator was used for frequency doubling. A squaring operation would only produce a sinusoid of double the frequency of the input. The waveform shown in the left panel appears to be a full-wave rectified signal, which would contain theoretically an infinite number of higher harmonics. The text also states that “This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity.” When was full-wave rectification performed?
+6. The authors use the term “frequency tagging” which has been used in the literature to refer to stimulating different regions of the stimulus field or fellow eyes with different sinusoidal frequencies and measuring the intermodulation (sum and difference) frequency responses that result from nonlinear interactions. They do not, however, cite the foundational work in this field.
+7. There is a large body of work that used ssVEPs to investigate contrast processing developmentally (infants through adulthood) and in various disease states, which is mostly missed in this review article.
+8. Figures should be labeled.
+Thus, the stated intention of this manuscript (“Here we describe how SSVEPs have been used to study visual contrast over the past 70 years”) fails to be met. Only select articles from a few sources are covered, and therefore, the richness and value of this technique is lost.
