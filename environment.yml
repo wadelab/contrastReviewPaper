@@ -1,7 +1,3 @@
-name: quarto
-channels:
-  - menpo
-  - defaults
 dependencies:
   - anyio=4.2.0=py312hecd8cb5_0
   - appnope=0.1.3=py312hecd8cb5_1001
