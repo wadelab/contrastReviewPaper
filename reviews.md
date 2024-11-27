@@ -1,5 +1,5 @@
-Comments to the Author
-General Comments
+## Comments to the Author
+# General Comments
 
 Wade and Baker have written a very approachable and well-motivated review of the use of VEP measurements of visual contrast. The authors rightly focus on the importance of measuring contrast responses under a wide range of conditions, highlighting the ways in which human evoked responses can be made in informative in diverse contexts. The review should thus be of broad interest.
 
