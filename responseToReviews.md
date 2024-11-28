@@ -72,17 +72,31 @@ Page 9 …chromatic and chromatic contrast as well as stereoscopic depth percept
 
 The DeVries Khoe and Spekreijse comparison between VEP and psychophysics was done above age 4 years and for acuity not for contrast sensitivity. The large discrepancies between VEP and FPL are in infancy for contrast sensitivity, as well as for acuity.  In the realm of contrast sensitivity, the differences are very large, up to a factor of 50.  Compare Norcia et al., 1990 Vision Res measurement to any behavioral data. Suggest making this comparison more quantitative.
 
+> We have made this more concrete. We have taken out the reference to steroscopic depth (because it is not directly related to contrast). It is hard for us to directly compare the values for contrast sensitivity from FPL vs VEP - the FPL values in particular seem to span quite a range. The figure in Brown 1990 suggests a x2 difference in detection threshold (if we are reading the plot correctly) but we are happy to accept higher values if the reviewer can point us to the relevant FPL literature. 
+
 The authors may wish to cite Norcia et al., (NeuroReport, 2000) for an early measurement of suppression in amblyopia using measurements of the contrast response function in each eye in the presence of a high contrast dichoptic masker in the other.  This study showed that amblyopic observers retain suppressive binocular interactions despite severely reduced stereopsis. The dominant eye exerted a greater suppressive effect on the non-dominant eye, suggesting that it maintains a relatively greater number, or more effective, inhibitory contacts with cortical cells.  Also may wish to cite recent work by Hou and colleagues using a similar approach, including application of normalization models.
+
+> We think these were both in already but we have explicitly grouped them in the section on amblyopia to make their relevance clearer.
 
 Schade (JOSA, 1956) was the first to measure the contrast sensitivity function of the human visual system as noted by Campbell and Robson (J. Physiol, 1968). Campbell and Green (1965, cited) credit Schade for how to make sinewave gratings on an oscilloscope but not for having made the first measurement.
 
+> Included
+
 Villadaite, Norcia et al., (cited) did not find spatial frequency specific effects at 8 cpd as in Pei et al,. (cited). So it’s not really a replication of that study, but more of an extension to a measurement of CRF instead of SF tuning.
+
+> Noted and altered
 
 Page 12, better to state whether attention effects were consistent with response gain or contrast gain to make the result more concrete for the reader.
 
+> Reynolds and Heeger (and Boynton) point out that the range of different types of change reported in the literature (response, contrast or mixtures of both) is explained by subtle differences in stimulus configuration (for example, the size and location of the 'probe' and any masking components relative to the size of the 'attentional spotlight'). We now note that the underlying model is one of contrast gain control (multiplicative amplification of the input rather than the output). 
+
 Discussion of time varying response paragraph on page 12 is not that relevant to contrast response function measurement, nor is the BCI section.  These applications of SSVEP and could be deleted or the relationship to contrast response function made clearer.
 
-Page, 14. It’s not clear from the text how one would study feedback with the SSVEP, please elaborate.
+> Originally, we envisaged this document as a primer on SSVEP contrast measurements for those coming to the field for the first time. In particular, we were struck by the large number of recent papers that use multi-frequency SSVEP contrast flicker as an input to BCI systems. There have been at least 400 such publications ('SSVEP AND BCI') in the last 5 years alone (compared to around 10 for amblyopia ('SSVEP AND amblyopia')and 80 for ('SSVEP AND clinical'). Some of these publications measure dynamic changes in covert spatial attention, some measure changes in featural attention, some measure fixation). We know from personal experience that many of the researchers using contrast flicker as a BCI input would benefit from a slightly more applied guide such as this and the BCI section adds very little to the overall length of the manuscipt at this point. 
+
+Page, 14. It’s not clear from the text how one would study feedback with the SSVEP, please elaborate. 
+
+> In the paper we write that we would look for modulation of subcortical responses due to top-down signals. The most natural things to look for might be interocular normalization (because eye layers are segregated in the LGN) and attentional gain control (because covert spatial attentional modulation must arise in cortex). This the type of feedback we are thinking of - not cortico-cortico feedback (which is hard to isolate with SSVEP)
 
 In the last section, it would be worth mentioning that in order to “identify” a non-linear system, one needs multiple inputs. If the system is 2nd order, a minimum of two inputs is needed. If the system non-linearity is higher order than that, then more simultaneous inputs are needed (see Boyd, Tang and Chua 1983, IEEE Trans Circuits and Systems  and  Chua and Liao, 1991, Int. J. Circuit Theory and Applications).
 
