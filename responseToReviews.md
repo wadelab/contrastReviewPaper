@@ -28,27 +28,47 @@ Adaptation effects.  Adapted contrast response functions have been measured by N
 
 Other studies also measured adaptation effects on the CRF Heinrich and Bach, (IOVS, 2001), Ross and Speed (1991, Proc Roy Soc). And the hard-to-find Bach, Greenlee and Buhler (Clin Vis Sci, 1996) paper that modeled the effect within a contrast gain control framework.
 
-> The Ross and Speed paper measures masking using SSVEP but other adaptation measures are, as far as we can tell, psychophysical.  Heinrich and Bach are concerned with transient changes in SSVEP amplitude within a recording which may have an adaptation origin but which manifest as response increases over the first few seconds and seems a little mysterious. Bach, Greenlee and Buhler is, however, pretty unequivocal and we now include it. We like the suggestion that the  'increase' in response is attributableto a shift from a square wave response to a more sinusoidal waveform as the apparent contrast of the stimulus is decreased by adaptation-driven gain control. The response power which was distributed across odd harmonics in the original response can now be concentrated in the 1st harmonic after adaptation.  
+> The Ross and Speed paper measures masking using SSVEP but other adaptation measures are, as far as we can tell, psychophysical.  Heinrich and Bach are concerned with transient changes in SSVEP amplitude within a recording which may have an adaptation origin but which manifest as response increases over the first few seconds and seems a little mysterious (we often observe these as well). Bach, Greenlee and Buhler is, however, pretty unequivocal and we now include it. We like the suggestion that the  'increase' in response is attributable to a shift from a square wave response to a more sinusoidal waveform as the apparent contrast of the stimulus is decreased by adaptation-driven gain control. The response power which was distributed across odd harmonics in the original response can now be concentrated in the 1st harmonic after adaptation.  
 
 Gain control development.  Morrone and Burr (Nature, 1986) used frequency tagging to measure orientation dependence of masking in infants and adults, as did Candy et al. The difference in the two studies is that in adults Morrone and Burr found response gain for cross-oriented maskers but Candy et al found contrast gain.   Skoczenski and Norcia used a high contrast 30 Hz dynamic 2D noise masker and variable contrast reversing gratings. They found masking consistent with a contrast gain effect.
 
 > We have clarified that these papers measure different types of gain control
 
-Page 5 bottom. The reciprocal effect of test and masker was first shown by Regan and Regan  (1988; cited)  for flicker modulation depth and then for gratings by Brown et al., (IOVS,  1999 for dichoptic masking) and  then  by candy et al., (J. Neurosci, 2001) along with Busse et al. (Neuron, 2009) as cited. It’s good to have cited Regan and Regan paper that introduced the notion of fingerprints in the spectrum being tied to the nature of the non-linearity. Maybe expand their “fingerprint” approacg a little more.
+Page 5 bottom. The reciprocal effect of test and masker was first shown by Regan and Regan  (1988; cited)  for flicker modulation depth and then for gratings by Brown et al., (IOVS,  1999 for dichoptic masking) and  then  by candy et al., (J. Neurosci, 2001) along with Busse et al. (Neuron, 2009) as cited.
+
+> Thanks - we have included these references
+
+ It’s good to have cited Regan and Regan paper that introduced the notion of fingerprints in the spectrum being tied to the nature of the non-linearity. Maybe expand their “fingerprint” approach a little more.
+
+> 
 
 Figure 4. Oversaturation occurs because the denominator overtakes the numerator at high contrast as it has two terms in it, not the single term in the numerator. Would be worth showing total power not saturating. Is this a general effect?
 
+> We think this topic is probably worth a more detailed treatment than we can provide here. Broadly, much of the oversaturation effect can be modeled by an increase in saturation and therefore harmonic distortion - power is transferred from the first to higher harmonics as contrast increases. It seems likely that total power does not saturate (perceptually, there appears to be a monotonic increase in contrast for example and discrimination thresholds increase up to 100%) but the issue is complicated by the fact that the distribution of neurons sensitive to different contrast levels might not be uniform and that neurons might alter their response properties to signal with optimum sensitivity around a particular range. Our goal here is simply to show people new to the field how the CRF is approximately log-linear with contrast. 
+
 Equation 3 is a special case where the neurons in the numerator are so selective that they don’t “see” the masker except by being influenced indirectly by the gain pool.  Putting the test and mask in the numerator and summing them before exponentiating yields robust IM. Weights can be used to reflect the neurons preference for the test vs the mask.  Does equation 3 produce IM?
+
+> In the accompanying code we specifically allow the user to alter the way that normalization is computed and many of the (commented) options produce robust IM. We encourage the user to experiment with different configurations to explore their effects. We have updated the text to make this more explicit.
 
 Page 7 Mckeefry et al., (Vis Neuro, 1996) is a good reference for linking harmonics of on/off to transient sustained responses.
 
+> Included
+
 Page 8 figure 5. The extrapolation to zero amplitude method should be attributed to Cambell and Maffei (J Physiol) 1970). Campbell and Kulikowski (J Physiol, 1972) made a detailed comparison to psychophysics.
+
+> We have now included these references
 
 Figure 5 is an oversimplification. As it doesn’t take into account how the additive noise mixes with the internal VEP response.  This was modeled in Norcia et al., (Vision Res, 1989). The additive noise adds a bias to the measurement, especially if the slope of the response function is shallow. The authors should try to connect the linear regression approach for threshold measurement to the sigmoidal non-linearity, as they are different models of the CRF. In practice the difference at the low contrast end is probably too small to matter and the saturation region is excluded.
 
+> We have now note that it is important to consider noise for situations where the SNR is low or the slope is shallow and we expand on the point that you have to stick to the part of the CRF where the curve is more or less linear - as we showed explicitly in the figure.  
+
 Page 9. The sweep method was first developed by David Regan (Vision Res, 1973) for use in objective refraction.
 
+> We have included this reference.
+
 Page 9 “This approach” seems to refer to the sweep VEP, not the method of measuring at multiple contrast levels over a series of trials which was used in the Atkinson/Braddick papers. The sweep method refers to the approach of incrementing or decrementing the stimulus value within a single trial and then averaging the sweeps to get the response function.  Regan argued that this was a better way of estimating response functions because amplitude variations over a session are distributed over the whole response function shifting it up or down instead of distorting its shape (Regan (Vison Res, 1975, color coding).
+
+> This is a good point but the (simpler) one we are trying to make here is that extrapolating from high stimulus levels down to zero provides a robust estimate of visual sensitivity in subjects where such measurements might otherwise be hard to make. We have altered the text to clarify this.
 
 Page 9 …chromatic and chromatic contrast as well as stereoscopic depth perception develops earlier than had been supposed previously based on behavioural readouts (Dobson et al., 1978; Norcia & Tyler, 1985b) with both chromatic and achromatic contrast detection reaching near-adult levels by around six months. Needs references for chromatic sensitivity and disparity sensitivity.
 
