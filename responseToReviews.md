@@ -16,7 +16,7 @@ Harmonics with different CRFs.  Bobak et al., (IOVS, 1986), found that the first
 The lack of dynamics in the normalization model, as presented should be discussed, the brief mention of Tsai et al. aside. The authors may wish to cite another framework that explicitly models dynamics (e.g. amplitude and phase) in the context of the contrast response function (Zemon and Gordon, Vision Res, 2006) .  
 
 ### Response
-> We thank the reviewer for these positive comments. In general this was intended to be an overview in the sense of a 'primer' for SSVEP rather than a detailed historical account of the field - hence the inclusion of code examples and relatively domain-agnostic language. However, the reviewer raises some important general issues and we now address them: Specifically, we include references to the idea that SSVEP can engage more than one type of neuron, that the population responses is not trivially derived from what is known about the properties of individual neurons and that fitting with a sigmoidal response function may mask some complexities in the CRF that are more readily seen with denser sampling. We think the Bobak reference is IOVS 1984 and we have also included the Kaestner TVST 2024 reference (thank you for drawing our attention to both of these). 
+> We thank the reviewer for these positive comments. In general this was intended to be an overview in the sense of a 'primer' for researchers coming to the SSVEP for the first time rather than a detailed historical account of the field - hence the inclusion of code examples and relatively domain-agnostic language. However, the reviewer raises some important general issues and we are happy to address them: Specifically, we include references to the idea that SSVEP can engage more than one type of neuron, that the population responses is not trivially derived from what is known about the properties of individual neurons and that fitting with a sigmoidal response function may mask some complexities in the CRF that are more readily seen with denser sampling. We think the Bobak reference is IOVS 1984 and we have also included the Kaestner TVST 2024 reference (thank you for drawing our attention to both of these). 
 
 ### Specific comments
 
@@ -38,7 +38,7 @@ Page 5 bottom. The reciprocal effect of test and masker was first shown by Regan
 
  It’s good to have cited Regan and Regan paper that introduced the notion of fingerprints in the spectrum being tied to the nature of the non-linearity. Maybe expand their “fingerprint” approach a little more.
 
-> 
+> We have expanded a little but are also conscious of limitations to this approach (see also the discussion re unique inputs and system order below). We think there might be some ways to relax these constraints a little by incorporating information about likely transducer functions at different stages (essentially fitting parameters rather than performing a full system identification) but this still requires many inputs.
 
 Figure 4. Oversaturation occurs because the denominator overtakes the numerator at high contrast as it has two terms in it, not the single term in the numerator. Would be worth showing total power not saturating. Is this a general effect?
 
@@ -100,19 +100,48 @@ Page, 14. It’s not clear from the text how one would study feedback with the S
 
 In the last section, it would be worth mentioning that in order to “identify” a non-linear system, one needs multiple inputs. If the system is 2nd order, a minimum of two inputs is needed. If the system non-linearity is higher order than that, then more simultaneous inputs are needed (see Boyd, Tang and Chua 1983, IEEE Trans Circuits and Systems  and  Chua and Liao, 1991, Int. J. Circuit Theory and Applications).
 
-.
+> This is a good point and we now include the Boyd reference in the section on fingerprinting.
 
 ## Reviewer: 2
 
 # Comments to the Author
 This manuscript is intended to be a review of the field of steady-state visual evoked potentials (ssVEPs) over the past 70 years.  The authors state in the introductory paragraph “Here we will describe how an EEG method known as the steady state visually evoked potential (SSVEP) technique has contributed to our understanding of human contrast processing in health, disease and throughout development.” The material included and the references cited, however, are quite limited and omit seminal work in this area.
 
+> We thank the reviewer for their helpful comments. As we noted above, our intention here was to provide an introduction to the SSVEP technique with appropriate simple code samples that would allow relative newcomers to the field to implement the the technique. We are, however, keen to avoid misrepresenting the history of the technique and are happy to include appropriate references. 
+
 1. All abbreviations should be defined upon first use.
-2. The following statement is unclear and inaccurate: “On-off flicker can drive independent populations of on- and off-cells in the retina once per cycle and can therefore produce a response at the fundamental flicker frequency, known as 1F, and its integer harmonics: 2F, 3F, 4F and so on. Counterphase flicker contains two transients per cycle and therefore does not produce a response at 1F, only at its even harmonics: 2F, 4F, 6F and so on.” The term “on-off flicker” is typically used for simple luminance flicker without spatial pattern contrast. In the context of pattern stimulation, “on-off” can refer to “appearance-disappearance” of a spatial pattern with its contrast modulated in time. When the pattern appears and disappears into a uniform field of equal space-average luminance, the light and dark elements are modulated in counterphase. Any linear contribution to the response elicited by each set of elements (e.g., bars or checks) is expected to be canceled when summed at the electrode site on the scalp. Thus, the response at 1F to this stimulus is in fact a nonlinear response. This type of stimulation does not separate contributions from “independent populations of on- and off-cells.” There are other ssVEP techniques developed that do tap ON and OFF pathways selectively, which are not cited here. Contrast-reversal stimuli which involve symmetrical modulation of light and dark elements cancel odd harmonic frequency components in the response, however, both kinds of stimulus techniques mentioned here elicit only nonlinear responses.
+
+> Done
+
+2. The following statement is unclear and inaccurate: “On-off flicker can drive independent populations of on- and off-cells in the retina once per cycle and can therefore produce a response at the fundamental flicker frequency, known as 1F, and its integer harmonics: 2F, 3F, 4F and so on. Counterphase flicker contains two transients per cycle and therefore does not produce a response at 1F, only at its even harmonics: 2F, 4F, 6F and so on.” The term “on-off flicker” is typically used for simple luminance flicker without spatial pattern contrast. In the context of pattern stimulation, “on-off” can refer to “appearance-disappearance” of a spatial pattern with its contrast modulated in time. When the pattern appears and disappears into a uniform field of equal space-average luminance, the light and dark elements are modulated in counterphase. Any linear contribution to the response elicited by each set of elements (e.g., bars or checks) is expected to be canceled when summed at the electrode site on the scalp. Thus, the response at 1F to this stimulus is in fact a nonlinear response. 
+
+> Thank you for this explanation. We have now reworded the explanation to make this clearer. We did take care to define what we mean by 'on-off' flicker in the preceding sentence but we now clarify the alternative 'appearence/disappearence' terminology. The point we were making was that odd harmonic responses (1F) are a feature of this this type of modulation because the responses to the appearance and disappearance of a pattern (or mean field) need not be completely symmetrical (See Zemon, et al 1988 for an explicit demonstration).  
+
+This type of stimulation does not separate contributions from “independent populations of on- and off-cells.”   There are other ssVEP techniques developed that do tap ON and OFF pathways selectively, which are not cited here. Contrast-reversal stimuli which involve symmetrical modulation of light and dark elements cancel odd harmonic frequency components in the response, however, both kinds of stimulus techniques mentioned here elicit only nonlinear responses.
+
+> We have clearly not been sufficiently clear here. We do not think we used the term 'separation' and we agree that a) there are infrequently-used paradigms that can target ON and OFF pathways more effectively (for example, 'sawtooth' temporal modulations that provide asymmetrical onset or offset edges) and b) responses from spatial features of differing polarity will tend to be combined at the scalp as long as the spatial frequency is high enough. We have expanded this section to attempt to make the general point clear.
+
+
 3. The statement “SSVEPs have proven to be an excellent measure of early chromatic processing as well” again fails to cite seminal work in this area.
+
+> We have included three earlier papers by Regan on this topic. 
+
 4. The statement “This normalization, achieved through a computation called ‘contrast gain control’” again neglects to cite the original work that defined “contrast gain control” and the authors ignored a nonlinear biophysical model proposed to explain this phenomenon in ssVEP contrast response functions (which was also applied in developmental work on infants and children).
+
+> 
+
 5. The description of Figure 3 and the nonlinear operations performed are unclear. They state in the text that Equation 2 (“hyperbolic ratio function”) is used as a nonlinear transducer, but the figure legend states that a squaring operator was used for frequency doubling. A squaring operation would only produce a sinusoid of double the frequency of the input. The waveform shown in the left panel appears to be a full-wave rectified signal, which would contain theoretically an infinite number of higher harmonics. The text also states that “This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity.” When was full-wave rectification performed?
+
+>
+
+
 6. The authors use the term “frequency tagging” which has been used in the literature to refer to stimulating different regions of the stimulus field or fellow eyes with different sinusoidal frequencies and measuring the intermodulation (sum and difference) frequency responses that result from nonlinear interactions. They do not, however, cite the foundational work in this field.
+
+
+
 7. There is a large body of work that used ssVEPs to investigate contrast processing developmentally (infants through adulthood) and in various disease states, which is mostly missed in this review article.
+
+
+
 8. Figures should be labeled.
 Thus, the stated intention of this manuscript (“Here we describe how SSVEPs have been used to study visual contrast over the past 70 years”) fails to be met. Only select articles from a few sources are covered, and therefore, the richness and value of this technique is lost.
