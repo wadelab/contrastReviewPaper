@@ -631,6 +631,10 @@ First, we consider the fact that neurons in the early visual system code either 
 ![Illustration of a full-wave rectified sinusoid (left), its Fourier spectrum (middle), and how the amplitude of the first harmonic component increases with contrast (right).](Figures/3_fullwaverectification.pdf){#fig-fullwaverectification}
 :::
 
+
+
+
+
 One of the simplest nonlinearities is the function that describes a cell's response to different levels of contrast. In @fig-transducer this is modeled by a hyperbolic ratio function resulting in a saturating non-linearity:
 
 $$R_{\mathrm{max}} = \frac{C_{\mathrm{in}}^n}{C_{50}^n + C_{\mathrm{in}}^n},$${#eq-nakarushton}
