@@ -128,12 +128,31 @@ This type of stimulation does not separate contributions from “independent pop
 
 4. The statement “This normalization, achieved through a computation called ‘contrast gain control’” again neglects to cite the original work that defined “contrast gain control” and the authors ignored a nonlinear biophysical model proposed to explain this phenomenon in ssVEP contrast response functions (which was also applied in developmental work on infants and children).
 
-> Contrast gain control is related to 'automatic gain control' - a electrical engineering concept that arose in the early 20th century. The concept of modulating the input (rather than the output) of the system became established in the 1930s and 40s (for example in WW2 radar systems) and the specific idea of computing that modulation as a function of the local average signal power seems to have arisen around this time and was refined over the 50s and 60s (for example, in 'sidechain compression'). In the domain of vision, an early example of 'contrast gain control' (scaling the input - in this case luminance) is found in Sperling and Sondhi 1968 but the first formalization of the concept in the domain of spatial vision that included the critical concepts of an early, divisive gain control signal computed from some additional estimate of local contrast seems to appear in Heeger 1992 (to explain animal data) and Foley 1994 where it is applied to human psychophysical data. 
+> Contrast gain control is related to 'automatic gain control' - a electrical engineering concept that arose in the early 20th century. The concept of modulating the input (rather than the output) of the system became established in the 1930s and 40s (for example in WW2 radar systems). The specific idea of computing that modulation as a function of the local average signal power seems to have arisen around this time and was refined over the 50s and 60s (for example, in 'sidechain compression'). In the domain of vision, an early example of 'contrast gain control' (scaling the input - in this case luminance) is found in Sperling and Sondhi 1968. 
+
+The first formalization of the concept in the domain of spatial vision that included the critical concepts of an early, divisive gain control signal computed from some additional estimate of local contrast seems to appear in   a seminal paper by Shapley and Victor, 1978. Application to contrast adaptation was demonstrated by Ohzawa, Sclar, Freeman, 1982, 1985] with a demonstration of instantaneous gain control in the human SSVEP by Bobak et al in 1988. A synthesis that included both adaptation and masking was proposed by Heeger 1992 while Foley 1994 show an application to human psychophysical data. We have now cited these more foundational papers. We would be happy to include the references to the non-linear biophysical model used in adult and developmental work if the reviewer can point us to the appropriate literature.
 
 1. The description of Figure 3 and the nonlinear operations performed are unclear. They state in the text that Equation 2 (“hyperbolic ratio function”) is used as a nonlinear transducer, but the figure legend states that a squaring operator was used for frequency doubling. A squaring operation would only produce a sinusoid of double the frequency of the input. The waveform shown in the left panel appears to be a full-wave rectified signal, which would contain theoretically an infinite number of higher harmonics. The text also states that “This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity.” When was full-wave rectification performed?
 
->
+> The transducer function used to produce Figure 3 is available in the paper and reproduced here:
 
+```python
+def simpleTransducerFunction(inputContrast, c50, RMax):
+ # Here we model a simple hyperbolic ratio function. Also called a "Naka-Rushton" function.
+ # RMax defines the reponse gain of the transducer (how big the biggest output is). 
+ # c50 defines the conrast sensitivity. Smaller values are more sensitive.
+ # The exponent can also vary - here we fix it to 2 but it can be varied.
+  expnt=2
+
+  # Contrast cannot be negative. To model the responses of a set of on and off 
+  # contrast detectors we perform full-wave rectification of the signal
+  inputContrast=np.abs(inputContrast)
+  output=RMax*(inputContrast**expnt)/(inputContrast**expnt + c50**expnt)
+  return output
+
+```
+
+The input contrast is full-wave rectified (via the 'abs' operator). Here we choose an exponent of '2' for the hyperbolic ratio function so it is *also* squared both in the numerator and the denominator. But this parameter is often fitted rather than fixed and the reader is encouraged to experiment with the exponent to examine its effect on the resulting amplitude spectrum. While there are, technically, infinite harmonics of this input, they decrease with frequency and we plot only three for reasons of space.
 
 6. The authors use the term “frequency tagging” which has been used in the literature to refer to stimulating different regions of the stimulus field or fellow eyes with different sinusoidal frequencies and measuring the intermodulation (sum and difference) frequency responses that result from nonlinear interactions. They do not, however, cite the foundational work in this field.
 
