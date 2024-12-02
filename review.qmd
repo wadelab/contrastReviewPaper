@@ -190,11 +190,6 @@ transducedSignal = np.zeros(len(contrastRange))
 for contrastIndex,thisContrast in enumerate(contrastRange):
   inputModulation = np.sin(2 * np.pi * inputFrequency_Hz * support_S) * thisContrast
 
-  FT_Signal = np.fft.fft(inputModulation) / len(inputModulation)
- 
-  inputAmplitude = np.abs(FT_Signal[inputFrequency_Hz])
-  initialSignal[contrastIndex]=inputAmplitude[0] 
-   
   # We are about to model response to contrast. Different cell populations detect positive and negative-going contrast and we can model their combined response by performing full-wave rectification as follows: 
   fullWaveRectifiedSignal=np.abs(inputModulation)
 
@@ -212,9 +207,10 @@ frequencySupport = np.arange(1,freqCutoff_Hz*duration_S+1) # We only want to plo
 #Make a figure with three subplots
 fig, axs = plt.subplots(1,3, figsize=(8, 3))
   
-axs[0].plot(support_S, transducedModulation)
-axs[0].set_title('Transduced signal', fontsize=10)
+axs[0].plot(support_S, fullWaveRectifiedSignal)
+axs[0].set_title('Rectified signal', fontsize=10)
 axs[0].set_xlabel('Time (s)')
+axs[0].set_ylabel('Magnitude (a.u.)')
 
 # Plot the absolute values of the FFT in the second axis as a bar plot
 axs[1].bar(frequencySupport, np.abs(FT_transducedModulation[frequencySupport]))
@@ -226,7 +222,7 @@ axs[1].grid()
 axs[2].plot(contrastRange*100,transducedSignal)
 axs[2].set_xlabel('Contrast (%)')
 axs[2].set_ylabel('Amplitude (a.u.)')
-axs[2].set_title('Transducer output', fontsize=10)
+axs[2].set_title('Contrast response function', fontsize=10)
 axs[2].grid()
 
 axs[2].grid()
@@ -284,6 +280,7 @@ fig, axs = plt.subplots(1,3, figsize=(8, 3))
 axs[0].plot(support_S, transducedModulation)
 axs[0].set_title('Transduced signal', fontsize=10)
 axs[0].set_xlabel('Time (s)')
+axs[0].set_ylabel('Magnitude (a.u.)')
 
 # Plot the absolute values of the FFT in the second axis as a bar plot
 axs[1].bar(frequencySupport, np.abs(FT_transducedModulation[frequencySupport]))
@@ -295,7 +292,7 @@ axs[1].grid()
 axs[2].plot(contrastRange*100,transducedSignal)
 axs[2].set_xlabel('Contrast (%)')
 axs[2].set_ylabel('Amplitude (a.u.)')
-axs[2].set_title('Transducer output', fontsize=10)
+axs[2].set_title('Contrast response function', fontsize=10)
 axs[2].grid()
 
 axs[2].grid()
@@ -364,7 +361,7 @@ axs[2].plot(contrastRange*100,transducedSignal)
 axs[2].plot(contrastRange*100,maskedSignal)
 axs[2].set_xlabel('Contrast (%)')
 axs[2].set_ylabel('Amplitude (a.u.)')
-axs[2].set_title('Transducer output', fontsize=10)
+axs[2].set_title('Contrast response funcion', fontsize=10)
 axs[2].grid()
 
 axs[2].grid()
@@ -619,9 +616,7 @@ To  understand these processes better, we will show how sinusoidal input signals
 
 Next we can consider the impact of two types of nonlinearity in processing on the responses. 
 
-First, we consider the fact that neurons in the early visual system code either positive or negative contrast. The responses of each different type of neuron is an increase in firing rate to the increasing levels of the prefered contrast polatiry and these neurons typically exhibit zero (or baseline) response to the non-prefered polarity. We can model the combined responses of these two cell populations to a time varying contrast signal by full-wave-rectification. The effect of this computation is, effectively, to double the input freuquency in the population measurement and to introduce additional higher (even) harmonics due to the discontinuity at the contrast reversals. The effect of full-wave rectification on the SSVEP signal is shown in @fig-fullwaverectification
-
-
+First, we consider the fact that neurons in the early visual system code either positive or negative contrast. The responses of each different type of neuron is an increase in firing rate to the increasing levels of the prefered contrast polarity and these neurons typically exhibit zero (or baseline) response to the non-prefered polarity. We can model the combined responses of these two cell populations to a time varying contrast signal by full-wave-rectification. The effect of this computation is, effectively, to double the input freuquency in the population measurement and to introduce additional higher (even) harmonics due to the discontinuity at the contrast reversals. The effect of full-wave rectification on the SSVEP signal is shown in @fig-fullwaverectification
 
 ::: {.content-visible when-format="docx"}
 - FIGURE ABOUT HERE
@@ -632,26 +627,25 @@ First, we consider the fact that neurons in the early visual system code either 
 
 :::
 
+The contrast response function (CRF) is still linear for this model - rectification has doubled the frequency (and introduced higher harmonics) but the response amplitude measured by the second harmonic is still directly proportional to the input amplitude. 
 
-
-
-
-One of the simplest nonlinearities is the function that describes a cell's response to different levels of contrast. In @fig-transducer this is modeled by a hyperbolic ratio function resulting in a saturating non-linearity:
-
+Neurons in the visual system typically do not exhibit this perfect response linearity. Instead, neuronal response are well-modeled by some form of saturating non-linearity: as the contrast increases, the response of the neuron increases but the response increase per unit contrast is reduced at the high end of the contrast range. This saturating nonlinearity is often modeled as a hyperbolic ratio function of the form   
+ 
 $$R_{\mathrm{max}} = \frac{C_{\mathrm{in}}^n}{C_{50}^n + C_{\mathrm{in}}^n},$${#eq-nakarushton}
 
 where ${R_{\mathrm{max}}}$ describes the maximum response level, $C_{\mathrm{in}}$ is the input contrast (or the time-varying waveform), $C_{50}$ is the 'semi-saturation constant' (the point at which the response is at half-maximum) and *n* controls the steepness of the curve (with a typical value around $n=2$.
 
-This nonlinearity has clear effects on signal transduction. The sinusoidal waveform is distorted by the nonlinearity, and appears frequency doubled (left panel of @fig-transducer; note that other nonlinearities such as rectification and squaring can have similar effects). The distortion is reflected in the Fourier spectrum (middle panel of @fig-transducer), which now includes responses at integer multiples (known as harmonics) of the stimulation frequency (10, 20 and 30Hz), but no response at the fundamental (5Hz). Finally, the contrast response function is now nonlinear (right panel of @fig-transducer). Although the hyperbolic ratio function (@eq-nakarushton) is monotonic, the CRF resulting from measuring the amplitude of the second harmonic (2F) component contains a slight roll-off at high input contrasts. This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity. Power at other harmonics increases, and the total power generated by the input is monotonic. This roll-off is often seen in experimental data and has been referred to as 'supersaturation' [@Tyler1985; @Peirce2007].
+This nonlinearity has clear effects on signal transduction. In @fig-transducer the full-wave rectified waveform (which is combining the response of both 'on' and 'off' neurons) passes through the saturating nonlinearity (left panel of @fig-transducer). The frequency doubling seen in @fig-fullwaverectification is still present but the the contrast response function is now nonlinear (right panel of @fig-transducer). 
 
+Interestingly, although the hyperbolic ratio function (@eq-nakarushton) is monotonic, the CRF resulting from measuring the amplitude of the second harmonic (2F) component contains a slight roll-off at high input contrasts. This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity. Power at other harmonics increases, and the total power generated by the input is monotonic. This roll-off is often seen in experimental data and has been referred to as 'supersaturation' [@Tyler1985; @Peirce2007].
 
 ::: {.content-visible when-format="docx"}
 - FIGURE ABOUT HERE
 
-![Illustration of how a sinusoidal input signal is affected by a nonlinear transducer. The input wavefore (left panel) is frequency doubled by the squaring operator, and now features energy at the second harmonic (10Hz) and its multiple (middle panel). The contrast response function at the second harmonic is now nonlinear, and saturates at high contrasts (right panel).](){#fig-transducer}
+![Illustration of how a sinusoidal input signal is affected by a nonlinear transducer. The input wavefore (left panel) is frequency doubled by the full-wave rectification (see @fig-fullwaverectification), and now has energy at the second harmonic (10Hz) and higher even harmonics (middle panel). Passing the signal through a second nonlinearity (the hyperbolic ratio function) causes the contrast response function at the second harmonic (2F) to become nonlinear and it and saturates (or even 'supersaturates') at high contrasts (right panel).](){#fig-transducer}
 :::
 ::: {.content-visible unless-format="docx"}
-![Illustration of how a sinusoidal input signal is affected by a nonlinear transducer. The input wavefore (left panel) is frequency doubled by the squaring operator, and now features energy at the second harmonic (10Hz) and its multiple (middle panel). The contrast response function at the second harmonic is now nonlinear, and saturates at high contrasts (right panel).](Figures/4_transducer.pdf){#fig-transducer}
+![Illustration of how a sinusoidal input signal is affected by a nonlinear transducer. The input wavefore (left panel) is frequency doubled by the full-wave rectification (see @fig-fullwaverectification), and now has energy at the second harmonic (10Hz) and higher even harmonics (middle panel). Passing the signal through a second nonlinearity (the hyperbolic ratio function) causes the contrast response function at the second harmonic (2F) to become nonlinear and it and saturates (or even 'supersaturates') at high contrasts (right panel).](Figures/4_transducer.pdf){#fig-transducer}
 :::
 
 
