@@ -50,6 +50,8 @@ def doubleTransducerFunction(inputContrast, maskContrast, c50, RMax):
   maskContrast=np.abs(maskContrast)
 
   output=RMax*(inputContrast**expnt)/(inputContrast**expnt + maskContrast**expnt + c50**expnt)
+  # Changing this equation can produce a different pattern of intermodulation terms in Figure 5.
+  #output=RMax*(inputContrast**expnt + maskContrast**expnt)/(inputContrast**expnt + maskContrast**expnt + c50**expnt)
   return output
 
 def create_grating(size, frequency, phase, contrast):
@@ -374,9 +376,10 @@ plt.savefig('Figures/5_twoinputs.pdf')
 
 # Define some constants
 nLevels=8
-internalNoise=1
+spontaneousNoise=.1 # Changing the level of background noise can alter the slope of the regression line and therefore the estimate of the threshold
+
 inputFrequency_Hz=np.array([5]) # We simulate a system with on input at many different contrasts
-contrastRange=np.logspace(1,1.9,nLevels)/100 # Equally spaced log contrast between 1 and 10^1.5
+contrastRange=np.logspace(.5,1.9,nLevels)/100 # Equally spaced log contrast between 1 and 10^1.5
 duration_S=1 # All variables in this code have an _[units] where possible
 digitisationRate_Hz=1000
 freqCutoff_Hz=30
@@ -389,7 +392,7 @@ fig, axs = plt.subplots(1,1, figsize=(4, 3))
 initialSignal = np.zeros(len(contrastRange))
 transducedSignal = np.zeros(len(contrastRange))
 for contrastIndex,thisContrast in enumerate(contrastRange):
-  inputModulation = np.sin(2 * np.pi * inputFrequency_Hz * support_S) * thisContrast + np.random.rand(len(support_S))*internalNoise
+  inputModulation = np.sin(2 * np.pi * inputFrequency_Hz * support_S) * thisContrast + np.random.rand(len(support_S))*spontaneousNoise 
 
   FT_Signal = np.fft.fft(inputModulation) / len(inputModulation)
 
@@ -574,7 +577,7 @@ $$\frac {I_{\mathrm{stimmax} }-I_{\mathrm{stimmin} }}{I_{\mathrm{stimmax} }+I_{\
 
 These contrast definitions are appropriate both to photometric measures of stimulus contrast (for example, luminance; @Lennie1993) and also to definitions based on cone excitations [@Derrington1984; @MacLeod1979] which are more common in work on chromatic processing.
 
-Although its mathematical definition is straightforward, the computations that underlie contrast processing in the brain have been the subject of intense research for many decades. The neural code for contrast, even in the earliest parts of visual cortex, is not simply a linear transform of the contrast at the retina - instead, contrast signals undergo a cascade of nonlinear processing stages that, broadly, attempt to normalise the output relative to the spatiotemporal environment. This normalization, achieved through a computation called 'contrast gain control' [@Foley1994; @Heeger1992; @Carandini2011] maximises the sensitivity of the visual system by making optimal use of neuronal bandwidth. As an example, a grating placed at the centre of a low-contrast background typically appears more intense than the same grating when superimposed on a high contrast background (see @fig-centresurround; note that the code used to produce all figures in this review is available in python and R at: https://github.com/wadelab/contrastReviewPaperVNS).
+Although its mathematical definition is straightforward, the computations that underlie contrast processing in the brain have been the subject of intense research for many decades. The neural code for contrast, even in the earliest parts of visual cortex, is not simply a linear transform of the contrast at the retina - instead, contrast signals undergo a cascade of nonlinear processing stages that, broadly, attempt to normalise the output relative to the spatiotemporal environment. This normalization, achieved through a computation called 'contrast gain control' [@ohzawaContrastGainControl1982, @ohzawaContrastGainControl1985, @bobakCorticalContrastGain1988a, @Foley1994; @Heeger1992; @Carandini2011] maximises the sensitivity of the visual system by making optimal use of neuronal bandwidth. As an example, a grating placed at the centre of a low-contrast background typically appears more intense than the same grating when superimposed on a high contrast background (see @fig-centresurround; note that the code used to produce all figures in this review is available in python and R at: https://github.com/wadelab/contrastReviewPaperVNS).
 
 ::: {.content-visible when-format="docx"}
 - FIGURE ABOUT HERE
@@ -650,7 +653,7 @@ Interestingly, although the hyperbolic ratio function (@eq-nakarushton) is monot
 
 
 
-To illustrate the effect of contrast gain control [@Heeger1992], we next include a second component (a 'mask') that contributes to the gain pool of the first (the 'target'). The mask stimulus will suppress the response at the target frequency, reducing its amplitude. The suppression is reciprocal - activity at the mask frequency is also reduced by the presence of the target, in a contrast-dependent manner [@Regan1988, @brownDevelopmentRivalryDichoptic1999, @Candy2001, @Busse2009]. At a single pair of (matched) contrast levels, we see a complex pattern of intermodulation terms in the transduced waveforms (left panel of @fig-twoinputs) and in the Fourier spectrum (middle panel of @fig-twoinputs). The two components interact generating nonlinear intermodulation terms at sums and differences of the input frequencies (F1, F2). The nature of the interaction --- and therefore the pattern of intermodulation terms ---  is determined by the computations happening as the contrast signal moves from retina to cortex [@Regan1988].
+To illustrate the effect of contrast gain control [@ohzawaContrastGainControl1982, @Heeger1992], we next include a second component (a 'mask') that contributes to the gain pool of the first (the 'target'). The mask stimulus will suppress the response at the target frequency, reducing its amplitude. The suppression is reciprocal - activity at the mask frequency is also reduced by the presence of the target, in a contrast-dependent manner [@Regan1988, @brownDevelopmentRivalryDichoptic1999, @Candy2001, @Busse2009]. At a single pair of (matched) contrast levels, we see a complex pattern of intermodulation terms in the transduced waveforms (left panel of @fig-twoinputs) and in the Fourier spectrum (middle panel of @fig-twoinputs). The two components interact generating nonlinear intermodulation terms at sums and differences of the input frequencies (F1, F2). The nature of the interaction --- and therefore the pattern of intermodulation terms ---  is determined by the computations happening as the contrast signal moves from retina to cortex [@Regan1988].
 
 
 ::: {.content-visible when-format="docx"}
