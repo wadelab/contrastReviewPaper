@@ -4,8 +4,8 @@ author:
   - name: Alex R. Wade
   - name: Daniel H. Baker
 format:
-  #docx: 
-    #omitFigures: true
+  docx: 
+    omitFigures: true
   pdf: default
     #keep-tex: true
 
@@ -51,8 +51,11 @@ def doubleTransducerFunction(inputContrast, maskContrast, c50, RMax):
   maskContrast=np.abs(maskContrast)
 
   output=RMax*(inputContrast**expnt)/(inputContrast**expnt + maskContrast**expnt + c50**expnt)
-  # Changing this equation can produce a different pattern of intermodulation terms in Figure 5.
+  
+  # Changing this equation can produce a different pattern of intermodulation terms in Figure 5. For example, use the equation below to include both mask and probe in the numerator.
+
   #output=RMax*(inputContrast**expnt + maskContrast**expnt)/(inputContrast**expnt + maskContrast**expnt + c50**expnt)
+
   return output
 
 def create_grating(size, frequency, phase, contrast):
