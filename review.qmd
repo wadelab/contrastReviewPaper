@@ -25,6 +25,7 @@ This work was supported by BBSRC grant BB/V007580/1 to DHB and ARW
 ```{python setup}
 
 # all package loading and subfunctions defined here
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colormaps
@@ -685,8 +686,7 @@ Similar changes to the contrast response function might also be obtained using a
 
 An early use of the SSVEP was to provide an objective estimate of spatial contrast sensitivity in infants, without requiring behavioural responses. In well-motivated adults, psychophysical measurements of contrast sensitivity remain the gold standard. However, it is difficult and time consuming to obtain reliable psychophysical data from infants. In these cases, SSVEP measurements represent a fast and efficient method for measuring low-level visual responses [@Norcia1990; @Tyler1979; @Braddick1986] and the high SNR of SSVEP means that infants need only look at the screen for short periods of time. 
 
-Because SSVEP responses at detection threshold are very small, estimating a threshold is achieved by measuring the contrast response function at relatively high levels (in the linear part of the log-contrast response function prior to saturation), and extrapolating back along the function (either contrast vs response measured at a constant spatial frequency or spatial frequency vs response at a constant contrast level) to estimate its intercept with the x-axis [@Campbell1970] (see @fig-sweepvep). This contrast level has been shown to correspond approximately with psychophysically measured detection thresholds [@campbellVisualEvokedPotential1972; @Norcia1986]. One factor affecting the accuracy of this technique is the presence of noise in the EEG signal which will increase the apparent amplitude of the SSVEP responses across the measurement range. The effect of this noise is particulary apparent for recordings with low SNR or where the slope of the CRF is shallow (and therefore where small changes in the vertical offset of the fit result in large changes in the X-axis intercept). Accurate estimates of thresholds therefore require the experimenter to model this noise and compensate for its effects - as detailed in [@Norcia1989]. 
-
+Because SSVEP responses at detection threshold are very small, estimating a threshold is achieved by measuring the contrast response function at relatively high levels (in the linear part of the log-contrast response function prior to saturation), and extrapolating back along the function (either contrast vs response measured at a constant spatial frequency or spatial frequency vs response at a constant contrast level) to estimate its intercept with the x-axis [@Campbell1970] (see @fig-sweepvep). This contrast level has been shown to correspond approximately with psychophysically measured detection thresholds [@campbellVisualEvokedPotential1972; @Norcia1986]. One factor affecting the accuracy of this technique is the presence of noise in the EEG signal which will increase the apparent amplitude of the SSVEP responses across the measurement range. The effect of this noise is particulary apparent for recordings with low SNR or where the slope of the CRF is shallow (and therefore where small changes in the vertical offset of the fit result in large changes in the X-axis intercept). Accurate estimates of thresholds therefore require the experimenter to model this noise and compensate for its effects, as detailed in @Norcia1989. 
 
 ::: {.content-visible when-format="docx"}
 - FIGURE ABOUT HERE
