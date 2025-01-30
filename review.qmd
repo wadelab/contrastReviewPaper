@@ -5,7 +5,7 @@ author:
   - name: Daniel H. Baker
 format:
   docx: 
-    omitFigures: true
+    omitFigures: false
   pdf: default
     #keep-tex: true
 
@@ -588,9 +588,7 @@ These contrast definitions are appropriate both to photometric measures of stimu
 Although its mathematical definition is straightforward, the computations that underlie contrast processing in the brain have been the subject of intense research for many decades. The neural code for contrast, even in the earliest parts of visual cortex, is not simply a linear transform of the contrast at the retina - instead, contrast signals undergo a cascade of nonlinear processing stages that, broadly, attempt to normalise the output relative to the spatiotemporal environment. This normalization, achieved through a computation called 'contrast gain control' [@ohzawaContrastGainControl1982; @ohzawaContrastGainControl1985; @bobakCorticalContrastGain1988a; @Foley1994; @Heeger1992; @Carandini2011] maximises the sensitivity of the visual system by making optimal use of neuronal bandwidth. As an example, a grating placed at the centre of a low-contrast background typically appears more intense than the same grating when superimposed on a high contrast background (see @fig-centresurround; note that the code used to produce all figures in this review is available in python and R at: https://github.com/wadelab/contrastReviewPaperVNS).
 
 ::: {.content-visible when-format="docx"}
-- FIGURE ABOUT HERE
-
-![The perceived contrast of a stimulus depends on its context. A high contrast surround reduces the apparent contrast of the central 'probe' region.](){#fig-centresurround}
+![The perceived contrast of a stimulus depends on its context. A high contrast surround reduces the apparent contrast of the central 'probe' region.](Figures/1_centresurround.pdf){#fig-centresurround}
 :::
 ::: {.content-visible unless-format="docx"}
 ![The perceived contrast of a stimulus depends on its context. A high contrast surround reduces the apparent contrast of the central 'probe' region.](Figures/1_centresurround.pdf){#fig-centresurround}
@@ -615,9 +613,7 @@ An additional complexity is introduced by the fact that the EEG is an average po
 To  understand these processes better, we will show how sinusoidal input signals might be processed by the visual system to produce SSVEPs. @fig-linear illustrates how sine waves of different contrasts are processed in a linear system. The first panel shows the input sine wave, which would be used to modulate stimulus amplitude over time. Notice that there are five peaks in the waveform during the one second sample, so the stimulation frequency is 5Hz (F1). The second panel shows the Fourier transform of the waveform, which contains a substantial peak at this frequency. If we change the stimulus contrast (i.e. the amplitude of the waveform), the amplitude of the F1 component increases linearly with contrast (right panel).
 
 ::: {.content-visible when-format="docx"}
-- FIGURE ABOUT HERE
-
-![Illustration of a sinusoidal input signal (left), its Fourier spectrum (middle), and how the amplitude of the first harmonic component increases with contrast (right). These calculations assume an entirely linear system.](){#fig-linear}
+![Illustration of a sinusoidal input signal (left), its Fourier spectrum (middle), and how the amplitude of the first harmonic component increases with contrast (right). These calculations assume an entirely linear system.](Figures/2_linearsystem.pdf){#fig-linear}
 :::
 ::: {.content-visible unless-format="docx"}
 ![Illustration of a sinusoidal input signal (left), its Fourier spectrum (middle), and how the amplitude of the first harmonic component increases with contrast (right). These calculations assume an entirely linear system.](Figures/2_linearsystem.pdf){#fig-linear}
@@ -629,8 +625,7 @@ Next we can consider the impact of two types of nonlinearity in processing on th
 First, we consider the fact that neurons in the early visual system code either positive or negative contrast. The response of each different type of neuron is an increase in firing rate to the increasing levels of the preferred contrast polarity, and these neurons typically exhibit zero (or baseline) response to the non-preferred polarity. We can model the combined responses of these two cell populations to a time varying contrast signal by full-wave-rectification. The effect of this computation is, effectively, to double the input frequency in the population measurement and to introduce additional higher (even) harmonics due to the discontinuity at the contrast reversals. The effect of full-wave rectification on the SSVEP signal is shown in @fig-fullwaverectification
 
 ::: {.content-visible when-format="docx"}
-- FIGURE ABOUT HERE
-![Illustration of a sinusoidal input signal (left), its Fourier spectrum (middle), and how the amplitude of the first harmonic component increases with contrast (right). These calculations assume an entirely linear system.](){#fig-fullwaverectification}
+![Illustration of a full-wave rectified sinusoid (left), its Fourier spectrum (middle), and how the amplitude of the first harmonic component increases with contrast (right).](Figures/3_fullwaverectification.pdf){#fig-fullwaverectification}
 :::
 ::: {.content-visible unless-format="docx"}
 ![Illustration of a full-wave rectified sinusoid (left), its Fourier spectrum (middle), and how the amplitude of the first harmonic component increases with contrast (right).](Figures/3_fullwaverectification.pdf){#fig-fullwaverectification}
@@ -650,9 +645,7 @@ This nonlinearity has clear effects on signal transduction. In @fig-transducer t
 Interestingly, although the hyperbolic ratio function (@eq-nakarushton) is monotonic, the CRF resulting from measuring the amplitude of the second harmonic (2F) component contains a slight roll-off at high input contrasts. This results from the distortion of the input sine waves at high contrast due to a combination of the full-wave rectification and saturating non-linearity. Power at other harmonics increases, and the total power generated by the input is monotonic. This roll-off is often seen in experimental data and has been referred to as 'supersaturation' [@Tyler1985; @Peirce2007].
 
 ::: {.content-visible when-format="docx"}
-- FIGURE ABOUT HERE
-
-![Illustration of how a sinusoidal input signal is affected by a nonlinear transducer. The input waveform (left panel) is frequency doubled by the full-wave rectification (see @fig-fullwaverectification), and now has energy at the second harmonic (10Hz) and higher even harmonics (middle panel). Passing the signal through a second nonlinearity (the hyperbolic ratio function) causes the contrast response function at the second harmonic (2F) to become nonlinear and it and saturates (or even 'supersaturates') at high contrasts (right panel).](){#fig-transducer}
+![Illustration of how a sinusoidal input signal is affected by a nonlinear transducer. The input waveform (left panel) is frequency doubled by the full-wave rectification (see @fig-fullwaverectification), and now has energy at the second harmonic (10Hz) and higher even harmonics (middle panel). Passing the signal through a second nonlinearity (the hyperbolic ratio function) causes the contrast response function at the second harmonic (2F) to become nonlinear and it and saturates (or even 'supersaturates') at high contrasts (right panel).](Figures/4_transducer.pdf){#fig-transducer}
 :::
 ::: {.content-visible unless-format="docx"}
 ![Illustration of how a sinusoidal input signal is affected by a nonlinear transducer. The input waveform (left panel) is frequency doubled by the full-wave rectification (see @fig-fullwaverectification), and now has energy at the second harmonic (10Hz) and higher even harmonics (middle panel). Passing the signal through a second nonlinearity (the hyperbolic ratio function) causes the contrast response function at the second harmonic (2F) to become nonlinear and it and saturates (or even 'supersaturates') at high contrasts (right panel).](Figures/4_transducer.pdf){#fig-transducer}
@@ -664,9 +657,7 @@ To illustrate the effect of contrast gain control [@ohzawaContrastGainControl198
 
 
 ::: {.content-visible when-format="docx"}
-- FIGURE ABOUT HERE
-
-![Demonstration of how two inputs of different frequencies are processed by a nonlinear transducer. Additional harmonics are apparent in the Fourier spectrum (middle panel), and the contrast response function is suppressed (right panel). The effects of using different nonlinearities can be explored in the accompanying code.](){#fig-twoinputs}
+![Demonstration of how two inputs of different frequencies are processed by a nonlinear transducer. Additional harmonics are apparent in the Fourier spectrum (middle panel), and the contrast response function is suppressed (right panel). The effects of using different nonlinearities can be explored in the accompanying code.](Figures/5_twoinputs.pdf){#fig-twoinputs}
 :::
 ::: {.content-visible unless-format="docx"}
 ![Demonstration of how two inputs of different frequencies are processed by a nonlinear transducer. Additional harmonics are apparent in the Fourier spectrum (middle panel), and the contrast response function is suppressed (right panel). The effects of using different nonlinearities can be explored in the accompanying code.](Figures/5_twoinputs.pdf){#fig-twoinputs}
@@ -692,9 +683,7 @@ An early use of the SSVEP was to provide an objective estimate of spatial contra
 Because SSVEP responses at detection threshold are very small, estimating a threshold is achieved by measuring the contrast response function at relatively high levels (in the linear part of the log-contrast response function prior to saturation), and extrapolating back along the function (either contrast vs response measured at a constant spatial frequency or spatial frequency vs response at a constant contrast level) to estimate its intercept with the x-axis [@Campbell1970] (see @fig-sweepvep). This contrast level has been shown to correspond approximately with psychophysically measured detection thresholds [@campbellVisualEvokedPotential1972; @Norcia1986]. One factor affecting the accuracy of this technique is the presence of noise in the EEG signal which will increase the apparent amplitude of the SSVEP responses across the measurement range. The effect of this noise is particulary apparent for recordings with low SNR or where the slope of the CRF is shallow (and therefore where small changes in the vertical offset of the fit result in large changes in the X-axis intercept). Accurate estimates of thresholds therefore require the experimenter to model this noise and compensate for its effects, as detailed in @Norcia1989. 
 
 ::: {.content-visible when-format="docx"}
-- FIGURE ABOUT HERE
-
-![Sweep VEP simulation showing how a contrast detection threshold can be estimated from sweep VEP data measured at higher contrasts. The solid line is the linear regression fit to the lowest four data points prior to the satuating part of the curve, and the dashed line extrapolates the fit back to determine the contrast value when y=0, which gives a threshold estimate (red point).](){#fig-sweepvep}
+![Sweep VEP simulation showing how a contrast detection threshold can be estimated from sweep VEP data measured at higher contrasts. The solid line is the linear regression fit to the  lowest four data points prior to the satuating part of the curve, and the dashed line extrapolates the fit back to determine the contrast value when y=0, which gives a threshold estimate (red point).](Figures/6_sweepplot.pdf){#fig-sweepvep}
 :::
 ::: {.content-visible unless-format="docx"}
 ![Sweep VEP simulation showing how a contrast detection threshold can be estimated from sweep VEP data measured at higher contrasts. The solid line is the linear regression fit to the  lowest four data points prior to the satuating part of the curve, and the dashed line extrapolates the fit back to determine the contrast value when y=0, which gives a threshold estimate (red point).](Figures/6_sweepplot.pdf){#fig-sweepvep}
@@ -723,9 +712,7 @@ Autism is a condition often associated with differences in vision [@Simmons2009]
 Recent work on understanding Parkinson's disease has also used *Drosophila* genetic models. @Afsari2014 found that mutant flies produced stronger SSVEP responses to flickering lights than control flies (see [@fig-plotclinical]d). The authors theorised that differences in early gain control during development might lead to visual deficits later in life. Although visual responses are a convenient assay of neural function, it is likely that the same general process applies throughout the whole brain, including in the motor system where the core Parkinson's symptoms (tremor, rigidity, slow movement) manifest. The SSVEP differences were reduced by a kinase inhibitor that targets the dopamine system, demonstrating how model organisms can be used to test new pharmacological treatments. SSVEP responses also provide a potential method to diagnose Parkinson's before any symptoms manifest, and to monitor the effect of treatments.
 
 ::: {.content-visible when-format="docx"}
-- FIGURE ABOUT HERE
-
-![Example contrast response functions for different clinical conditions. Panel (a) shows modelled contrast response functions for epilepsy patients (blue) and control participants (black), based on the data of Tsai et al. (2011). Panel (b) shows functions for the amblyopic (red) and fellow (black) eyes of adults with amblyopia, based on the data of Baker et al. (2015). Panel (c) shows functions for children with (green) and without (black) a diagnosis of autism, based on the data of Vilidaite et al. (2018). Panel (d) shows data from *Drosophila melanogaster* (fruit flies) from Afsari et al. (2014). One day-old flies expressing a human gene linked to Parkinson's (hLRRK-G2019S) show increased SSVEP response amplitude and sensitivity (red) compared to control animals (black).](){#fig-plotclinical}
+![Example contrast response functions for different clinical conditions. Panel (a) shows modelled contrast response functions for epilepsy patients (blue) and control participants (black), based on the data of Tsai et al. (2011). Panel (b) shows functions for the amblyopic (red) and fellow (black) eyes of adults with amblyopia, based on the data of Baker et al. (2015). Panel (c) shows functions for children with (green) and without (black) a diagnosis of autism, based on the data of Vilidaite et al. (2018). Panel (d) shows data from *Drosophila melanogaster* (fruit flies) from Afsari et al. (2014). One day-old flies expressing a human gene linked to Parkinson's (hLRRK-G2019S) show increased SSVEP response amplitude and sensitivity (red) compared to control animals (black).](Figures/7_clinicalplot.pdf){#fig-plotclinical}
 :::
 
 ::: {.content-visible unless-format="docx"}
