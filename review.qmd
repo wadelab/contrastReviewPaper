@@ -4,9 +4,9 @@ author:
   - name: Alex R. Wade
   - name: Daniel H. Baker
 format:
-  latex: default
+  #latex: default
   docx: 
-    omitFigures: false
+    omitFigures: true
   pdf: default
     #keep-tex: true
 
@@ -548,7 +548,7 @@ plt.savefig('Figures/7_clinicalplot.png', dpi=300)
 
 # Abstract:
 
-Contrast is the currency of the early visual system. Measuring the way that the computations underlying contrast processing depend on factors such as spatial and temporal frequency, age, clinical conditions, eccentricity, chromaticity and the presence of other stimuli has been a focus of vision science for over a century. One of the most productive experimental approaches in this field has been the use of the 'steady-state visually-evoked potential' (SSVEP): a technique where contrast modulating inputs are 'frequency tagged' (presented at well-defined frequencies and phases) and the electrical signals that they generate in the brain are analyzed in the temporal frequency domain. SSVEPs have several advantages over conventional measures of visually-evoked responses: they have relatively unambiguous ouput measures, a high signal to noise ratio (SNR), and they allow us to analyze interactions between stimulus components using a convenient mathematical framework. Here we describe how SSVEPs have been used to study visual contrast over the past 70 years [@Dawson1954]. Because our thinking about SSVEPs is well-described by simple mathematical models, we embed code that illustrates key steps in the modelling and analysis. This paper can therefore be used both as a review of the use of SSVEP in measuring human contrast processing, and as an interactive learning aid.
+Contrast is the currency of the early visual system. Measuring the way that the computations underlying contrast processing depend on factors such as spatial and temporal frequency, age, clinical conditions, eccentricity, chromaticity and the presence of other stimuli has been a focus of vision science for over a century. One of the most productive experimental approaches in this field has been the use of the 'steady-state visually-evoked potential' (SSVEP): a technique where contrast modulating inputs are 'frequency tagged' (presented at well-defined frequencies and phases) and the electrical signals that they generate in the brain are analyzed in the temporal frequency domain. SSVEPs have several advantages over conventional measures of visually-evoked responses: they have relatively unambiguous ouput measures, a high signal to noise ratio (SNR), and they allow us to analyze interactions between stimulus components using a convenient mathematical framework. Here we describe how SSVEPs have been used to study visual contrast over the past 70 years. Because our thinking about SSVEPs is well-described by simple mathematical models, we embed code that illustrates key steps in the modelling and analysis. This paper can therefore be used both as a review of the use of SSVEP in measuring human contrast processing, and as an interactive learning aid.
 
 Keywords: 
 
